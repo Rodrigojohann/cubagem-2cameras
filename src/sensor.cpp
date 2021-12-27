@@ -91,12 +91,12 @@ cout << "\nCloud 2: " << cloud_raw2->points.size();
 passz.setInputCloud(cloud_raw1);
 passz.setFilterFieldName ("z");
 passz.setFilterLimits (-5000, 5000);
-passz.filter(cloud_raw1);
+passz.filter(*cloud_raw1);
 
 passz.setInputCloud(cloud_raw2);
 passz.setFilterFieldName ("z");
 passz.setFilterLimits (-5000, 5000);
-passz.filter(cloud_raw2);
+passz.filter(*cloud_raw2);
 
 cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
