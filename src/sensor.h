@@ -7,6 +7,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <pcl/registration/icp.h>
+#include <pcl/filters/passthrough.h>
 
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;

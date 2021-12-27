@@ -77,6 +77,7 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     PointCloudT::Ptr                  cloud_raw1 (new PointCloudT);
     PointCloudT::Ptr                  cloud_raw2 (new PointCloudT);
     PointCloudT::Ptr                  cloud_sum (new PointCloudT);
+    pcl::PassThrough<pcl::PointXYZ>                passz;
 ////
     cloud_raw1.reset(new pcl::PointCloud<pcl::PointXYZ>);
     cloud_raw2.reset(new pcl::PointCloud<pcl::PointXYZ>);
@@ -84,11 +85,27 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     cloud_raw1 = CamStream(ipAddress1, port);
     cloud_raw2 = CamStream(ipAddress2, port);
 
+cout << "\n\nCloud 1: " << cloud_raw1->points.size();
+cout << "\nCloud 2: " << cloud_raw2->points.size();
+
+passz.setInputCloud(cloud_raw1);
+passz.setFilterFieldName ("z");
+passz.setFilterLimits (-5000, 5000);
+passz.filter(cloud_raw1);
+
+passz.setInputCloud(cloud_raw2);
+passz.setFilterFieldName ("z");
+passz.setFilterLimits (-5000, 5000);
+passz.filter(cloud_raw2);
+
+cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
+cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
+
     pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
     icp.setInputSource(cloud_raw1);
     icp.setInputTarget(cloud_raw2);
 
-    icp.align(cloud_sum);
+    icp.align(*cloud_sum);
 
     return cloud_sum;
 }
