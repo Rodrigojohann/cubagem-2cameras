@@ -71,3 +71,25 @@ bool Sensor::TestConnection(char* ipAddress, unsigned short port)
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PointCloudT::Ptr Sensor::2CamStream(char* ipAddress1, char* ipAddress2, unsigned short port)
+{
+// var
+    PointCloudT::Ptr                  cloud_raw1 (new PointCloudT);
+    PointCloudT::Ptr                  cloud_raw2 (new PointCloudT);
+    PointCloudT::Ptr                  cloud_sum (new PointCloudT);
+////
+    cloud_raw1.reset(new pcl::PointCloud<pcl::PointXYZ>);
+    cloud_raw2.reset(new pcl::PointCloud<pcl::PointXYZ>);
+
+    cloud_raw1 = CamStream(ipAddress1, port);
+    cloud_raw2 = CamStream(ipAddress2, port);
+
+    pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
+    icp.setInputSource(cloud_raw1);
+    icp.setInputTarget(cloud_raw2);
+
+    icp.align(cloud_sum);
+
+    return cloud_sum;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
