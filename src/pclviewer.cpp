@@ -37,7 +37,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
     Controller c;
     Sensor s;
 
-    if (s.TestConnection(IP, PORT) == false)
+    if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
     {
         TotalStr = "N/A";
         ui->label_2->setText(QString::fromStdString(TotalStr));
@@ -50,7 +50,8 @@ PCLViewer::PCLViewer (QWidget *parent) :
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
             coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-            cloudnew = s.CamStream(IP, PORT);
+            //cloudnew = s.CamStream(IP, PORT);
+            cloudnew = s.TwoCamStream(IP1, IP2, PORT);
             coloredinput->points.resize(cloudnew->points.size());
 
             if (cloudnew->points.size() > 100){
@@ -160,7 +161,7 @@ void PCLViewer::FramePallet()
     Controller c;
     Sensor s;
 
-    if (s.TestConnection(IP, PORT) == false)
+    if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
     {
         TotalStr = "N/A";
         ui->label_2->setText(QString::fromStdString(TotalStr));
@@ -173,7 +174,8 @@ void PCLViewer::FramePallet()
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
             coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-            cloudnew = s.CamStream(IP, PORT);
+            //cloudnew = s.CamStream(IP, PORT);
+            cloudnew = s.TwoCamStream(IP1, IP2, PORT);
             coloredinput->points.resize(cloudnew->points.size());
 
             if (cloudnew->points.size() > 100)
