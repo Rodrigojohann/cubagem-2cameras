@@ -242,8 +242,8 @@ std::tuple<float, float, float> Controller::CalculateDimensionsPallet(PointCloud
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
 
 
-    std::tie(unsortedclusters, clustersize) = c.CloudSegmentationPallet(filteredcloud);
-    clusters = c.SortClustersPallet(unsortedclusters, clustersize);
+    std::tie(unsortedclusters, clustersize) = CloudSegmentationPallet(inputcloud);
+    clusters = SortClustersPallet(unsortedclusters, clustersize);
 
 
     dimensionX = dimensionY = dimensionZ = 0.0;

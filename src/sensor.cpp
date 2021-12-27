@@ -71,7 +71,7 @@ bool Sensor::TestConnection(char* ipAddress, unsigned short port)
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Sensor::2CamStream(char* ipAddress1, char* ipAddress2, unsigned short port)
+PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsigned short port)
 {
 // var
     PointCloudT::Ptr                  cloud_raw1 (new PointCloudT);

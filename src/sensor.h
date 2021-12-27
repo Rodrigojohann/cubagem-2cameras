@@ -17,5 +17,5 @@ class Sensor
 public:
     PointCloudT::Ptr CamStream(char* ipAddress, unsigned short port);
     bool TestConnection(char* ipAddress, unsigned short port);
-    PointCloudT::Ptr 2CamStream(char* ipAddress1, char* ipAddress2, unsigned short port);
+    PointCloudT::Ptr TwoCamStream(char* ipAddress1, char* ipAddress2, unsigned short port);
 };
