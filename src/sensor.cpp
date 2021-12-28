@@ -77,6 +77,7 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     PointCloudT::Ptr                  cloud_raw1 (new PointCloudT);
     PointCloudT::Ptr                  cloud_raw2 (new PointCloudT);
     PointCloudT::Ptr                  cloud_transformed (new PointCloudT);
+    PointCloudT::Ptr                  cloud_aligned (new PointCloudT);
     PointCloudT::Ptr                  output_cloud (new PointCloudT);
     pcl::PassThrough<pcl::PointXYZ>                passz;
 ////
@@ -102,17 +103,27 @@ passz.filter(*cloud_raw2);
 cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 
+
+float theta = M_PI;
+Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
+transform_2.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
+
+std::cout << transform_2.matrix() << std::endl;
+
+pcl::transformPointCloud (*cloud_raw1, *cloud_transformed, transform_2);
+
+
 pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-icp.setInputSource(cloud_raw1);
+icp.setInputSource(cloud_transformed);
 icp.setInputTarget(cloud_raw2);
 
-icp.align(*cloud_transformed);
+icp.align(*cloud_aligned);
 
 std::cout << "has converged:" << icp.hasConverged() << " score: " <<
 icp.getFitnessScore() << std::endl;
 std::cout << icp.getFinalTransformation() << std::endl;
 
-*output_cloud += *cloud_transformed;
+*output_cloud += *cloud_aligned;
 *output_cloud += *cloud_raw2;
 
     return output_cloud;

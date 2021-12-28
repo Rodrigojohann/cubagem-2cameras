@@ -10,6 +10,7 @@
 #include <pcl/filters/passthrough.h>
 #include <pcl/registration/ndt.h>
 #include <pcl/filters/approximate_voxel_grid.h>
+#include <pcl/common/transforms.h>
 
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
