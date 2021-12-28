@@ -122,10 +122,9 @@ Eigen::AngleAxisf init_rotation (0.6931, Eigen::Vector3f::UnitZ ());
 Eigen::Translation3f init_translation (1.79387, 0.720047, 0);
 Eigen::Matrix4f init_guess = (init_translation * init_rotation).matrix ();
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_sum (new pcl::PointCloud<pcl::PointXYZ>);
 ndt.align (*cloud_sum, init_guess);
 
-*cloud_sum += *cloud_raw1
+*cloud_sum += *cloud_raw1;
 
     return cloud_sum+cloud_raw2;
 }
