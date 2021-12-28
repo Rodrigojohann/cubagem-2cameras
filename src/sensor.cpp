@@ -76,6 +76,7 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
 // var
     PointCloudT::Ptr                  cloud_raw1 (new PointCloudT);
     PointCloudT::Ptr                  cloud_raw2 (new PointCloudT);
+    PointCloudT::Ptr                  cloud_transformed (new PointCloudT);
     PointCloudT::Ptr                  output_cloud (new PointCloudT);
     pcl::PassThrough<pcl::PointXYZ>                passz;
 ////
@@ -105,8 +106,7 @@ pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
 icp.setInputSource(cloud_raw1);
 icp.setInputTarget(cloud_raw2);
 
-pcl::PointCloud<pcl::PointXYZ> cloud_transformed;
-icp.align(cloud_transformed);
+icp.align(*cloud_transformed);
 
 std::cout << "has converged:" << icp.hasConverged() << " score: " <<
 icp.getFitnessScore() << std::endl;
