@@ -98,34 +98,22 @@ passz.setFilterFieldName ("z");
 passz.setFilterLimits (-5000, 5000);
 passz.filter(*cloud_raw2);
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud1 (new pcl::PointCloud<pcl::PointXYZ>);
-pcl::ApproximateVoxelGrid<pcl::PointXYZ> approximate_voxel_filter;
-approximate_voxel_filter.setLeafSize (0.2, 0.2, 0.2);
-approximate_voxel_filter.setInputCloud (cloud_raw1);
-approximate_voxel_filter.filter (*filtered_cloud1);
-
 cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 
-pcl::NormalDistributionsTransform<pcl::PointXYZ, pcl::PointXYZ> ndt;
+pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
+icp.setInputSource(cloud_raw1);
+icp.setInputTarget(cloud_raw2);
 
-ndt.setTransformationEpsilon (0.01);
-ndt.setStepSize (0.1);
-ndt.setResolution (1.0);
+pcl::PointCloud<pcl::PointXYZ> cloud_transformed;
+icp.align(cloud_transformed);
 
-ndt.setMaximumIterations (35);
+std::cout << "has converged:" << icp.hasConverged() << " score: " <<
+icp.getFitnessScore() << std::endl;
+std::cout << icp.getFinalTransformation() << std::endl;
 
-ndt.setInputSource (filtered_cloud1);
-ndt.setInputTarget (cloud_raw2);
-
-Eigen::AngleAxisf init_rotation (0.6931, Eigen::Vector3f::UnitZ ());
-Eigen::Translation3f init_translation (1.79387, 0.720047, 0);
-Eigen::Matrix4f init_guess = (init_translation * init_rotation).matrix ();
-
-ndt.align (*output_cloud, init_guess);
-pcl::transformPointCloud (*cloud_raw1, *output_cloud, ndt.getFinalTransformation ());
-
-*output_cloud += cloud_raw2;
+*outputcloud += *cloud_transformed;
+*outputcloud += *cloud_raw2;
 
     return output_cloud;
 }
