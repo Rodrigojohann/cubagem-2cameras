@@ -76,7 +76,7 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
 // var
     PointCloudT::Ptr                  cloud_raw1 (new PointCloudT);
     PointCloudT::Ptr                  cloud_raw2 (new PointCloudT);
-    PointCloudT::Ptr                  cloud_sum (new PointCloudT);
+    PointCloudT::Ptr                  output_cloud (new PointCloudT);
     pcl::PassThrough<pcl::PointXYZ>                passz;
 ////
     cloud_raw1.reset(new pcl::PointCloud<pcl::PointXYZ>);
@@ -100,9 +100,9 @@ passz.filter(*cloud_raw2);
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud1 (new pcl::PointCloud<pcl::PointXYZ>);
 pcl::ApproximateVoxelGrid<pcl::PointXYZ> approximate_voxel_filter;
-//approximate_voxel_filter.setLeafSize (0.2, 0.2, 0.2);
-//approximate_voxel_filter.setInputCloud (cloud_raw1);
-//approximate_voxel_filter.filter (*filtered_cloud1);
+approximate_voxel_filter.setLeafSize (0.2, 0.2, 0.2);
+approximate_voxel_filter.setInputCloud (cloud_raw1);
+approximate_voxel_filter.filter (*filtered_cloud1);
 
 cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
@@ -115,17 +115,18 @@ ndt.setResolution (1.0);
 
 ndt.setMaximumIterations (35);
 
-ndt.setInputSource (cloud_raw1);
+ndt.setInputSource (filtered_cloud1);
 ndt.setInputTarget (cloud_raw2);
 
 Eigen::AngleAxisf init_rotation (0.6931, Eigen::Vector3f::UnitZ ());
 Eigen::Translation3f init_translation (1.79387, 0.720047, 0);
 Eigen::Matrix4f init_guess = (init_translation * init_rotation).matrix ();
 
-ndt.align (*cloud_sum, init_guess);
+ndt.align (*output_cloud, init_guess);
+pcl::transformPointCloud (*cloud_raw1, *output_cloud, ndt.getFinalTransformation ());
 
-*cloud_sum += *cloud_raw1;
+*output_cloud += cloud_raw2;
 
-    return cloud_sum;
+    return output_cloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
