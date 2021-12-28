@@ -98,14 +98,34 @@ passz.setFilterFieldName ("z");
 passz.setFilterLimits (-5000, 5000);
 passz.filter(*cloud_raw2);
 
+pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud1 (new pcl::PointCloud<pcl::PointXYZ>);
+pcl::ApproximateVoxelGrid<pcl::PointXYZ> approximate_voxel_filter;
+approximate_voxel_filter.setLeafSize (0.2, 0.2, 0.2);
+approximate_voxel_filter.setInputCloud (cloud_raw1);
+approximate_voxel_filter.filter (*filtered_cloud1);
+
 cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 
-    pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-    icp.setInputSource(cloud_raw1);
-    icp.setInputTarget(cloud_raw2);
+pcl::NormalDistributionsTransform<pcl::PointXYZ, pcl::PointXYZ> ndt;
 
-    icp.align(*cloud_sum);
+ndt.setTransformationEpsilon (0.01);
+ndt.setStepSize (0.1);
+ndt.setResolution (1.0);
+
+ndt.setMaximumIterations (35);
+
+ndt.setInputSource (filtered_cloud1);
+ndt.setInputTarget (cloud_raw2);
+
+Eigen::AngleAxisf init_rotation (0.6931, Eigen::Vector3f::UnitZ ());
+Eigen::Translation3f init_translation (1.79387, 0.720047, 0);
+Eigen::Matrix4f init_guess = (init_translation * init_rotation).matrix ();
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_sum (new pcl::PointCloud<pcl::PointXYZ>);
+ndt.align (*cloud_sum, init_guess);
+
+*cloud_sum += *cloud_raw1
 
     return cloud_sum+cloud_raw2;
 }

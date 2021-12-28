@@ -6,4 +6,4 @@
 #define IP1 (char*)"192.168.130.191"
 #define IP2 (char*)"192.168.130.195"
 #define PORT 2114
-#define Nsamples 5
+#define Nsamples 1
