@@ -11,6 +11,7 @@
 #include <pcl/registration/ndt.h>
 #include <pcl/filters/approximate_voxel_grid.h>
 #include <pcl/common/transforms.h>
+#include <pcl/features/moment_of_inertia_estimation.h>
 
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;

@@ -66,6 +66,24 @@ PCLViewer::PCLViewer (QWidget *parent) :
                     coloredinput->points[i].a = 200;
                 }
 
+pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
+
+feature_extractor.setInputCloud (cloudnew);
+feature_extractor.compute ();
+
+pcl::PointXYZ min_point_OBB;
+pcl::PointXYZ max_point_OBB;
+pcl::PointXYZ position_OBB;
+Eigen::Matrix3f rotational_matrix_OBB;
+
+feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+
+Eigen::Vector3f position (position_OBB.x, position_OBB.y, position_OBB.z);
+Eigen::Quaternionf quat (rotational_matrix_OBB);
+viewer_->addCube (position, quat, max_point_OBB.x - min_point_OBB.x, max_point_OBB.y - min_point_OBB.y, max_point_OBB.z - min_point_OBB.z, "OBB");
+viewer_->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "OBB");
+
+
                 filteredcloud = c.FilterCloud(cloudnew);
                 std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
