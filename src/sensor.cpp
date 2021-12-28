@@ -112,8 +112,8 @@ std::cout << "has converged:" << icp.hasConverged() << " score: " <<
 icp.getFitnessScore() << std::endl;
 std::cout << icp.getFinalTransformation() << std::endl;
 
-*outputcloud += *cloud_transformed;
-*outputcloud += *cloud_raw2;
+*output_cloud += *cloud_transformed;
+*output_cloud += *cloud_raw2;
 
     return output_cloud;
 }
