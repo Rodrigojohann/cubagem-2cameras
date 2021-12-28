@@ -8,6 +8,8 @@
 #include <boost/make_shared.hpp>
 #include <pcl/registration/icp.h>
 #include <pcl/filters/passthrough.h>
+#include <pcl/registration/ndt.h>
+#include <pcl/filters/approximate_voxel_grid.h>
 
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;

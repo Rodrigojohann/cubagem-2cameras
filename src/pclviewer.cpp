@@ -11,8 +11,8 @@ PCLViewer::PCLViewer (QWidget *parent) :
 {
     ui->setupUi (this);
     //
-    this->setWindowState(Qt::WindowFullScreen);
-    this->setCursor(Qt::BlankCursor);
+//    this->setWindowState(Qt::WindowFullScreen);
+//    this->setCursor(Qt::BlankCursor);
     this->setWindowTitle ("Cubagem");
 
     connect (ui->pushButton_1, SIGNAL(pressed()), this, SLOT(CleanBox()));
@@ -26,7 +26,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
     viewer_->setBackgroundColor(0, 0, 0);
     viewer_->setShowFPS(false);
     ui->qvtkWidget->SetRenderWindow(viewer_->getRenderWindow());
-    ui->qvtkWidget->setEnabled(false);
+//    ui->qvtkWidget->setEnabled(false);
 
     viewer_->setupInteractor(ui->qvtkWidget->GetInteractor(), ui->qvtkWidget->GetRenderWindow());
     ui->qvtkWidget->update();
