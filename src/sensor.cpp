@@ -151,9 +151,9 @@ transform_align1 (2,0) = rotational_matrix_OBB1 (2,0);
 transform_align1 (2,1) = rotational_matrix_OBB1 (2,1);
 transform_align1 (2,2) = rotational_matrix_OBB1 (2,2);
 
-transform_align1 (3,0) = position_OBB1.x;
-transform_align1 (3,1) = position_OBB1.y;
-transform_align1 (3,2) = position_OBB1.z;
+transform_align1 (0,3) = position_OBB1.x;
+transform_align1 (1,3) = position_OBB1.y;
+transform_align1 (2,3) = position_OBB1.z;
 
 Eigen::Matrix4f transform_align2 = Eigen::Matrix4f::Identity();
 
@@ -167,9 +167,9 @@ transform_align2 (2,0) = rotational_matrix_OBB1 (2,0);
 transform_align2 (2,1) = rotational_matrix_OBB1 (2,1);
 transform_align2 (2,2) = rotational_matrix_OBB1 (2,2);
 
-transform_align2 (3,0) = position_OBB1.x;
-transform_align2 (3,1) = position_OBB1.y;
-transform_align2 (3,2) = position_OBB1.z;
+transform_align2 (0,3) = position_OBB1.x;
+transform_align2 (1,3) = position_OBB1.y;
+transform_align2 (2,3) = position_OBB1.z;
 
 
 //Eigen::Affine3f transform_inverse1 = Eigen::Affine3f::Identity();
