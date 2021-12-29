@@ -139,21 +139,37 @@ feature_extractor.compute ();
 feature_extractor.getOBB (min_point_OBB2, max_point_OBB2, position_OBB2, rotational_matrix_OBB2);
 
 
-Eigen::Matrix4f transform_1 = Eigen::Matrix4f::Identity();
+Eigen::Matrix4f transform_align1 = Eigen::Matrix4f::Identity();
 
-transform_1 (0,0) = rotational_matrix_OBB1 (0,0);
-transform_1 (0,1) = rotational_matrix_OBB1 (0,1);
-transform_1 (0,2) = rotational_matrix_OBB1 (0,2);
-transform_1 (1,0) = rotational_matrix_OBB1 (1,0);
-transform_1 (1,1) = rotational_matrix_OBB1 (1,1);
-transform_1 (1,2) = rotational_matrix_OBB1 (1,2);
-transform_1 (2,0) = rotational_matrix_OBB1 (2,0);
-transform_1 (2,1) = rotational_matrix_OBB1 (2,1);
-transform_1 (2,2) = rotational_matrix_OBB1 (2,2);
+transform_align1 (0,0) = rotational_matrix_OBB1 (0,0);
+transform_align1 (0,1) = rotational_matrix_OBB1 (0,1);
+transform_align1 (0,2) = rotational_matrix_OBB1 (0,2);
+transform_align1 (1,0) = rotational_matrix_OBB1 (1,0);
+transform_align1 (1,1) = rotational_matrix_OBB1 (1,1);
+transform_align1 (1,2) = rotational_matrix_OBB1 (1,2);
+transform_align1 (2,0) = rotational_matrix_OBB1 (2,0);
+transform_align1 (2,1) = rotational_matrix_OBB1 (2,1);
+transform_align1 (2,2) = rotational_matrix_OBB1 (2,2);
 
-transform_1 (3,0) = position_OBB_1 (0);
-transform_1 (3,1) = position_OBB_1 (1);
-transform_1 (3,2) = position_OBB_1 (2);
+transform_align1 (3,0) = position_OBB1.x;
+transform_align1 (3,1) = position_OBB1.y;
+transform_align1 (3,2) = position_OBB1.z;
+
+Eigen::Matrix4f transform_align2 = Eigen::Matrix4f::Identity();
+
+transform_align2 (0,0) = rotational_matrix_OBB1 (0,0);
+transform_align2 (0,1) = rotational_matrix_OBB1 (0,1);
+transform_align2 (0,2) = rotational_matrix_OBB1 (0,2);
+transform_align2 (1,0) = rotational_matrix_OBB1 (1,0);
+transform_align2 (1,1) = rotational_matrix_OBB1 (1,1);
+transform_align2 (1,2) = rotational_matrix_OBB1 (1,2);
+transform_align2 (2,0) = rotational_matrix_OBB1 (2,0);
+transform_align2 (2,1) = rotational_matrix_OBB1 (2,1);
+transform_align2 (2,2) = rotational_matrix_OBB1 (2,2);
+
+transform_align2 (3,0) = position_OBB1.x;
+transform_align2 (3,1) = position_OBB1.y;
+transform_align2 (3,2) = position_OBB1.z;
 
 
 //Eigen::Affine3f transform_inverse1 = Eigen::Affine3f::Identity();
