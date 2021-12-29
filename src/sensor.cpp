@@ -137,6 +137,12 @@ feature_extractor.setInputCloud (cloud_raw2);
 feature_extractor.compute ();
 feature_extractor.getOBB (min_point_OBB2, max_point_OBB2, position_OBB2, rotational_matrix_OBB2);
 
+Eigen::Affine3f transform_inverse1 = Eigen::Affine3f::Identity();
+Eigen::Affine3f transform_inverse2 = Eigen::Affine3f::Identity();
+
+transform_inverse1.matrix() = rotational_matrix_OBB1.inverse();
+transform_inverse2.matrix() = rotational_matrix_OBB2.inverse();
+
 pcl::transformPointCloud (*cloud_transformed, *cloud_transformed1, rotational_matrix_OBB1.inverse());
 pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, rotational_matrix_OBB2.inverse());
 
