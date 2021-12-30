@@ -106,80 +106,74 @@ cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 
 
-float theta = M_PI;
+//float theta = M_PI;
 
-Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
-transform_2.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
+//Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
+//transform_2.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
 
-std::cout << transform_2.matrix() << std::endl;
+//std::cout << transform_2.matrix() << std::endl;
 
-pcl::transformPointCloud (*cloud_raw1, *cloud_transformed, transform_2);
-
-
-pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
+//pcl::transformPointCloud (*cloud_raw1, *cloud_transformed, transform_2);
 
 
-
-pcl::PointXYZ min_point_OBB1;
-pcl::PointXYZ max_point_OBB1;
-pcl::PointXYZ position_OBB1;
-Eigen::Matrix3f rotational_matrix_OBB1;
-
-feature_extractor.setInputCloud (cloud_transformed);
-feature_extractor.compute ();
-feature_extractor.getOBB (min_point_OBB1, max_point_OBB1, position_OBB1, rotational_matrix_OBB1);
-
-Eigen::Matrix3f rotated_matrix1 = rotational_matrix_OBB1.inverse();
-
-pcl::PointXYZ min_point_OBB2;
-pcl::PointXYZ max_point_OBB2;
-pcl::PointXYZ position_OBB2;
-Eigen::Matrix3f rotational_matrix_OBB2;
-
-feature_extractor.setInputCloud (cloud_raw2);
-feature_extractor.compute ();
-feature_extractor.getOBB (min_point_OBB2, max_point_OBB2, position_OBB2, rotational_matrix_OBB2);
-
-Eigen::Matrix3f rotated_matrix2 = rotational_matrix_OBB2.inverse();
-
-Eigen::Matrix4f transform_align1 = Eigen::Matrix4f::Identity();
-
-transform_align1 (0,0) = rotated_matrix1 (0,0);
-transform_align1 (0,1) = rotated_matrix1 (0,1);
-transform_align1 (0,2) = rotated_matrix1 (0,2);
-transform_align1 (1,0) = rotated_matrix1 (1,0);
-transform_align1 (1,1) = rotated_matrix1 (1,1);
-transform_align1 (1,2) = rotated_matrix1 (1,2);
-transform_align1 (2,0) = rotated_matrix1 (2,0);
-transform_align1 (2,1) = rotated_matrix1 (2,1);
-transform_align1 (2,2) = rotated_matrix1 (2,2);
-
-transform_align1 (0,3) = -position_OBB1.x;
-transform_align1 (1,3) = -position_OBB1.y;
-transform_align1 (2,3) = -position_OBB1.z;
-
-Eigen::Matrix4f transform_align2 = Eigen::Matrix4f::Identity();
-
-transform_align2 (0,0) = rotated_matrix2 (0,0);
-transform_align2 (0,1) = rotated_matrix2 (0,1);
-transform_align2 (0,2) = rotated_matrix2 (0,2);
-transform_align2 (1,0) = rotated_matrix2 (1,0);
-transform_align2 (1,1) = rotated_matrix2 (1,1);
-transform_align2 (1,2) = rotated_matrix2 (1,2);
-transform_align2 (2,0) = rotated_matrix2 (2,0);
-transform_align2 (2,1) = rotated_matrix2 (2,1);
-transform_align2 (2,2) = rotated_matrix2 (2,2);
-
-transform_align2 (0,3) = -position_OBB1.x;
-transform_align2 (1,3) = -position_OBB1.y;
-transform_align2 (2,3) = -position_OBB1.z;
+//pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
 
 
-//Eigen::Affine3f transform_inverse1 = Eigen::Affine3f::Identity();
-//Eigen::Affine3f transform_inverse2 = Eigen::Affine3f::Identity();
 
-//transform_inverse1.matrix() = rotational_matrix_OBB1.inverse();
-//transform_inverse2.matrix() = rotational_matrix_OBB2.inverse();
+//pcl::PointXYZ min_point_OBB1;
+//pcl::PointXYZ max_point_OBB1;
+//pcl::PointXYZ position_OBB1;
+//Eigen::Matrix3f rotational_matrix_OBB1;
+
+//feature_extractor.setInputCloud (cloud_transformed);
+//feature_extractor.compute ();
+//feature_extractor.getOBB (min_point_OBB1, max_point_OBB1, position_OBB1, rotational_matrix_OBB1);
+
+//Eigen::Matrix3f rotated_matrix1 = rotational_matrix_OBB1.inverse();
+
+//pcl::PointXYZ min_point_OBB2;
+//pcl::PointXYZ max_point_OBB2;
+//pcl::PointXYZ position_OBB2;
+//Eigen::Matrix3f rotational_matrix_OBB2;
+
+//feature_extractor.setInputCloud (cloud_raw2);
+//feature_extractor.compute ();
+//feature_extractor.getOBB (min_point_OBB2, max_point_OBB2, position_OBB2, rotational_matrix_OBB2);
+
+//Eigen::Matrix3f rotated_matrix2 = rotational_matrix_OBB2.inverse();
+
+//Eigen::Matrix4f transform_align1 = Eigen::Matrix4f::Identity();
+
+//transform_align1 (0,0) = rotated_matrix1 (0,0);
+//transform_align1 (0,1) = rotated_matrix1 (0,1);
+//transform_align1 (0,2) = rotated_matrix1 (0,2);
+//transform_align1 (1,0) = rotated_matrix1 (1,0);
+//transform_align1 (1,1) = rotated_matrix1 (1,1);
+//transform_align1 (1,2) = rotated_matrix1 (1,2);
+//transform_align1 (2,0) = rotated_matrix1 (2,0);
+//transform_align1 (2,1) = rotated_matrix1 (2,1);
+//transform_align1 (2,2) = rotated_matrix1 (2,2);
+
+//transform_align1 (0,3) = -position_OBB1.x;
+//transform_align1 (1,3) = -position_OBB1.y;
+//transform_align1 (2,3) = -position_OBB1.z;
+
+//Eigen::Matrix4f transform_align2 = Eigen::Matrix4f::Identity();
+
+//transform_align2 (0,0) = rotated_matrix2 (0,0);
+//transform_align2 (0,1) = rotated_matrix2 (0,1);
+//transform_align2 (0,2) = rotated_matrix2 (0,2);
+//transform_align2 (1,0) = rotated_matrix2 (1,0);
+//transform_align2 (1,1) = rotated_matrix2 (1,1);
+//transform_align2 (1,2) = rotated_matrix2 (1,2);
+//transform_align2 (2,0) = rotated_matrix2 (2,0);
+//transform_align2 (2,1) = rotated_matrix2 (2,1);
+//transform_align2 (2,2) = rotated_matrix2 (2,2);
+
+//transform_align2 (0,3) = -position_OBB1.x;
+//transform_align2 (1,3) = -position_OBB1.y;
+//transform_align2 (2,3) = -position_OBB1.z;
+
 
 //pcl::transformPointCloud (*cloud_transformed, *cloud_transformed1, rotational_matrix_OBB1.inverse());
 //pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, rotational_matrix_OBB2.inverse());
@@ -196,9 +190,9 @@ transform_align2 (2,3) = -position_OBB1.z;
 //icp.getFitnessScore() << std::endl;
 //std::cout << icp.getFinalTransformation() << std::endl;
 
-*output_cloud += *cloud_aligned;
+*output_cloud += *cloud_raw1;
 *output_cloud += *cloud_raw2;
 
-    return cloud_raw1;
+    return output_cloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
