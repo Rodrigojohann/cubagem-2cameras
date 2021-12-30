@@ -129,6 +129,8 @@ feature_extractor.setInputCloud (cloud_transformed);
 feature_extractor.compute ();
 feature_extractor.getOBB (min_point_OBB1, max_point_OBB1, position_OBB1, rotational_matrix_OBB1);
 
+Eigen::Matrix3f rotated_matrix1 = rotational_matrix_OBB1.inverse();
+
 pcl::PointXYZ min_point_OBB2;
 pcl::PointXYZ max_point_OBB2;
 pcl::PointXYZ position_OBB2;
@@ -138,38 +140,39 @@ feature_extractor.setInputCloud (cloud_raw2);
 feature_extractor.compute ();
 feature_extractor.getOBB (min_point_OBB2, max_point_OBB2, position_OBB2, rotational_matrix_OBB2);
 
+Eigen::Matrix3f rotated_matrix2 = rotational_matrix_OBB2.inverse();
 
 Eigen::Matrix4f transform_align1 = Eigen::Matrix4f::Identity();
 
-transform_align1 (0,0) = rotational_matrix_OBB1 (0,0);
-transform_align1 (0,1) = rotational_matrix_OBB1 (0,1);
-transform_align1 (0,2) = rotational_matrix_OBB1 (0,2);
-transform_align1 (1,0) = rotational_matrix_OBB1 (1,0);
-transform_align1 (1,1) = rotational_matrix_OBB1 (1,1);
-transform_align1 (1,2) = rotational_matrix_OBB1 (1,2);
-transform_align1 (2,0) = rotational_matrix_OBB1 (2,0);
-transform_align1 (2,1) = rotational_matrix_OBB1 (2,1);
-transform_align1 (2,2) = rotational_matrix_OBB1 (2,2);
+transform_align1 (0,0) = rotated_matrix1 (0,0);
+transform_align1 (0,1) = rotated_matrix1 (0,1);
+transform_align1 (0,2) = rotated_matrix1 (0,2);
+transform_align1 (1,0) = rotated_matrix1 (1,0);
+transform_align1 (1,1) = rotated_matrix1 (1,1);
+transform_align1 (1,2) = rotated_matrix1 (1,2);
+transform_align1 (2,0) = rotated_matrix1 (2,0);
+transform_align1 (2,1) = rotated_matrix1 (2,1);
+transform_align1 (2,2) = rotated_matrix1 (2,2);
 
-transform_align1 (0,3) = position_OBB1.x;
-transform_align1 (1,3) = position_OBB1.y;
-transform_align1 (2,3) = position_OBB1.z;
+transform_align1 (0,3) = -position_OBB1.x;
+transform_align1 (1,3) = -position_OBB1.y;
+transform_align1 (2,3) = -position_OBB1.z;
 
 Eigen::Matrix4f transform_align2 = Eigen::Matrix4f::Identity();
 
-transform_align2 (0,0) = rotational_matrix_OBB1 (0,0);
-transform_align2 (0,1) = rotational_matrix_OBB1 (0,1);
-transform_align2 (0,2) = rotational_matrix_OBB1 (0,2);
-transform_align2 (1,0) = rotational_matrix_OBB1 (1,0);
-transform_align2 (1,1) = rotational_matrix_OBB1 (1,1);
-transform_align2 (1,2) = rotational_matrix_OBB1 (1,2);
-transform_align2 (2,0) = rotational_matrix_OBB1 (2,0);
-transform_align2 (2,1) = rotational_matrix_OBB1 (2,1);
-transform_align2 (2,2) = rotational_matrix_OBB1 (2,2);
+transform_align2 (0,0) = rotated_matrix2 (0,0);
+transform_align2 (0,1) = rotated_matrix2 (0,1);
+transform_align2 (0,2) = rotated_matrix2 (0,2);
+transform_align2 (1,0) = rotated_matrix2 (1,0);
+transform_align2 (1,1) = rotated_matrix2 (1,1);
+transform_align2 (1,2) = rotated_matrix2 (1,2);
+transform_align2 (2,0) = rotated_matrix2 (2,0);
+transform_align2 (2,1) = rotated_matrix2 (2,1);
+transform_align2 (2,2) = rotated_matrix2 (2,2);
 
-transform_align2 (0,3) = position_OBB1.x;
-transform_align2 (1,3) = position_OBB1.y;
-transform_align2 (2,3) = position_OBB1.z;
+transform_align2 (0,3) = -position_OBB1.x;
+transform_align2 (1,3) = -position_OBB1.y;
+transform_align2 (2,3) = -position_OBB1.z;
 
 
 //Eigen::Affine3f transform_inverse1 = Eigen::Affine3f::Identity();
