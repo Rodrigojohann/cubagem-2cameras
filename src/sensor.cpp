@@ -94,26 +94,31 @@ cout << "\nCloud 2: " << cloud_raw2->points.size();
 
 passz.setInputCloud(cloud_raw1);
 passz.setFilterFieldName ("z");
-passz.setFilterLimits (-5000, 5000);
+passz.setFilterLimits (0, 5);
 passz.filter(*cloud_raw1);
 
 passz.setInputCloud(cloud_raw2);
 passz.setFilterFieldName ("z");
-passz.setFilterLimits (-5000, 5000);
+passz.setFilterLimits (0, 5);
 passz.filter(*cloud_raw2);
 
 cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 
 
-//float theta = M_PI;
+float theta1 = M_PI;
+float theta2 = M_PI;
 
-//Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
-//transform_2.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
+Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
+Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
+
+transform_1.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitX()));
+transform_2.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitX()));
 
 //std::cout << transform_2.matrix() << std::endl;
 
-//pcl::transformPointCloud (*cloud_raw1, *cloud_transformed, transform_2);
+pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
+pcl::transformPointCloud (*cloud_raw1, *cloud_transformed2, transform_2);
 
 
 //pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
@@ -154,7 +159,8 @@ cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 //transform_align1 (2,1) = rotated_matrix1 (2,1);
 //transform_align1 (2,2) = rotated_matrix1 (2,2);
 
-//transform_align1 (0,3) = -position_OBB1.x;
+//transform_align1 (0,3) = -position_OBB1.x;./cu
+
 //transform_align1 (1,3) = -position_OBB1.y;
 //transform_align1 (2,3) = -position_OBB1.z;
 
