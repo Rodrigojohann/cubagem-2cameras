@@ -86,6 +86,7 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     PointCloudT::Ptr                  output_cloud (new PointCloudT);
     PointCloudT::Ptr                  cloud_transformed1 (new PointCloudT);
     PointCloudT::Ptr                  cloud_transformed2 (new PointCloudT);
+    PointCloudT::Ptr                  cloud_transformed3 (new PointCloudT);
     pcl::PassThrough<pcl::PointXYZ>   passz;
 ////
     cloud_raw1.reset(new pcl::PointCloud<pcl::PointXYZ>);
