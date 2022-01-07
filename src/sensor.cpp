@@ -45,6 +45,11 @@ PointCloudT::Ptr Sensor::CamStream(char* ipAddress, unsigned short port)
         cloud_raw->points[i].z = pointCloud[i].z;
     }
 
+
+
+
+
+
     control.stopAcquisition();
     control.closeConnection();
     dataStream.closeConnection();
@@ -102,24 +107,34 @@ passz.setFilterFieldName ("z");
 passz.setFilterLimits (0, 5);
 passz.filter(*cloud_raw2);
 
+
 cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
 cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 
-
-float theta1 = M_PI;
-float theta2 = M_PI;
+float theta1 = -ANGLE1*(M_PI/180);
+float theta2 = -ANGLE2*(M_PI/180);
 
 Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
 Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
 
-transform_1.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitX()));
-transform_2.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitX()));
+transform_1.rotate (Eigen::AngleAxisf (theta1, Eigen::Vector3f::UnitX()));
+transform_2.rotate (Eigen::AngleAxisf (theta2, Eigen::Vector3f::UnitX()));
 
-//std::cout << transform_2.matrix() << std::endl;
+std::cout << transform_2.matrix() << std::endl;
 
 pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
-pcl::transformPointCloud (*cloud_raw1, *cloud_transformed2, transform_2);
+pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, transform_2);
 
+
+float theta3 = M_PI;
+Eigen::Affine3f transform_3 = Eigen::Affine3f::Identity();
+transform_3.rotate (Eigen::AngleAxisf (theta3, Eigen::Vector3f::UnitZ()));
+transform_3.translation() << 0.0, 3.05, 0.0;
+
+pcl::transformPointCloud (*cloud_transformed2, *cloud_transformed3, transform_3);
+
+//cloud_transformed1 = RemoveDistortion(cloud_raw1);
+//cloud_transformed2 = RemoveDistortion(cloud_transformed3);
 
 //pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
 
@@ -196,9 +211,43 @@ pcl::transformPointCloud (*cloud_raw1, *cloud_transformed2, transform_2);
 //icp.getFitnessScore() << std::endl;
 //std::cout << icp.getFinalTransformation() << std::endl;
 
-*output_cloud += *cloud_raw1;
-*output_cloud += *cloud_raw2;
+*output_cloud += *cloud_transformed1;
+//*output_cloud += *cloud_raw2;
+*output_cloud += *cloud_transformed3;
 
     return output_cloud;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PointCloudT::Ptr Sensor::RemoveDistortion(PointCloudT::Ptr inputcloud)
+{
+// var
+    PointCloudT::Ptr outputcloud(new PointCloudT);
+    double xi, yi, zi, xi_0, yi_0, zi_0;
+    double Ri;
+    double M;
+////
+
+    outputcloud->points.resize(inputcloud->points.size());
+
+    for(size_t i=0; i<outputcloud->points.size(); ++i)
+    {
+        xi_0 = (*inputcloud)[i].x;
+        yi_0 = (*inputcloud)[i].y;
+        zi_0 = (*inputcloud)[i].z;
+
+        Ri = sqrt(pow(xi_0, 2.0)+pow(yi_0, 2.0)+pow(zi_0, 2.0));
+        M = 1-0.5*((pow(xi_0, 2.0)*pow(tan(XANGLE), 2.0))+(pow(yi_0, 2.0)*pow(tan(YANGLE), 2.0)));
+
+        xi = xi_0*M*tan(XANGLE)*Ri;
+        yi = yi_0*M*tan(YANGLE)*Ri;
+        zi = M*Ri;
+
+        outputcloud->points[i].x = (xi);
+        outputcloud->points[i].y = (yi);
+        outputcloud->points[i].z = (zi);
+    }
+
+    return outputcloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

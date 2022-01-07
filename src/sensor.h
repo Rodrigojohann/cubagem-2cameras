@@ -12,7 +12,10 @@
 #include <pcl/filters/approximate_voxel_grid.h>
 #include <pcl/common/transforms.h>
 #include <pcl/features/moment_of_inertia_estimation.h>
+#include <config.h>
 
+#define XANGLE 0.60213859194
+#define YANGLE 0.48869219056
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 typedef std::vector<PointXYZ>          CloudVector;
@@ -23,4 +26,5 @@ public:
     PointCloudT::Ptr CamStream(char* ipAddress, unsigned short port);
     bool TestConnection(char* ipAddress, unsigned short port);
     PointCloudT::Ptr TwoCamStream(char* ipAddress1, char* ipAddress2, unsigned short port);
+    PointCloudT::Ptr RemoveDistortion(PointCloudT::Ptr inputcloud);
 };

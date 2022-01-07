@@ -7,3 +7,5 @@
 #define IP2 (char*)"192.168.130.195"
 #define PORT 2114
 #define Nsamples 1
+#define ANGLE1 16
+#define ANGLE2 28
