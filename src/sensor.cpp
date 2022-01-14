@@ -1,6 +1,13 @@
 #include "sensor.h"
 
 #include <pcl/features/normal_3d_omp.h>
+#include <pcl/features/fpfh_omp.h>
+#include <pcl/filters/filter.h>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/registration/icp.h>
+#include <pcl/registration/sample_consensus_prerejective.h>
+#include <pcl/segmentation/sac_segmentation.h>
 
 using namespace std;
 
@@ -118,7 +125,7 @@ passz.filter(*cloud_raw2);
 
 // Point clouds
 PointCloudT::Ptr object (new pcl::PointCloud<pcl::PointNormal>);
-PointCloudT::Ptr object_aligned (new pcl::PointCloud<pcl::PointNormal>);
+PointCloudT::Ptr object_aligned (new pcl::PointCloud<pcl::PointXYZ>);
 PointCloudT::Ptr scene (new pcl::PointCloud<pcl::PointNormal>);
 FeatureCloudT::Ptr object_features (new pcl::PointCloud<pcl::FPFHSignature33>);
 FeatureCloudT::Ptr scene_features (new pcl::PointCloud<pcl::FPFHSignature33>);
@@ -141,10 +148,11 @@ fest.setInputNormals (cloud_raw2);
 fest.compute (*scene_features);
 
 // Perform alignment
+const float leaf = 0.005f;
 pcl::SampleConsensusPrerejective<PointNT,PointNT,FeatureT> align;
-align.setInputSource (object);
+align.setInputSource (cloud_raw1);
 align.setSourceFeatures (object_features);
-align.setInputTarget (scene);
+align.setInputTarget (cloud_raw2);
 align.setTargetFeatures (scene_features);
 align.setMaximumIterations (50000); // Number of RANSAC iterations
 align.setNumberOfSamples (3); // Number of points to sample for generating/prerejecting a pose
