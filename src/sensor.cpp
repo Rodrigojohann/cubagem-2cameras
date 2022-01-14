@@ -1,6 +1,11 @@
 #include "sensor.h"
 
+#include <pcl/features/normal_3d_omp.h>
+
 using namespace std;
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PointCloudT::Ptr Sensor::CamStream(char* ipAddress, unsigned short port)
@@ -109,108 +114,75 @@ passz.setFilterLimits (0, 5);
 passz.filter(*cloud_raw2);
 
 
-cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
-cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
-
-float theta1 = -ANGLE1*(M_PI/180);
-float theta2 = -ANGLE2*(M_PI/180);
-
-Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
-Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
-
-transform_1.rotate (Eigen::AngleAxisf (theta1, Eigen::Vector3f::UnitX()));
-transform_2.rotate (Eigen::AngleAxisf (theta2, Eigen::Vector3f::UnitX()));
-
-std::cout << transform_2.matrix() << std::endl;
-
-pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
-pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, transform_2);
 
 
-float theta3 = M_PI;
-Eigen::Affine3f transform_3 = Eigen::Affine3f::Identity();
-transform_3.rotate (Eigen::AngleAxisf (theta3, Eigen::Vector3f::UnitZ()));
-transform_3.translation() << 0.0, 3.05, 0.0;
-
-pcl::transformPointCloud (*cloud_transformed2, *cloud_transformed3, transform_3);
-
-//cloud_transformed1 = RemoveDistortion(cloud_raw1);
-//cloud_transformed2 = RemoveDistortion(cloud_transformed3);
-
-//pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
+// Point clouds
+PointCloudT::Ptr object (new pcl::PointCloud<pcl::PointNormal>);
+PointCloudT::Ptr object_aligned (new pcl::PointCloud<pcl::PointNormal>);
+PointCloudT::Ptr scene (new pcl::PointCloud<pcl::PointNormal>);
+FeatureCloudT::Ptr object_features (new pcl::PointCloud<pcl::FPFHSignature33>);
+FeatureCloudT::Ptr scene_features (new pcl::PointCloud<pcl::FPFHSignature33>);
 
 
+// Estimate normals for scene
+pcl::NormalEstimationOMP<pcl::PointXYZ,pcl::PointXYZ> nest;
+nest.setRadiusSearch (0.01);
+nest.setInputCloud (cloud_raw2);
+nest.compute (*cloud_raw2);
 
-//pcl::PointXYZ min_point_OBB1;
-//pcl::PointXYZ max_point_OBB1;
-//pcl::PointXYZ position_OBB1;
-//Eigen::Matrix3f rotational_matrix_OBB1;
+// Estimate features
+pcl::FPFHEstimationOMP<pcl::PointXYZ, pcl::PointXYZ, pcl::FPFHSignature33> fest;
+fest.setRadiusSearch (0.025);
+fest.setInputCloud (cloud_raw1);
+fest.setInputNormals (cloud_raw1);
+fest.compute (*object_features);
+fest.setInputCloud (cloud_raw2);
+fest.setInputNormals (cloud_raw2);
+fest.compute (*scene_features);
 
-//feature_extractor.setInputCloud (cloud_transformed);
-//feature_extractor.compute ();
-//feature_extractor.getOBB (min_point_OBB1, max_point_OBB1, position_OBB1, rotational_matrix_OBB1);
+// Perform alignment
+pcl::SampleConsensusPrerejective<PointNT,PointNT,FeatureT> align;
+align.setInputSource (object);
+align.setSourceFeatures (object_features);
+align.setInputTarget (scene);
+align.setTargetFeatures (scene_features);
+align.setMaximumIterations (50000); // Number of RANSAC iterations
+align.setNumberOfSamples (3); // Number of points to sample for generating/prerejecting a pose
+align.setCorrespondenceRandomness (5); // Number of nearest features to use
+align.setSimilarityThreshold (0.9f); // Polygonal edge length similarity threshold
+align.setMaxCorrespondenceDistance (2.5f * leaf); // Inlier threshold
+align.setInlierFraction (0.25f); // Required inlier fraction for accepting a pose hypothesis
+{
+  pcl::ScopeTime t("Alignment");
+  align.align (*object_aligned);
+}
 
-//Eigen::Matrix3f rotated_matrix1 = rotational_matrix_OBB1.inverse();
+//cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
+//cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
 
-//pcl::PointXYZ min_point_OBB2;
-//pcl::PointXYZ max_point_OBB2;
-//pcl::PointXYZ position_OBB2;
-//Eigen::Matrix3f rotational_matrix_OBB2;
+//float theta1 = -ANGLE1*(M_PI/180);
+//float theta2 = -ANGLE2*(M_PI/180);
 
-//feature_extractor.setInputCloud (cloud_raw2);
-//feature_extractor.compute ();
-//feature_extractor.getOBB (min_point_OBB2, max_point_OBB2, position_OBB2, rotational_matrix_OBB2);
+//Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
+//Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
 
-//Eigen::Matrix3f rotated_matrix2 = rotational_matrix_OBB2.inverse();
+//transform_1.rotate (Eigen::AngleAxisf (theta1, Eigen::Vector3f::UnitX()));
+//transform_2.rotate (Eigen::AngleAxisf (theta2, Eigen::Vector3f::UnitX()));
 
-//Eigen::Matrix4f transform_align1 = Eigen::Matrix4f::Identity();
+//std::cout << transform_2.matrix() << std::endl;
 
-//transform_align1 (0,0) = rotated_matrix1 (0,0);
-//transform_align1 (0,1) = rotated_matrix1 (0,1);
-//transform_align1 (0,2) = rotated_matrix1 (0,2);
-//transform_align1 (1,0) = rotated_matrix1 (1,0);
-//transform_align1 (1,1) = rotated_matrix1 (1,1);
-//transform_align1 (1,2) = rotated_matrix1 (1,2);
-//transform_align1 (2,0) = rotated_matrix1 (2,0);
-//transform_align1 (2,1) = rotated_matrix1 (2,1);
-//transform_align1 (2,2) = rotated_matrix1 (2,2);
-
-//transform_align1 (0,3) = -position_OBB1.x;./cu
-
-//transform_align1 (1,3) = -position_OBB1.y;
-//transform_align1 (2,3) = -position_OBB1.z;
-
-//Eigen::Matrix4f transform_align2 = Eigen::Matrix4f::Identity();
-
-//transform_align2 (0,0) = rotated_matrix2 (0,0);
-//transform_align2 (0,1) = rotated_matrix2 (0,1);
-//transform_align2 (0,2) = rotated_matrix2 (0,2);
-//transform_align2 (1,0) = rotated_matrix2 (1,0);
-//transform_align2 (1,1) = rotated_matrix2 (1,1);
-//transform_align2 (1,2) = rotated_matrix2 (1,2);
-//transform_align2 (2,0) = rotated_matrix2 (2,0);
-//transform_align2 (2,1) = rotated_matrix2 (2,1);
-//transform_align2 (2,2) = rotated_matrix2 (2,2);
-
-//transform_align2 (0,3) = -position_OBB1.x;
-//transform_align2 (1,3) = -position_OBB1.y;
-//transform_align2 (2,3) = -position_OBB1.z;
+//pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
+//pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, transform_2);
 
 
-//pcl::transformPointCloud (*cloud_transformed, *cloud_transformed1, rotational_matrix_OBB1.inverse());
-//pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, rotational_matrix_OBB2.inverse());
+//float theta3 = M_PI;
+//Eigen::Affine3f transform_3 = Eigen::Affine3f::Identity();
+//transform_3.rotate (Eigen::AngleAxisf (theta3, Eigen::Vector3f::UnitZ()));
+//transform_3.translation() << 0.0, 3.05, 0.0;
+
+//pcl::transformPointCloud (*cloud_transformed2, *cloud_transformed3, transform_3);
 
 
-
-//pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-//icp.setInputSource(cloud_transformed);
-//icp.setInputTarget(cloud_raw2);
-
-//icp.align(*cloud_aligned);
-
-//std::cout << "has converged:" << icp.hasConverged() << " score: " <<
-//icp.getFitnessScore() << std::endl;
-//std::cout << icp.getFinalTransformation() << std::endl;
 
 *output_cloud += *cloud_transformed1;
 //*output_cloud += *cloud_raw2;
