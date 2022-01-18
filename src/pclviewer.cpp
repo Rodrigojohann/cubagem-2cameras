@@ -214,9 +214,9 @@ void PCLViewer::FramePallet()
 
 
                 cloud_hull.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                cloud_hull = c.ConvexHull(filteredcloud);
+                std::tie(cloud_hull, hullpolygons) = c.ConvexHull(filteredcloud);
 
-                viewer_->addPolygon<pcl::PointXYZ>(cloud_hull, 0, 0, 255, "polyline");
+                viewer_->addPolygonMesh<pcl::PointXYZ>(cloud_hull, hullpolygons, "polyline");
 
                 projectedcloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
                 projectedcloud = c.ProjectCloud(filteredcloud);

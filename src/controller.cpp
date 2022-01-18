@@ -391,16 +391,19 @@ PointCloudT::Ptr Controller::ProjectCloud(PointCloudT::Ptr inputcloud)
     return outputcloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Controller::ConvexHull(PointCloudT::Ptr inputcloud)
+std::tuple<PointCloudT::Ptr, std::vector<pcl::Vertices>> Controller::ConvexHull(PointCloudT::Ptr inputcloud)
 {
 // var
     PointCloudT::Ptr cloud_hull;
     pcl::ConvexHull<pcl::PointXYZ> chull;
+    std::vector<pcl::Vertices> polygons;
 ////
+    cloud_hull.reset(new PointCloudT);
+
     chull.setInputCloud(inputcloud);
     chull.setDimension(3);
-    chull.reconstruct(*cloud_hull);
+    chull.reconstruct(*cloud_hull, polygons);
 
-    return cloud_hull;
+    return std::make_tuple(cloud_hull, polygons);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
