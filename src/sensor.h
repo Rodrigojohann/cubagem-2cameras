@@ -14,6 +14,8 @@
 #include <pcl/features/moment_of_inertia_estimation.h>
 #include <config.h>
 
+#include <pcl/filters/voxel_grid.h>
+
 #define XANGLE 0.60213859194
 #define YANGLE 0.48869219056
 

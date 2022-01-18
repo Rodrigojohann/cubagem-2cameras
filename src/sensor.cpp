@@ -1,18 +1,6 @@
 #include "sensor.h"
 
-#include <pcl/features/normal_3d_omp.h>
-#include <pcl/features/fpfh_omp.h>
-#include <pcl/filters/filter.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/registration/icp.h>
-#include <pcl/registration/sample_consensus_prerejective.h>
-#include <pcl/segmentation/sac_segmentation.h>
-
 using namespace std;
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PointCloudT::Ptr Sensor::CamStream(char* ipAddress, unsigned short port)
@@ -56,11 +44,6 @@ PointCloudT::Ptr Sensor::CamStream(char* ipAddress, unsigned short port)
         cloud_raw->points[i].y = pointCloud[i].y;
         cloud_raw->points[i].z = pointCloud[i].z;
     }
-
-
-
-
-
 
     control.stopAcquisition();
     control.closeConnection();
@@ -120,81 +103,39 @@ passz.setFilterFieldName ("z");
 passz.setFilterLimits (0, 5);
 passz.filter(*cloud_raw2);
 
+cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
+cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
+
+float theta1 = -ANGLE1*(M_PI/180);
+float theta2 = -ANGLE2*(M_PI/180);
+
+Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
+Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
+
+transform_1.rotate (Eigen::AngleAxisf (theta1, Eigen::Vector3f::UnitX()));
+transform_2.rotate (Eigen::AngleAxisf (theta2, Eigen::Vector3f::UnitX()));
+
+std::cout << transform_2.matrix() << std::endl;
+
+pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
+pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, transform_2);
 
 
+float theta3 = M_PI;
+Eigen::Affine3f transform_3 = Eigen::Affine3f::Identity();
+transform_3.rotate (Eigen::AngleAxisf (theta3, Eigen::Vector3f::UnitZ()));
+transform_3.translation() << 0.0, 3.05, 0.0;
 
-// Point clouds
-PointCloudT::Ptr object (new pcl::PointCloud<pcl::PointNormal>);
-PointCloudT::Ptr object_aligned (new pcl::PointCloud<pcl::PointXYZ>);
-PointCloudT::Ptr scene (new pcl::PointCloud<pcl::PointNormal>);
-FeatureCloudT::Ptr object_features (new pcl::PointCloud<pcl::FPFHSignature33>);
-FeatureCloudT::Ptr scene_features (new pcl::PointCloud<pcl::FPFHSignature33>);
-
-
-// Estimate normals for scene
-pcl::NormalEstimationOMP<pcl::PointXYZ,pcl::PointXYZ> nest;
-nest.setRadiusSearch (0.01);
-nest.setInputCloud (cloud_raw2);
-nest.compute (*cloud_raw2);
-
-// Estimate features
-pcl::FPFHEstimationOMP<pcl::PointXYZ, pcl::PointXYZ, pcl::FPFHSignature33> fest;
-fest.setRadiusSearch (0.025);
-fest.setInputCloud (cloud_raw1);
-fest.setInputNormals (cloud_raw1);
-fest.compute (*object_features);
-fest.setInputCloud (cloud_raw2);
-fest.setInputNormals (cloud_raw2);
-fest.compute (*scene_features);
-
-// Perform alignment
-const float leaf = 0.005f;
-pcl::SampleConsensusPrerejective<PointNT,PointNT,FeatureT> align;
-align.setInputSource (cloud_raw1);
-align.setSourceFeatures (object_features);
-align.setInputTarget (cloud_raw2);
-align.setTargetFeatures (scene_features);
-align.setMaximumIterations (50000); // Number of RANSAC iterations
-align.setNumberOfSamples (3); // Number of points to sample for generating/prerejecting a pose
-align.setCorrespondenceRandomness (5); // Number of nearest features to use
-align.setSimilarityThreshold (0.9f); // Polygonal edge length similarity threshold
-align.setMaxCorrespondenceDistance (2.5f * leaf); // Inlier threshold
-align.setInlierFraction (0.25f); // Required inlier fraction for accepting a pose hypothesis
-{
-  pcl::ScopeTime t("Alignment");
-  align.align (*object_aligned);
-}
-
-//cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
-//cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
-
-//float theta1 = -ANGLE1*(M_PI/180);
-//float theta2 = -ANGLE2*(M_PI/180);
-
-//Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
-//Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
-
-//transform_1.rotate (Eigen::AngleAxisf (theta1, Eigen::Vector3f::UnitX()));
-//transform_2.rotate (Eigen::AngleAxisf (theta2, Eigen::Vector3f::UnitX()));
-
-//std::cout << transform_2.matrix() << std::endl;
-
-//pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
-//pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, transform_2);
-
-
-//float theta3 = M_PI;
-//Eigen::Affine3f transform_3 = Eigen::Affine3f::Identity();
-//transform_3.rotate (Eigen::AngleAxisf (theta3, Eigen::Vector3f::UnitZ()));
-//transform_3.translation() << 0.0, 3.05, 0.0;
-
-//pcl::transformPointCloud (*cloud_transformed2, *cloud_transformed3, transform_3);
-
+pcl::transformPointCloud (*cloud_transformed2, *cloud_transformed3, transform_3);
 
 
 *output_cloud += *cloud_transformed1;
-//*output_cloud += *cloud_raw2;
 *output_cloud += *cloud_transformed3;
+
+pcl::VoxelGrid<pcl::PointXYZ> sor;
+sor.setInputCloud (output_cloud);
+sor.setLeafSize (0.01f, 0.01f, 0.01f);
+sor.filter (*output_cloud);
 
     return output_cloud;
 }
