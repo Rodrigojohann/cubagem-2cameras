@@ -30,5 +30,5 @@ public:
     double                                          SurfaceArea(PointCloudT::Ptr inputcloud);
     double                                          PalletArea(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                ProjectCloud(PointCloudT::Ptr inputcloud);
-
+    PointCloudT::Ptr                                ConvexHull(PointCloudT::Ptr inputcloud);
 };

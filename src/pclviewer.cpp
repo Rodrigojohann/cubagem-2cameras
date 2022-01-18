@@ -212,6 +212,12 @@ void PCLViewer::FramePallet()
                     coloredcloud->points[i].a = 255;
                 }
 
+
+                cloud_hull.reset(new pcl::PointCloud<pcl::PointXYZ>);
+                cloud_hull = c.ConvexHull(filteredcloud);
+
+                viewer_->addPolygon<pcl::PointXYZ>(cloud_hull, 0, 0, 255, "polyline");
+
                 projectedcloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
                 projectedcloud = c.ProjectCloud(filteredcloud);
 
