@@ -123,7 +123,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
                     objvolume = hullarea*dimensionZ;
                     totalvolume += objvolume;
 
-                   // viewer_->updatePointCloud(coloredcloud, to_string(number));
+                    viewer_->updatePointCloud(coloredcloud, to_string(number));
                 }
             }
             volumemean += totalvolume;

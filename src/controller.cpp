@@ -398,7 +398,7 @@ PointCloudT::Ptr Controller::ConvexHull(PointCloudT::Ptr inputcloud)
     pcl::ConvexHull<pcl::PointXYZ> chull;
 ////
     chull.setInputCloud(inputcloud);
-    chull.setDimension(3)
+    chull.setDimension(3);
     chull.reconstruct(*cloud_hull);
 
     return cloud_hull;
