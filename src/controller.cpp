@@ -198,35 +198,34 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     pcl::PointXYZ                                  centroid;
     pcl::SACSegmentation<pcl::PointXYZ>            seg;
     pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
-    pcl::ModelCoefficients::Ptr coefficients new pcl::ModelCoefficients());
+    pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients());
     pcl::ExtractIndices<pcl::PointXYZ> extract;
     PointCloudT::Ptr cloud_plane (new PointCloudT);
 ////
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
-    
+
     seg.setOptimizeCoefficients (true);
     seg.setModelType (pcl::SACMODEL_PLANE);
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setMaxIterations (1000);
     seg.setDistanceThreshold (0.01);
-    
+
     seg.setInputCloud(inputcloud);
     seg.segment (*inliers, *coefficients);
-    
+
     extract.setInputCloud (inputcloud);
     extract.setIndices (inliers);
     extract.setNegative (false);
-    extract.filter (*cloud_p);
+    extract.filter (*cloud_plane);
 
-
-    pcl::computeCentroid(*inputcloud, centroid);
+    pcl::computeCentroid(*cloud_plane, centroid);
 
     passz.setInputCloud(inputcloud);
     passz.setFilterFieldName ("z");
     passz.setFilterLimits ((minPt.z-0.1), (minPt.z+0.1));
     passz.filter(*inputcloud);
 
-    feature_extractor.setInputCloud(inputcloud);
+    feature_extractor.setInputCloud(cloud_plane);
     feature_extractor.compute();
     feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
 
