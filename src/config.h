@@ -1,5 +1,5 @@
 #define  CAMHEIGHT 3.6
-#define  X_MIN 1.0
+#define  X_MIN 0.7
 #define  X_MAX 1.5
 #define  Y_MIN 0.0
 #define  Y_MAX 2.0

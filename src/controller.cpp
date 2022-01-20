@@ -197,15 +197,28 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     pcl::PassThrough<pcl::PointXYZ>                passz;
     pcl::PointXYZ                                  centroid;
     pcl::SACSegmentation<pcl::PointXYZ>            seg;
+    pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+    pcl::ModelCoefficients::Ptr coefficients new pcl::ModelCoefficients());
+    pcl::ExtractIndices<pcl::PointXYZ> extract;
+    PointCloudT::Ptr cloud_plane (new PointCloudT);
 ////
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
     
     seg.setOptimizeCoefficients (true);
     seg.setModelType (pcl::SACMODEL_PLANE);
     seg.setMethodType (pcl::SAC_RANSAC);
-    seg.setDistanceThreshold (0.05);
+    seg.setMaxIterations (1000);
+    seg.setDistanceThreshold (0.01);
     
+    seg.setInputCloud(inputcloud);
+    seg.segment (*inliers, *coefficients);
     
+    extract.setInputCloud (inputcloud);
+    extract.setIndices (inliers);
+    extract.setNegative (false);
+    extract.filter (*cloud_p);
+
+
     pcl::computeCentroid(*inputcloud, centroid);
 
     passz.setInputCloud(inputcloud);

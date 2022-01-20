@@ -12,6 +12,7 @@
 #include <pcl/surface/convex_hull.h>
 #include <config.h>
 #include <pcl/common/centroid.h>
+#include <pcl/filters/extract_indices.h>
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
