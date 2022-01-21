@@ -34,11 +34,11 @@ class PCLViewer : public QMainWindow
   public Q_SLOTS:
 
     void FrameBox();
-    void FramePallet();
+    void FrameGeneric();
     void CleanBox();
     void CleanPallet();
     void FrameBoxInPallet();
-    void FrameGeneric();
+    void FrameGenericInPallet();
     void CleanBoxInPallet();
     void CleanGeneric();
 

@@ -19,13 +19,13 @@ PCLViewer::PCLViewer (QWidget *parent) :
     connect (ui->pushButton_1, SIGNAL(released()), this, SLOT(FrameBox()));
 
     connect (ui->pushButton_2, SIGNAL(pressed()), this, SLOT(CleanPallet()));
-    connect (ui->pushButton_2, SIGNAL(released()), this, SLOT(FramePallet()));
+    connect (ui->pushButton_2, SIGNAL(released()), this, SLOT(FrameGeneric()));
 
     connect (ui->pushButton_3, SIGNAL(pressed()), this, SLOT(CleanBoxInPallet()));
     connect (ui->pushButton_3, SIGNAL(released()), this, SLOT(FrameBoxInPallet()));
 
     connect (ui->pushButton_4, SIGNAL(pressed()), this, SLOT(CleanGeneric()));
-    connect (ui->pushButton_4, SIGNAL(released()), this, SLOT(FrameGeneric()));
+    connect (ui->pushButton_4, SIGNAL(released()), this, SLOT(FrameGenericInPallet()));
 
     // Set up the QVTK window
     viewer_.reset(new pcl::visualization::PCLVisualizer("viewer", false));
@@ -161,7 +161,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::FramePallet()
+void PCLViewer::FrameGeneric()
 {
     ////////
     Controller c;
@@ -282,7 +282,7 @@ void PCLViewer::FrameBoxInPallet()
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::FrameGeneric()
+void PCLViewer::FrameGenericInPallet()
 {
 
 }
