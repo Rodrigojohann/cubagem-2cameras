@@ -103,7 +103,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Palete</string>
+          <string>Outros</string>
          </property>
         </widget>
        </item>
@@ -139,7 +139,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Carga (não cúbica)</string>
+          <string>Outros (em palete)</string>
          </property>
         </widget>
        </item>
