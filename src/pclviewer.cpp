@@ -340,16 +340,59 @@ void PCLViewer::CleanGeneric()
     ui->label_2->setText(QString::fromStdString("0.0 kg"));
     ui->qvtkWidget->update();
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::CleanBoxInPallet()
 {
+    viewer_->removeAllPointClouds();
 
+    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+
+    viewer_->resetCamera();
+    viewer_->setCameraPosition(0, 0, -3, 0, -1.3, -1);
+
+    viewer_->addPointCloud(coloredinput, "inputcloud");
+    viewer_->addPointCloud(coloredcloud, to_string(0));
+    viewer_->addPointCloud(coloredcloud, to_string(1));
+    viewer_->addPointCloud(coloredcloud, to_string(2));
+    viewer_->addPointCloud(coloredcloud, to_string(3));
+    viewer_->addPointCloud(coloredcloud, to_string(4));
+
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(1));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(2));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(3));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(4));
+
+    volumemean = 0.0;
+
+    ui->label_2->setStyleSheet("font-weight: bold");
+    ui->label_2->setText(QString::fromStdString("0.0 kg"));
+    ui->qvtkWidget->update();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::CleanGenericInPallet()
 {
+    viewer_->removeAllPointClouds();
 
+    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+
+    viewer_->resetCamera();
+    viewer_->setCameraPosition(0, 0, -3, 0, -1.3, -1);
+
+    viewer_->addPointCloud(coloredinput, "inputcloud");
+    viewer_->addPointCloud(coloredcloud, to_string(0));
+
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
+
+    minZ = 0.0;
+
+    ui->label_2->setStyleSheet("font-weight: bold");
+    ui->label_2->setText(QString::fromStdString("0.0 kg"));
+    ui->qvtkWidget->update();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PCLViewer::~PCLViewer()
