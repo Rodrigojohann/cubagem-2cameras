@@ -440,19 +440,20 @@ void PCLViewer::FrameGenericInPallet()
                 }
 
                 filteredcloud = c.FilterCloud(cloudnew);
+                cloud_palletremoved = c.RemovePallet(filteredcloud);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
                 coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
                 viewer_->updatePointCloud (coloredcloud, to_string(0));
 
-                coloredcloud->points.resize(filteredcloud->points.size());
+                coloredcloud->points.resize(cloud_palletremoved->points.size());
 
-                for(size_t i=0; i<filteredcloud->points.size(); ++i)
+                for(size_t i=0; i<cloud_palletremoved->points.size(); ++i)
                 {
-                    coloredcloud->points[i].x = (*filteredcloud)[i].x;
-                    coloredcloud->points[i].y = (*filteredcloud)[i].y;
-                    coloredcloud->points[i].z = (*filteredcloud)[i].z;
+                    coloredcloud->points[i].x = (*cloud_palletremoved)[i].x;
+                    coloredcloud->points[i].y = (*cloud_palletremoved)[i].y;
+                    coloredcloud->points[i].z = (*cloud_palletremoved)[i].z;
 
                     coloredcloud->points[i].r = cloudcolor[0][0];
                     coloredcloud->points[i].g = cloudcolor[0][1];
@@ -462,14 +463,14 @@ void PCLViewer::FrameGenericInPallet()
 
 
                 cloud_hull.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                std::tie(cloud_hull, hullpolygons) = c.ConvexHull(filteredcloud);
+                std::tie(cloud_hull, hullpolygons) = c.ConvexHull(cloud_palletremoved);
 
                 //viewer_->addPolygonMesh<pcl::PointXYZ>(cloud_hull, hullpolygons, "polyline");
 
                 projectedcloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                projectedcloud = c.ProjectCloud(filteredcloud);
+                projectedcloud = c.ProjectCloud(cloud_palletremoved);
 
-                std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsPallet(filteredcloud);
+                std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsPallet(cloud_palletremoved);
                 palletarea = c.PalletArea(projectedcloud);
 
                 if (counter == 0)
