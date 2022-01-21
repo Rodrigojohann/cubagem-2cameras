@@ -152,7 +152,7 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
 
     pass_z.setInputCloud(inputcloud);
     pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits(0, CAMHEIGHT-PALLETHEIGHT));
+    pass_z.setFilterLimits(0, (CAMHEIGHT-PALLETHEIGHT));
     pass_z.filter(*filtered_cloud);
 
     return filtered_cloud;
