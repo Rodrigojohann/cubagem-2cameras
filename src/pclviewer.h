@@ -35,12 +35,12 @@ class PCLViewer : public QMainWindow
 
     void FrameBox();
     void FrameGeneric();
-    void CleanBox();
-    void CleanPallet();
     void FrameBoxInPallet();
     void FrameGenericInPallet();
-    void CleanBoxInPallet();
+    void CleanBox();
     void CleanGeneric();
+    void CleanBoxInPallet();
+    void CleanGenericInPallet();
 
   protected:
 

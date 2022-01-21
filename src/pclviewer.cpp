@@ -18,13 +18,13 @@ PCLViewer::PCLViewer (QWidget *parent) :
     connect (ui->pushButton_1, SIGNAL(pressed()), this, SLOT(CleanBox()));
     connect (ui->pushButton_1, SIGNAL(released()), this, SLOT(FrameBox()));
 
-    connect (ui->pushButton_2, SIGNAL(pressed()), this, SLOT(CleanPallet()));
+    connect (ui->pushButton_2, SIGNAL(pressed()), this, SLOT(CleanGeneric()));
     connect (ui->pushButton_2, SIGNAL(released()), this, SLOT(FrameGeneric()));
 
     connect (ui->pushButton_3, SIGNAL(pressed()), this, SLOT(CleanBoxInPallet()));
     connect (ui->pushButton_3, SIGNAL(released()), this, SLOT(FrameBoxInPallet()));
 
-    connect (ui->pushButton_4, SIGNAL(pressed()), this, SLOT(CleanGeneric()));
+    connect (ui->pushButton_4, SIGNAL(pressed()), this, SLOT(CleanGenericInPallet()));
     connect (ui->pushButton_4, SIGNAL(released()), this, SLOT(FrameGenericInPallet()));
 
     // Set up the QVTK window
@@ -318,7 +318,7 @@ void PCLViewer::CleanBox()
     ui->qvtkWidget->update();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::CleanPallet()
+void PCLViewer::CleanGeneric()
 {
     viewer_->removeAllPointClouds();
 
@@ -347,7 +347,7 @@ void PCLViewer::CleanBoxInPallet()
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::CleanGeneric()
+void PCLViewer::CleanGenericInPallet()
 {
 
 }
