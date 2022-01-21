@@ -9,3 +9,4 @@
 #define Nsamples 1
 #define ANGLE1 16
 #define ANGLE2 28
+#define PALLETHEIGHT 0.135

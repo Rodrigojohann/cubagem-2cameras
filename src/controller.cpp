@@ -141,6 +141,23 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     return outputcloud2;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
+{
+// var
+    PointCloudT::Ptr                filtered_cloud (new PointCloudT);
+    pcl::PointXYZ                   minPt, maxPt;
+    pcl::PassThrough<pcl::PointXYZ> pass_z;
+////
+    pcl::getMinMax3D(*inputcloud, minPt, maxPt);
+
+    pass_z.setInputCloud(inputcloud);
+    pass_z.setFilterFieldName("z");
+    pass_z.setFilterLimits(0, CAMHEIGHT-PALLETHEIGHT));
+    pass_z.filter(*filtered_cloud);
+
+    return filtered_cloud;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
 {
 // var
@@ -250,8 +267,11 @@ std::tuple<float, float, float> Controller::CalculateDimensionsPallet(PointCloud
     std::vector <pcl::PointIndices>                clusters;
     std::vector<pcl::PointIndices>                 unsortedclusters;
     int                                            clustersize;
+    pcl::PointXYZ                                  centroid;
 ////
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
+
+    pcl::computeCentroid(*inputcloud, centroid);
 
 
     std::tie(unsortedclusters, clustersize) = CloudSegmentationPallet(inputcloud);
