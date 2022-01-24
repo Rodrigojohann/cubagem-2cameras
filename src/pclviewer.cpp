@@ -198,60 +198,69 @@ void PCLViewer::FrameGeneric()
                 }
 
                 filteredcloud = c.FilterCloud(cloudnew);
+                std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
+
+                notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+                clusters = nonorientedclusters;//c.RemoveInclined(filteredcloud, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
-                coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-                viewer_->updatePointCloud (coloredcloud, to_string(0));
-
-                coloredcloud->points.resize(filteredcloud->points.size());
-
-                for(size_t i=0; i<filteredcloud->points.size(); ++i)
+                if (clusters.size() > 5)
                 {
-                    coloredcloud->points[i].x = (*filteredcloud)[i].x;
-                    coloredcloud->points[i].y = (*filteredcloud)[i].y;
-                    coloredcloud->points[i].z = (*filteredcloud)[i].z;
-
-                    coloredcloud->points[i].r = cloudcolor[0][0];
-                    coloredcloud->points[i].g = cloudcolor[0][1];
-                    coloredcloud->points[i].b = cloudcolor[0][2];
-                    coloredcloud->points[i].a = 255;
-                }
-
-
-                cloud_hull.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                std::tie(cloud_hull, hullpolygons) = c.ConvexHull(filteredcloud);
-
-                //viewer_->addPolygonMesh<pcl::PointXYZ>(cloud_hull, hullpolygons, "polyline");
-
-                projectedcloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                projectedcloud = c.ProjectCloud(filteredcloud);
-
-                std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsPallet(filteredcloud);
-                palletarea = c.PalletArea(projectedcloud);
-
-                if (counter == 0)
-                {
-                    minpalletarea = palletarea;
-                    minZ = dimensionZ;
+                    limitcluster = 5;
                 }
                 else
                 {
-                    if (palletarea < minpalletarea)
+                    limitcluster = clusters.size();
+                }
+
+                totalvolume = 0.0;
+                objvolume = 0.0;
+
+                coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+
+                viewer_->updatePointCloud(coloredcloud, to_string(0));
+                viewer_->updatePointCloud(coloredcloud, to_string(1));
+                viewer_->updatePointCloud(coloredcloud, to_string(2));
+                viewer_->updatePointCloud(coloredcloud, to_string(3));
+                viewer_->updatePointCloud(coloredcloud, to_string(4));
+
+                for (int number=0; number<limitcluster; ++number)
+                {
+                    segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
+                    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+                    coloredcloud->points.resize(clusters[number].indices.size());
+                    segmented_cloud->points.resize(clusters[number].indices.size());
+
+                    for(size_t i=0; i<clusters[number].indices.size(); ++i)
                     {
-                        minpalletarea = palletarea;
+                        segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                        segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                        segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+
+                        coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                        coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                        coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+
+                        coloredcloud->points[i].r = cloudcolor[number][0];
+                        coloredcloud->points[i].g = cloudcolor[number][1];
+                        coloredcloud->points[i].b = cloudcolor[number][2];
+                        coloredcloud->points[i].a = 255;
                     }
 
-                    if (dimensionZ < minZ)
-                    {
-                        minZ = dimensionZ;
-                    }
+                    hullarea = c.SurfaceArea(segmented_cloud);
+                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
+
+                    objvolume = hullarea*dimensionZ;
+                    totalvolume += objvolume;
+
+                    viewer_->updatePointCloud(coloredcloud, to_string(number));
                 }
-                viewer_->updatePointCloud (coloredcloud, to_string(0));
             }
+            volumemean += totalvolume;
         }
 
-        cubefactor = (minpalletarea*minZ)/5988.02395;
+        cubefactor = (volumemean/Nsamples)/5988.02395;
         cubefactor = floor((cubefactor*2)+0.5)/2;
 
         if (cubefactor >= 1000)
@@ -366,7 +375,7 @@ void PCLViewer::FrameBoxInPallet(){
                     hullarea = c.SurfaceArea(segmented_cloud);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
 
-                    dimensionZ = dimensionZ - PALLETHEIGHT;
+                    dimensionZ = dimensionZ - (PALLETHEIGHT*100);
 
                     objvolume = hullarea*dimensionZ;
                     totalvolume += objvolume;
