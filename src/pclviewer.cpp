@@ -477,7 +477,7 @@ void PCLViewer::FrameGenericInPallet()
                 projectedcloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
                 projectedcloud = c.ProjectCloud(cloud_palletremoved);
 
-                std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsPallet(cloud_palletremoved);
+                std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(cloud_palletremoved);
                 palletarea = c.PalletArea(projectedcloud);
 
                 if (counter == 0)

@@ -26,7 +26,7 @@ public:
     std::tuple<std::vector<pcl::PointIndices>, int> CloudSegmentation(PointCloudT::Ptr inputcloud);
     std::tuple<std::vector<pcl::PointIndices>, int> CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensions(PointCloudT::Ptr inputcloud);
-    std::tuple<float, float, float>                 CalculateDimensionsPallet(PointCloudT::Ptr inputcloud);
+    std::tuple<float, float, float>                 CalculateDimensionsGeneric(PointCloudT::Ptr inputcloud);
     bool                                            NormalOrientation (PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster);
     std::vector <pcl::PointIndices>                 RemoveInclined(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputclusters);
     double                                          SurfaceArea(PointCloudT::Ptr inputcloud);

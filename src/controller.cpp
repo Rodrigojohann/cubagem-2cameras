@@ -219,8 +219,6 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     pcl::ExtractIndices<pcl::PointXYZ> extract;
     PointCloudT::Ptr cloud_plane (new PointCloudT);
 ////
-    pcl::getMinMax3D(*inputcloud, minPt, maxPt);
-
     seg.setOptimizeCoefficients (true);
     seg.setModelType (pcl::SACMODEL_PLANE);
     seg.setMethodType (pcl::SAC_RANSAC);
@@ -239,7 +237,7 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
 
     passz.setInputCloud(inputcloud);
     passz.setFilterFieldName ("z");
-    passz.setFilterLimits ((minPt.z-0.1), (minPt.z+0.1));
+    passz.setFilterLimits ((centroid.z-0.1), (centroid.z+0.1));
     passz.filter(*inputcloud);
 
     feature_extractor.setInputCloud(cloud_plane);
@@ -253,7 +251,7 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::tuple<float, float, float> Controller::CalculateDimensionsPallet(PointCloudT::Ptr inputcloud)
+std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointCloudT::Ptr inputcloud)
 {
 // var
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
