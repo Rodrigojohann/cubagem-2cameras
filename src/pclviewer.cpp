@@ -161,129 +161,127 @@ PCLViewer::PCLViewer (QWidget *parent) :
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::FrameGeneric()
-{
-    ////////
-    Controller c;
-    Sensor s;
+void PCLViewer::FrameGeneric(){
+////////
+  Controller c;
+  Sensor s;
 
-    if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
-    {
-        TotalStr = "N/A";
-        ui->label_2->setText(QString::fromStdString(TotalStr));
-        ui->qvtkWidget->update();
-    }
-    else
-    {
-        for (size_t counter = 0; counter < Nsamples; ++counter)
-        {
-            cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
-            coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+  if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
+  {
+      TotalStr = "N/A";
+      ui->label_2->setText(QString::fromStdString(TotalStr));
+      ui->qvtkWidget->update();
+  }
+  else
+  {
+      for (size_t counter = 0; counter < Nsamples; ++counter)
+      {
+          cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
+          coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-            //cloudnew = s.CamStream(IP, PORT);
-            cloudnew = s.TwoCamStream(IP1, IP2, PORT);
-            coloredinput->points.resize(cloudnew->points.size());
+          //cloudnew = s.CamStream(IP, PORT);
+          cloudnew = s.TwoCamStream(IP1, IP2, PORT);
+          coloredinput->points.resize(cloudnew->points.size());
 
-            if (cloudnew->points.size() > 100)
-            {
-                for (size_t i = 0; i < coloredinput->points.size(); i++)
-                {
-                    coloredinput->points[i].x = (*cloudnew)[i].x;
-                    coloredinput->points[i].y = (*cloudnew)[i].y;
-                    coloredinput->points[i].z = (*cloudnew)[i].z;
-                    coloredinput->points[i].r = 255;
-                    coloredinput->points[i].g = 255;
-                    coloredinput->points[i].b = 255;
-                    coloredinput->points[i].a = 200;
-                }
+          if (cloudnew->points.size() > 100){
+              for (size_t i = 0; i < coloredinput->points.size(); i++)
+              {
+                  coloredinput->points[i].x = (*cloudnew)[i].x;
+                  coloredinput->points[i].y = (*cloudnew)[i].y;
+                  coloredinput->points[i].z = (*cloudnew)[i].z;
+                  coloredinput->points[i].r = 255;
+                  coloredinput->points[i].g = 255;
+                  coloredinput->points[i].b = 255;
+                  coloredinput->points[i].a = 200;
+              }
 
-                filteredcloud = c.FilterCloud(cloudnew);
-                std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
+              filteredcloud = c.FilterCloud(cloudnew);
+              std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-                notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-                clusters = nonorientedclusters;//c.RemoveInclined(filteredcloud, notorientedclusters);
+              notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+              clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
 
-                viewer_->updatePointCloud(coloredinput, "inputcloud");
+              viewer_->updatePointCloud(coloredinput, "inputcloud");
 
-                if (clusters.size() > 5)
-                {
-                    limitcluster = 5;
-                }
-                else
-                {
-                    limitcluster = clusters.size();
-                }
+              if (clusters.size() > 5)
+              {
+                  limitcluster = 5;
+              }
+              else
+              {
+                  limitcluster = clusters.size();
+              }
 
-                totalvolume = 0.0;
-                objvolume = 0.0;
+              totalvolume = 0.0;
+              objvolume = 0.0;
 
-                coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+              coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-                viewer_->updatePointCloud(coloredcloud, to_string(0));
-                viewer_->updatePointCloud(coloredcloud, to_string(1));
-                viewer_->updatePointCloud(coloredcloud, to_string(2));
-                viewer_->updatePointCloud(coloredcloud, to_string(3));
-                viewer_->updatePointCloud(coloredcloud, to_string(4));
+              viewer_->updatePointCloud(coloredcloud, to_string(0));
+              viewer_->updatePointCloud(coloredcloud, to_string(1));
+              viewer_->updatePointCloud(coloredcloud, to_string(2));
+              viewer_->updatePointCloud(coloredcloud, to_string(3));
+              viewer_->updatePointCloud(coloredcloud, to_string(4));
 
-                for (int number=0; number<limitcluster; ++number)
-                {
-                    segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-                    coloredcloud->points.resize(clusters[number].indices.size());
-                    segmented_cloud->points.resize(clusters[number].indices.size());
+              for (int number=0; number<limitcluster; ++number)
+              {
+                  segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
+                  coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+                  coloredcloud->points.resize(clusters[number].indices.size());
+                  segmented_cloud->points.resize(clusters[number].indices.size());
 
-                    for(size_t i=0; i<clusters[number].indices.size(); ++i)
-                    {
-                        segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                        segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                        segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+                  for(size_t i=0; i<clusters[number].indices.size(); ++i)
+                  {
+                      segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                      segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                      segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
-                        coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                        coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                        coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+                      coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                      coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                      coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
-                        coloredcloud->points[i].r = cloudcolor[number][0];
-                        coloredcloud->points[i].g = cloudcolor[number][1];
-                        coloredcloud->points[i].b = cloudcolor[number][2];
-                        coloredcloud->points[i].a = 255;
-                    }
+                      coloredcloud->points[i].r = cloudcolor[number][0];
+                      coloredcloud->points[i].g = cloudcolor[number][1];
+                      coloredcloud->points[i].b = cloudcolor[number][2];
+                      coloredcloud->points[i].a = 255;
+                  }
 
-                    hullarea = c.SurfaceArea(segmented_cloud);
-                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
+                  hullarea = c.SurfaceArea(segmented_cloud);
+                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
 
-                    objvolume = hullarea*dimensionZ;
-                    totalvolume += objvolume;
+                  objvolume = hullarea*dimensionZ;
+                  totalvolume += objvolume;
 
-                    viewer_->updatePointCloud(coloredcloud, to_string(number));
-                }
-            }
-            volumemean += totalvolume;
-        }
+                  viewer_->updatePointCloud(coloredcloud, to_string(number));
+              }
+          }
+          volumemean += totalvolume;
+      }
 
-        cubefactor = (volumemean/Nsamples)/5988.02395;
-        cubefactor = floor((cubefactor*2)+0.5)/2;
+      cubefactor = (volumemean/Nsamples)/5988.02395;
+      cubefactor = floor((cubefactor*2)+0.5)/2;
 
-        if (cubefactor >= 1000)
-        {
-            stringprecision = 6;
-        }
-        else if (cubefactor < 1000 and cubefactor >= 100)
-        {
-            stringprecision = 5;
-        }
-        else if (cubefactor < 100 and cubefactor >= 10)
-        {
-            stringprecision = 4;
-        }
-        else
-        {
-            stringprecision = 3;
-        }
+      if (cubefactor >= 1000)
+      {
+          stringprecision = 6;
+      }
+      else if (cubefactor < 1000 and cubefactor >= 100)
+      {
+          stringprecision = 5;
+      }
+      else if (cubefactor < 100 and cubefactor >= 10)
+      {
+          stringprecision = 4;
+      }
+      else
+      {
+          stringprecision = 3;
+      }
 
-        TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
-        ui->label_2->setText(QString::fromStdString(TotalStr));
-        ui->qvtkWidget->update();
-    }
+      TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
+      ui->label_2->setText(QString::fromStdString(TotalStr));
+      ui->qvtkWidget->update();
+  }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::FrameBoxInPallet(){
