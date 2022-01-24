@@ -570,11 +570,19 @@ void PCLViewer::CleanGeneric()
 
     viewer_->addPointCloud(coloredinput, "inputcloud");
     viewer_->addPointCloud(coloredcloud, to_string(0));
+    viewer_->addPointCloud(coloredcloud, to_string(1));
+    viewer_->addPointCloud(coloredcloud, to_string(2));
+    viewer_->addPointCloud(coloredcloud, to_string(3));
+    viewer_->addPointCloud(coloredcloud, to_string(4));
 
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(1));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(2));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(3));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(4));
 
-    minZ = 0.0;
+    volumemean = 0.0;
 
     ui->label_2->setStyleSheet("font-weight: bold");
     ui->label_2->setText(QString::fromStdString("0.0 kg"));
