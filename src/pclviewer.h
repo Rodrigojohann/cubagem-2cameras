@@ -14,6 +14,7 @@
 
 using namespace std;
 typedef std::vector<PointXYZ> CloudVector;
+typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
 namespace Ui
 {
@@ -46,11 +47,11 @@ class PCLViewer : public QMainWindow
 
     boost::shared_ptr<boost::thread> visualizer_thread_;
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr     cloudnew;
+    PointCloudT::Ptr     cloudnew;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr coloredinput;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr     filteredcloud;
+    PointCloudT::Ptr     filteredcloud;
     PointCloudT::Ptr                        cloud_palletremoved;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr     segmented_cloud;
+    PointCloudT::Ptr     segmented_cloud;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr coloredcloud;
     PointCloudT::Ptr                        projectedcloud;
     PointCloudT::Ptr                        cloud_hull;

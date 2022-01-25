@@ -53,7 +53,6 @@ PCLViewer::PCLViewer (QWidget *parent) :
     {
         for (size_t counter = 0; counter < Nsamples; ++counter)
         {
-            cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
             coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
             //cloudnew = s.CamStream(IP, PORT);
@@ -102,7 +101,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
                 for (int number=0; number<limitcluster; ++number)
                 {
-                    segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
+                    segmented_cloud.reset(new PointCloudT);
                     coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
                     coloredcloud->points.resize(clusters[number].indices.size());
                     segmented_cloud->points.resize(clusters[number].indices.size());
@@ -176,7 +175,6 @@ void PCLViewer::FrameGeneric(){
   {
       for (size_t counter = 0; counter < Nsamples; ++counter)
       {
-          cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
           coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
           //cloudnew = s.CamStream(IP, PORT);
@@ -225,7 +223,7 @@ void PCLViewer::FrameGeneric(){
 
               for (int number=0; number<limitcluster; ++number)
               {
-                  segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
+                  segmented_cloud.reset(new PointCloudT);
                   coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
                   coloredcloud->points.resize(clusters[number].indices.size());
                   segmented_cloud->points.resize(clusters[number].indices.size());
@@ -299,7 +297,6 @@ void PCLViewer::FrameBoxInPallet(){
     {
         for (size_t counter = 0; counter < Nsamples; ++counter)
         {
-            cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
             coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
             //cloudnew = s.CamStream(IP, PORT);
@@ -349,7 +346,7 @@ void PCLViewer::FrameBoxInPallet(){
 
                 for (int number=0; number<limitcluster; ++number)
                 {
-                    segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
+                    segmented_cloud.reset(new PointCloudT);
                     coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
                     coloredcloud->points.resize(clusters[number].indices.size());
                     segmented_cloud->points.resize(clusters[number].indices.size());
@@ -425,7 +422,6 @@ else
 {
   for (size_t counter = 0; counter < Nsamples; ++counter)
   {
-      cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
       coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
       //cloudnew = s.CamStream(IP, PORT);
@@ -475,7 +471,7 @@ else
 
           for (int number=0; number<limitcluster; ++number)
           {
-              segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
+              segmented_cloud.reset(new PointCloudT);
               coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
               coloredcloud->points.resize(clusters[number].indices.size());
               segmented_cloud->points.resize(clusters[number].indices.size());
@@ -640,11 +636,19 @@ void PCLViewer::CleanGenericInPallet()
 
     viewer_->addPointCloud(coloredinput, "inputcloud");
     viewer_->addPointCloud(coloredcloud, to_string(0));
+    viewer_->addPointCloud(coloredcloud, to_string(1));
+    viewer_->addPointCloud(coloredcloud, to_string(2));
+    viewer_->addPointCloud(coloredcloud, to_string(3));
+    viewer_->addPointCloud(coloredcloud, to_string(4));
 
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(1));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(2));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(3));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(4));
 
-    minZ = 0.0;
+    volumemean = 0.0;
 
     ui->label_2->setStyleSheet("font-weight: bold");
     ui->label_2->setText(QString::fromStdString("0.0 kg"));

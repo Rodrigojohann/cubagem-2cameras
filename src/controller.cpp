@@ -1,7 +1,6 @@
 #include "controller.h"
 
 using namespace std;
-typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector <pcl::PointIndices> Controller::SortClusters(std::vector <pcl::PointIndices> inputclusters, int size)
@@ -95,7 +94,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         seg.setInputCloud (outputcloud);
         seg.segment (*inliers, *coefficients);
 
-        outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
+        outputcloud1.reset(new PointCloudT);
         outputcloud1->points.resize(inliers->indices.size());
 
         for(size_t i=0; i < inliers->indices.size(); ++i)
@@ -112,7 +111,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     }
     else
     {
-        outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
+        outputcloud1.reset(new PointCloudT);
         outputcloud1->points.resize(inputcloud->points.size());
         for (size_t i=0; i < inputcloud->points.size(); ++i)
         {
@@ -344,10 +343,10 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
 {
 // var
     double                              hullarea;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_hull;
+    PointCloudT::Ptr cloud_hull;
     pcl::ConcaveHull<pcl::PointXYZ>     chull;
 ////
-    cloud_hull.reset(new pcl::PointCloud<pcl::PointXYZ>);
+    cloud_hull.reset(new PointCloudT);
     chull.setInputCloud (inputcloud);
     chull.setDimension(2);
     chull.setAlpha (0.1);
@@ -367,12 +366,12 @@ double Controller::PalletArea(PointCloudT::Ptr inputcloud)
 {
 // var
     double                              hullarea = 0.0;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_hull;
+    PointCloudT::Ptr cloud_hull;
     pcl::ConvexHull<pcl::PointXYZ>     chull;
 ////
     if (inputcloud->points.size() > 100)
     {
-        cloud_hull.reset(new pcl::PointCloud<pcl::PointXYZ>);
+        cloud_hull.reset(new PointCloudT);
         chull.setInputCloud (inputcloud);
         chull.setDimension(2);
         chull.reconstruct (*cloud_hull);
