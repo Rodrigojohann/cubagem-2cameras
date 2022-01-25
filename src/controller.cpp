@@ -162,8 +162,6 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
 {
 // var
     pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    
-    
     std::vector <pcl::PointIndices>                clusters;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
 ////
@@ -273,7 +271,7 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
 
     dimensionX = (max_point_OBB.x - min_point_OBB.x)*100;
     dimensionY = (max_point_OBB.y - min_point_OBB.y)*100;
-    dimensionZ = (CAMHEIGHT - centroid.z)*100;
+    dimensionZ = (CAMHEIGHT - minPt.z)*100;
 
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }

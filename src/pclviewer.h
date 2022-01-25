@@ -46,7 +46,6 @@ class PCLViewer : public QMainWindow
 
     boost::shared_ptr<boost::thread> visualizer_thread_;
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr     inputcloud;
     pcl::PointCloud<pcl::PointXYZ>::Ptr     cloudnew;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr coloredinput;
     pcl::PointCloud<pcl::PointXYZ>::Ptr     filteredcloud;
