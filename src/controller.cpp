@@ -256,13 +256,14 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
     pcl::PointXYZ                                  maxPt;
     pcl::PointXYZ                                  centroid;
     PointCloudT::Ptr                               cloud_filtered (new PointCloudT);
+    pcl::PassThrough<pcl::PointXYZ>                pass_z;
 ////
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
 
-    passz.setInputCloud(inputcloud);
-    passz.setFilterFieldName ("z");
-    passz.setFilterLimits ((minPt.z), (minPt.z+0.1));
-    passz.filter(*cloud_filtered);
+    pass_z.setInputCloud(inputcloud);
+    pass_z.setFilterFieldName ("z");
+    pass_z.setFilterLimits ((minPt.z), (minPt.z+0.1));
+    pass_z.filter(*cloud_filtered);
 
     pcl::computeCentroid(*cloud_filtered, centroid);
 
