@@ -247,7 +247,7 @@ void PCLViewer::FrameGeneric(){
                   }
 
                   hullarea = c.SurfaceArea(segmented_cloud);
-                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
+                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(segmented_cloud);
 
                   objvolume = hullarea*dimensionZ;
                   totalvolume += objvolume;

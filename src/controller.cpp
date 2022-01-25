@@ -204,14 +204,11 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
 {
 // var
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
-    pcl::PointXYZ                                  minPt;
-    pcl::PointXYZ                                  maxPt;
     pcl::PointXYZ                                  min_point_OBB;
     pcl::PointXYZ                                  max_point_OBB;
     pcl::PointXYZ                                  position_OBB;
     Eigen::Matrix3f                                rotational_matrix_OBB;
     float                                          dimensionX, dimensionY, dimensionZ;
-    pcl::PassThrough<pcl::PointXYZ>                passz;
     pcl::PointXYZ                                  centroid;
     pcl::SACSegmentation<pcl::PointXYZ>            seg;
     pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
@@ -235,11 +232,6 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
 
     pcl::computeCentroid(*cloud_plane, centroid);
 
-    passz.setInputCloud(inputcloud);
-    passz.setFilterFieldName ("z");
-    passz.setFilterLimits ((centroid.z-0.1), (centroid.z+0.1));
-    passz.filter(*inputcloud);
-
     feature_extractor.setInputCloud(cloud_plane);
     feature_extractor.compute();
     feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
@@ -255,39 +247,33 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
 {
 // var
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
-    pcl::PointXYZ                                  minPt;
-    pcl::PointXYZ                                  maxPt;
     pcl::PointXYZ                                  min_point_OBB;
     pcl::PointXYZ                                  max_point_OBB;
     pcl::PointXYZ                                  position_OBB;
     Eigen::Matrix3f                                rotational_matrix_OBB;
     float                                          dimensionX, dimensionY, dimensionZ;
-    std::vector <pcl::PointIndices>                clusters;
-    std::vector<pcl::PointIndices>                 unsortedclusters;
-    int                                            clustersize;
+    pcl::PointXYZ                                  minPt;
+    pcl::PointXYZ                                  maxPt;
     pcl::PointXYZ                                  centroid;
+    PointCloudT::Ptr                               cloud_filtered (new PointCloudT);
 ////
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
 
-    pcl::computeCentroid(*inputcloud, centroid);
+    passz.setInputCloud(inputcloud);
+    passz.setFilterFieldName ("z");
+    passz.setFilterLimits ((minPt.z), (minPt.z+0.1));
+    passz.filter(*cloud_filtered);
 
+    pcl::computeCentroid(*cloud_filtered, centroid);
 
-    std::tie(unsortedclusters, clustersize) = CloudSegmentationPallet(inputcloud);
-    clusters = SortClustersPallet(unsortedclusters, clustersize);
+    feature_extractor.setInputCloud(inputcloud);
+    feature_extractor.compute();
+    feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
 
+    dimensionX = (max_point_OBB.x - min_point_OBB.x)*100;
+    dimensionY = (max_point_OBB.y - min_point_OBB.y)*100;
+    dimensionZ = (CAMHEIGHT - centroid.z)*100;
 
-    dimensionX = dimensionY = dimensionZ = 0.0;
-
-    if (inputcloud->points.size()> 10){
-
-        feature_extractor.setInputCloud(inputcloud);
-        feature_extractor.compute();
-        feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
-
-        dimensionX = (max_point_OBB.x - min_point_OBB.x)*100;
-        dimensionY = (max_point_OBB.y - min_point_OBB.y)*100;
-        dimensionZ = (CAMHEIGHT - minPt.z - 0.05)*100;
-    }
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
