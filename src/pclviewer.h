@@ -13,8 +13,9 @@
 #include <math.h>
 
 using namespace std;
-typedef std::vector<PointXYZ>          CloudVector;
-typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
+typedef std::vector<PointXYZ>              CloudVector;
+typedef pcl::PointCloud<pcl::PointXYZ>     PointCloudT;
+typedef pcl::PointCloud<pcl::PointXYZRGBA> ColoredCloudT;
 
 namespace Ui
 {
@@ -52,8 +53,8 @@ class PCLViewer : public QMainWindow
     PointCloudT::Ptr                                     segmented_cloud;
     PointCloudT::Ptr                                     projectedcloud;
     PointCloudT::Ptr                                     cloud_hull;
-    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr              coloredinput;
-    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr              coloredcloud;
+    ColoredCloudT::Ptr                                   coloredinput;
+    ColoredCloudT::Ptr                                   coloredcloud;
     std::vector<pcl::Vertices>                           hullpolygons;
     std::vector<pcl::PointIndices>                       unsortedclusters;
     std::vector<pcl::PointIndices>                       notorientedclusters;

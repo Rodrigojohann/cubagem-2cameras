@@ -97,7 +97,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 for (int number=0; number<limitcluster; ++number)
                 {
                     segmented_cloud.reset(new PointCloudT);
-                    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+                    coloredcloud.reset(new ColoredCloudT);
                     coloredcloud->points.resize(clusters[number].indices.size());
                     segmented_cloud->points.resize(clusters[number].indices.size());
 
@@ -214,7 +214,7 @@ void PCLViewer::FrameGeneric(){
               for (int number=0; number<limitcluster; ++number)
               {
                   segmented_cloud.reset(new PointCloudT);
-                  coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+                  coloredcloud.reset(new ColoredCloudT);
                   coloredcloud->points.resize(clusters[number].indices.size());
                   segmented_cloud->points.resize(clusters[number].indices.size());
 
@@ -332,7 +332,7 @@ void PCLViewer::FrameBoxInPallet(){
                 for (int number=0; number<limitcluster; ++number)
                 {
                     segmented_cloud.reset(new PointCloudT);
-                    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+                    coloredcloud.reset(new ColoredCloudT);
                     coloredcloud->points.resize(clusters[number].indices.size());
                     segmented_cloud->points.resize(clusters[number].indices.size());
 
@@ -452,7 +452,7 @@ else
           for (int number=0; number<limitcluster; ++number)
           {
               segmented_cloud.reset(new PointCloudT);
-              coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+              coloredcloud.reset(new ColoredCloudT);
               coloredcloud->points.resize(clusters[number].indices.size());
               segmented_cloud->points.resize(clusters[number].indices.size());
 
@@ -515,8 +515,8 @@ void PCLViewer::CleanBox()
 {
     viewer_->removeAllPointClouds();
 
-    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    coloredinput.reset(new ColoredCloudT);
+    coloredcloud.reset(new ColoredCloudT);
 
     viewer_->resetCamera();
     viewer_->setCameraPosition(0, 0, -3, 0, -1.3, -1);
@@ -546,8 +546,8 @@ void PCLViewer::CleanGeneric()
 {
     viewer_->removeAllPointClouds();
 
-    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    coloredinput.reset(new ColoredCloudT);
+    coloredcloud.reset(new ColoredCloudT);
 
     viewer_->resetCamera();
     viewer_->setCameraPosition(0, 0, -3, 0, -1.3, -1);
@@ -577,8 +577,8 @@ void PCLViewer::CleanBoxInPallet()
 {
     viewer_->removeAllPointClouds();
 
-    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    coloredinput.reset(new ColoredCloudT);
+    coloredcloud.reset(new ColoredCloudT);
 
     viewer_->resetCamera();
     viewer_->setCameraPosition(0, 0, -3, 0, -1.3, -1);
@@ -608,8 +608,8 @@ void PCLViewer::CleanGenericInPallet()
 {
     viewer_->removeAllPointClouds();
 
-    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    coloredinput.reset(new ColoredCloudT);
+    coloredcloud.reset(new ColoredCloudT);
 
     viewer_->resetCamera();
     viewer_->setCameraPosition(0, 0, -3, 0, -1.3, -1);
