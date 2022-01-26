@@ -13,7 +13,7 @@
 #include <math.h>
 
 using namespace std;
-typedef std::vector<PointXYZ> CloudVector;
+typedef std::vector<PointXYZ>          CloudVector;
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
 namespace Ui
@@ -29,8 +29,7 @@ class PCLViewer : public QMainWindow
 
   explicit
     PCLViewer (QWidget *parent = 0);
-
-    ~PCLViewer ();
+   ~PCLViewer ();
 
   public Q_SLOTS:
 
@@ -45,33 +44,33 @@ class PCLViewer : public QMainWindow
 
   protected:
 
-    boost::shared_ptr<boost::thread> visualizer_thread_;
+    boost::shared_ptr<boost::thread>                     visualizer_thread_;
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
-    PointCloudT::Ptr     cloudnew;
-    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr coloredinput;
-    PointCloudT::Ptr     filteredcloud;
-    PointCloudT::Ptr                        cloud_palletremoved;
-    PointCloudT::Ptr     segmented_cloud;
-    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr coloredcloud;
-    PointCloudT::Ptr                        projectedcloud;
-    PointCloudT::Ptr                        cloud_hull;
-    std::vector<pcl::Vertices>              hullpolygons;
-    std::vector<pcl::PointIndices>          unsortedclusters;
-    std::vector<pcl::PointIndices>          notorientedclusters;
-    std::vector<pcl::PointIndices>          clusters;
-    int                                     cloudcolor[5][3] = {{0, 0, 255}, {0, 220, 0}, {255, 0, 0}, {200, 200, 0}, {255, 0, 255}};
-    int                                     clustersize;
-    double                                  dimensionX, dimensionY, dimensionZ;
-    double                                  minZ;
-    double                                  objvolume, totalvolume;
-    double                                  volumemean;
-    string                                  TotalStr;
-    int                                     limitcluster;
-    double                                  hullarea;
-    double                                  palletarea;
-    double                                  minpalletarea;
-    int                                     stringprecision;
-    double                                  cubefactor;
+    PointCloudT::Ptr                                     cloudnew;
+    PointCloudT::Ptr                                     filteredcloud;
+    PointCloudT::Ptr                                     cloud_palletremoved;
+    PointCloudT::Ptr                                     segmented_cloud;
+    PointCloudT::Ptr                                     projectedcloud;
+    PointCloudT::Ptr                                     cloud_hull;
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr              coloredinput;
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr              coloredcloud;
+    std::vector<pcl::Vertices>                           hullpolygons;
+    std::vector<pcl::PointIndices>                       unsortedclusters;
+    std::vector<pcl::PointIndices>                       notorientedclusters;
+    std::vector<pcl::PointIndices>                       clusters;
+    int                                                  cloudcolor[5][3] = {{0, 0, 255}, {0, 220, 0}, {255, 0, 0}, {200, 200, 0}, {255, 0, 255}};
+    int                                                  clustersize;
+    int                                                  limitcluster;
+    int                                                  stringprecision;
+    double                                               dimensionX, dimensionY, dimensionZ;
+    double                                               minZ;
+    double                                               objvolume, totalvolume;
+    double                                               volumemean;
+    double                                               hullarea;
+    double                                               palletarea;
+    double                                               minpalletarea;
+    double                                               cubefactor;
+    string                                               TotalStr;
 
   private:
 

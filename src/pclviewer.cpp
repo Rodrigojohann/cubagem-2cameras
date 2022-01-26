@@ -41,9 +41,9 @@ PCLViewer::PCLViewer (QWidget *parent) :
  void PCLViewer::FrameBox(){
   ////////
     Controller c;
-    Sensor s;
+    Sensor     s;
 
-    if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
+    if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
     {
         TotalStr = "N/A";
         ui->label_2->setText(QString::fromStdString(TotalStr));
@@ -53,9 +53,6 @@ PCLViewer::PCLViewer (QWidget *parent) :
     {
         for (size_t counter = 0; counter < Nsamples; ++counter)
         {
-            coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-            //cloudnew = s.CamStream(IP, PORT);
             cloudnew = s.TwoCamStream(IP1, IP2, PORT);
             coloredinput->points.resize(cloudnew->points.size());
 
@@ -90,8 +87,6 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
                 totalvolume = 0.0;
                 objvolume = 0.0;
-
-                coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
                 viewer_->updatePointCloud(coloredcloud, to_string(0));
                 viewer_->updatePointCloud(coloredcloud, to_string(1));
@@ -163,9 +158,9 @@ PCLViewer::PCLViewer (QWidget *parent) :
 void PCLViewer::FrameGeneric(){
 ////////
   Controller c;
-  Sensor s;
+  Sensor     s;
 
-  if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
+  if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
   {
       TotalStr = "N/A";
       ui->label_2->setText(QString::fromStdString(TotalStr));
@@ -175,9 +170,6 @@ void PCLViewer::FrameGeneric(){
   {
       for (size_t counter = 0; counter < Nsamples; ++counter)
       {
-          coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-          //cloudnew = s.CamStream(IP, PORT);
           cloudnew = s.TwoCamStream(IP1, IP2, PORT);
           coloredinput->points.resize(cloudnew->points.size());
 
@@ -212,8 +204,6 @@ void PCLViewer::FrameGeneric(){
 
               totalvolume = 0.0;
               objvolume = 0.0;
-
-              coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
               viewer_->updatePointCloud(coloredcloud, to_string(0));
               viewer_->updatePointCloud(coloredcloud, to_string(1));
@@ -285,9 +275,9 @@ void PCLViewer::FrameGeneric(){
 void PCLViewer::FrameBoxInPallet(){
   ////////
     Controller c;
-    Sensor s;
+    Sensor     s;
 
-    if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
+    if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
     {
         TotalStr = "N/A";
         ui->label_2->setText(QString::fromStdString(TotalStr));
@@ -297,9 +287,6 @@ void PCLViewer::FrameBoxInPallet(){
     {
         for (size_t counter = 0; counter < Nsamples; ++counter)
         {
-            coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-            //cloudnew = s.CamStream(IP, PORT);
             cloudnew = s.TwoCamStream(IP1, IP2, PORT);
             coloredinput->points.resize(cloudnew->points.size());
 
@@ -335,8 +322,6 @@ void PCLViewer::FrameBoxInPallet(){
 
                 totalvolume = 0.0;
                 objvolume = 0.0;
-
-                coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
                 viewer_->updatePointCloud(coloredcloud, to_string(0));
                 viewer_->updatePointCloud(coloredcloud, to_string(1));
@@ -410,9 +395,9 @@ void PCLViewer::FrameBoxInPallet(){
 void PCLViewer::FrameGenericInPallet(){
 ////////
 Controller c;
-Sensor s;
+Sensor     s;
 
-if (s.TestConnection(IP1, PORT) == false and s.TestConnection(IP2, PORT) == false)
+if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
 {
   TotalStr = "N/A";
   ui->label_2->setText(QString::fromStdString(TotalStr));
@@ -422,9 +407,6 @@ else
 {
   for (size_t counter = 0; counter < Nsamples; ++counter)
   {
-      coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-      //cloudnew = s.CamStream(IP, PORT);
       cloudnew = s.TwoCamStream(IP1, IP2, PORT);
       coloredinput->points.resize(cloudnew->points.size());
 
@@ -460,8 +442,6 @@ else
 
           totalvolume = 0.0;
           objvolume = 0.0;
-
-          coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
           viewer_->updatePointCloud(coloredcloud, to_string(0));
           viewer_->updatePointCloud(coloredcloud, to_string(1));

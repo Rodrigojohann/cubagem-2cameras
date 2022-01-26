@@ -140,7 +140,6 @@ PointCloudT::Ptr Sensor::RemoveDistortion(PointCloudT::Ptr inputcloud){
     PointCloudT::Ptr outputcloud (new PointCloudT);
     double           xi, yi, zi, xi_0, yi_0, zi_0, Ri, M;
 ////
-
     outputcloud->points.resize(inputcloud->points.size());
 
     for(size_t i=0; i<outputcloud->points.size(); ++i)
