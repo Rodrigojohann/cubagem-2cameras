@@ -164,7 +164,7 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
 ////
     if (inputcloud->points.size() > 10){
         tree->setInputCloud (inputcloud);
-        ec.setClusterTolerance (0.050);
+        ec.setClusterTolerance (0.030);
         ec.setMinClusterSize (50);
         ec.setMaxClusterSize (25000);
         ec.setSearchMethod (tree);
