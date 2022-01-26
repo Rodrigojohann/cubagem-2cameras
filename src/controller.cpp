@@ -53,15 +53,15 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pcl::PassThrough<pcl::PointXYZ>                          pass_x;
     pcl::PassThrough<pcl::PointXYZ>                          pass_y;
     pcl::PassThrough<pcl::PointXYZ>                          pass_z;
-    PointCloudT::Ptr                                         outputcloud (new PointCloudT);
+    PointCloudT::Ptr                                         outputcloud  (new PointCloudT);
     PointCloudT::Ptr                                         outputcloud1 (new PointCloudT);
     PointCloudT::Ptr                                         outputcloud2 (new PointCloudT);
-    pcl::PointIndicesPtr                                     ground (new pcl::PointIndices);
+    pcl::PointIndicesPtr                                     ground       (new pcl::PointIndices);
     pcl::ModelCoefficients::Ptr                              coefficients (new pcl::ModelCoefficients);
-    pcl::PointIndices::Ptr                                   inliers (new pcl::PointIndices);
+    pcl::PointIndices::Ptr                                   inliers      (new pcl::PointIndices);
     pcl::SACSegmentation<pcl::PointXYZ>                      seg;
     pcl::SegmentDifferences<pcl::PointXYZ>                   p;
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree (new pcl::search::KdTree<pcl::PointXYZ>);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree         (new pcl::search::KdTree<pcl::PointXYZ>);
     pcl::PointCloud<pcl::PointNormal>                        mls_points;
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
 ////
@@ -206,10 +206,10 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     float                                          dimensionX, dimensionY, dimensionZ;
     pcl::PointXYZ                                  centroid;
     pcl::SACSegmentation<pcl::PointXYZ>            seg;
-    pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
-    pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients());
-    pcl::ExtractIndices<pcl::PointXYZ> extract;
-    PointCloudT::Ptr cloud_plane (new PointCloudT);
+    pcl::PointIndices::Ptr                         inliers      (new pcl::PointIndices);
+    pcl::ModelCoefficients::Ptr                    coefficients (new pcl::ModelCoefficients());
+    PointCloudT::Ptr                               cloud_plane  (new PointCloudT);
+    pcl::ExtractIndices<pcl::PointXYZ>             extract;
 ////
     seg.setOptimizeCoefficients (true);
     seg.setModelType (pcl::SACMODEL_PLANE);
@@ -276,10 +276,10 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
 bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster)
 {
 // var
-    pcl::PointCloud<pcl::Normal>::Ptr                 normals (new pcl::PointCloud<pcl::Normal>);
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>());
+    pcl::PointCloud<pcl::Normal>::Ptr                 normals         (new pcl::PointCloud<pcl::Normal>);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr           tree            (new pcl::search::KdTree<pcl::PointXYZ>());
     PointCloudT::Ptr                                  segmented_cloud (new PointCloudT);
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
     float                                             normal_x_mean;
     float                                             normal_y_mean;
     float                                             tolerance = 0.25;
@@ -323,8 +323,8 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
 std::vector <pcl::PointIndices> Controller::RemoveInclined(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
 {
 // var
-    std::vector <pcl::PointIndices> selectedclusters;
-    bool IsNormal;
+    std::vector<pcl::PointIndices> selectedclusters;
+    bool                           IsNormal;
 ////
     for (int i=0; i<inputclusters.size(); ++i)
     {
@@ -387,7 +387,6 @@ PointCloudT::Ptr Controller::ProjectCloud(PointCloudT::Ptr inputcloud)
 // var
     PointCloudT::Ptr outputcloud (new PointCloudT);
 ////
-
     outputcloud->points.resize(inputcloud->points.size());
 
     for(size_t i=0; i<inputcloud->points.size(); ++i)
@@ -396,7 +395,6 @@ PointCloudT::Ptr Controller::ProjectCloud(PointCloudT::Ptr inputcloud)
         outputcloud->points[i].y = (*inputcloud)[i].y;
         outputcloud->points[i].z = CAMHEIGHT;
     }
-
 
     return outputcloud;
 }
