@@ -120,7 +120,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
                     hullarea = c.SurfaceArea(segmented_cloud);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
 
-                    objvolume = hullarea*dimensionZ;
+                    objvolume = dimensionX*dimensionY*dimensionZ;
                     totalvolume += objvolume;
 
                     viewer_->updatePointCloud(coloredcloud, to_string(number));

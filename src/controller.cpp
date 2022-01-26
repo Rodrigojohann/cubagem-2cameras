@@ -94,7 +94,6 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         seg.setInputCloud (outputcloud);
         seg.segment (*inliers, *coefficients);
 
-        outputcloud1.reset(new PointCloudT);
         outputcloud1->points.resize(inliers->indices.size());
 
         for(size_t i=0; i < inliers->indices.size(); ++i)
@@ -111,7 +110,6 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     }
     else
     {
-        outputcloud1.reset(new PointCloudT);
         outputcloud1->points.resize(inputcloud->points.size());
         for (size_t i=0; i < inputcloud->points.size(); ++i)
         {
@@ -342,11 +340,10 @@ std::vector <pcl::PointIndices> Controller::RemoveInclined(PointCloudT::Ptr inpu
 double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
 {
 // var
-    double                              hullarea;
-    PointCloudT::Ptr cloud_hull;
-    pcl::ConcaveHull<pcl::PointXYZ>     chull;
+    double                          hullarea;
+    PointCloudT::Ptr                cloud_hull (new PointCloudT);
+    pcl::ConcaveHull<pcl::PointXYZ> chull;
 ////
-    cloud_hull.reset(new PointCloudT);
     chull.setInputCloud (inputcloud);
     chull.setDimension(2);
     chull.setAlpha (0.1);
@@ -365,13 +362,12 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
 double Controller::PalletArea(PointCloudT::Ptr inputcloud)
 {
 // var
-    double                              hullarea = 0.0;
-    PointCloudT::Ptr cloud_hull;
-    pcl::ConvexHull<pcl::PointXYZ>     chull;
+    double                         hullarea = 0.0;
+    PointCloudT::Ptr               cloud_hull (new PointCloudT);
+    pcl::ConvexHull<pcl::PointXYZ> chull;
 ////
     if (inputcloud->points.size() > 100)
     {
-        cloud_hull.reset(new PointCloudT);
         chull.setInputCloud (inputcloud);
         chull.setDimension(2);
         chull.reconstruct (*cloud_hull);
@@ -408,12 +404,10 @@ PointCloudT::Ptr Controller::ProjectCloud(PointCloudT::Ptr inputcloud)
 std::tuple<PointCloudT::Ptr, std::vector<pcl::Vertices>> Controller::ConvexHull(PointCloudT::Ptr inputcloud)
 {
 // var
-    PointCloudT::Ptr cloud_hull;
+    PointCloudT::Ptr               cloud_hull (new PointCloudT);
     pcl::ConvexHull<pcl::PointXYZ> chull;
-    std::vector<pcl::Vertices> polygons;
+    std::vector<pcl::Vertices>     polygons;
 ////
-    cloud_hull.reset(new PointCloudT);
-
     chull.setInputCloud(inputcloud);
     chull.setDimension(3);
     chull.reconstruct(*cloud_hull, polygons);
