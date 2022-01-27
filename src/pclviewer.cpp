@@ -108,15 +108,28 @@ PCLViewer::PCLViewer (QWidget *parent) :
                         segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
 //////////////////
-                    pcl::PassThrough<pcl::PointXYZ>                pass_z;
-                    pcl::PointXYZ                                  centroid;
+                    }
+                        pcl::SACSegmentation<pcl::PointXYZ>            seg;
+                        pcl::PointIndices::Ptr                         inliers      (new pcl::PointIndices);
+                        pcl::ModelCoefficients::Ptr                    coefficients (new pcl::ModelCoefficients());
+                        pcl::ExtractIndices<pcl::PointXYZ>             extract;
 
-                    pcl::computeCentroid(*segmented_cloud, centroid);
+                        seg.setOptimizeCoefficients (true);
+                        seg.setModelType (pcl::SACMODEL_PLANE);
+                        seg.setMethodType (pcl::SAC_RANSAC);
+                        seg.setMaxIterations (1000);
+                        seg.setDistanceThreshold (0.01);
 
-                    pass_z.setInputCloud(segmented_cloud);
-                    pass_z.setFilterFieldName ("z");
-                    pass_z.setFilterLimits ((centroid.z-0.01), (centroid.z+0.01));
-                    pass_z.filter(*segmented_cloud);
+                        seg.setInputCloud(segmented_cloud);
+                        seg.segment (*inliers, *coefficients);
+
+                        extract.setInputCloud (segmented_cloud);
+                        extract.setIndices (inliers);
+                        extract.setNegative (false);
+                        extract.filter (*segmented_cloud);
+
+                    for(size_t i=0; i < segmented_cloud->points.size(); ++i)
+                    {
 //////////////////
 
                         coloredcloud->points[i].x = (*segmented_cloud)[i].x;
