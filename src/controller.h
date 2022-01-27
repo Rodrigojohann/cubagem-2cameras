@@ -13,6 +13,7 @@
 #include <config.h>
 #include <pcl/common/centroid.h>
 #include <pcl/filters/extract_indices.h>
+#include <pcl/filters/radius_outlier_removal.h>
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
