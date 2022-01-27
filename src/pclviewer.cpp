@@ -106,43 +106,18 @@ PCLViewer::PCLViewer (QWidget *parent) :
                         segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
                         segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
                         segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
-
-//////////////////
                     }
-                        pcl::SACSegmentation<pcl::PointXYZ>            seg;
-                        pcl::PointIndices::Ptr                         inliers      (new pcl::PointIndices);
-                        pcl::ModelCoefficients::Ptr                    coefficients (new pcl::ModelCoefficients());
-                        pcl::ExtractIndices<pcl::PointXYZ>             extract;
-                        pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;
-
-                        seg.setOptimizeCoefficients (true);
-                        seg.setModelType (pcl::SACMODEL_PLANE);
-                        seg.setMethodType (pcl::SAC_RANSAC);
-                        seg.setMaxIterations (1000);
-                        seg.setDistanceThreshold (0.01);
-
-                        seg.setInputCloud(segmented_cloud);
-                        seg.segment (*inliers, *coefficients);
-
-                        extract.setInputCloud (segmented_cloud);
-                        extract.setIndices (inliers);
-                        extract.setNegative (false);
-                        extract.filter (*segmented_cloud);
-
-                        outrem.setInputCloud(segmented_cloud);
-                        outrem.setRadiusSearch(0.01);
-                        outrem.setMinNeighborsInRadius (3);
-                        outrem.setKeepOrganized(false);
-                        outrem.filter (*segmented_cloud);
 
 
-                    for(size_t i=0; i < segmented_cloud->points.size(); ++i)
+                    cloud_planebox = c.ExtractPlaneBox(segmented_cloud);
+
+                    for(size_t i=0; i < cloud_planebox->points.size(); ++i)
                     {
 //////////////////
 
-                        coloredcloud->points[i].x = (*segmented_cloud)[i].x;
-                        coloredcloud->points[i].y = (*segmented_cloud)[i].y;
-                        coloredcloud->points[i].z = (*segmented_cloud)[i].z;
+                        coloredcloud->points[i].x = (*cloud_planebox)[i].x;
+                        coloredcloud->points[i].y = (*cloud_planebox)[i].y;
+                        coloredcloud->points[i].z = (*cloud_planebox)[i].z;
 
                         coloredcloud->points[i].r = cloudcolor[number][0];
                         coloredcloud->points[i].g = cloudcolor[number][1];
@@ -150,8 +125,8 @@ PCLViewer::PCLViewer (QWidget *parent) :
                         coloredcloud->points[i].a = 255;
                     }
 
-                    hullarea = c.SurfaceArea(segmented_cloud);
-                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
+                    hullarea = c.SurfaceArea(cloud_planebox);
+                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(cloud_planebox);
 
                     objvolume = dimensionX*dimensionY*dimensionZ;
                     totalvolume += objvolume;

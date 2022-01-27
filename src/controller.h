@@ -23,6 +23,7 @@ public:
     std::vector <pcl::PointIndices>                 SortClustersPallet(std::vector <pcl::PointIndices> inputclusters, int size);
     PointCloudT::Ptr                                FilterCloud(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                RemovePallet(PointCloudT::Ptr inputcloud);
+    PointCloudT::Ptr                                ExtractPlaneBox(PointCloudT::Ptr inputcloud);
     std::tuple<std::vector<pcl::PointIndices>, int> CloudSegmentation(PointCloudT::Ptr inputcloud);
     std::tuple<std::vector<pcl::PointIndices>, int> CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensions(PointCloudT::Ptr inputcloud);

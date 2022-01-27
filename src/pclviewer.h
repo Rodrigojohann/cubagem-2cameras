@@ -53,6 +53,7 @@ class PCLViewer : public QMainWindow
     PointCloudT::Ptr                                     filteredcloud;
     PointCloudT::Ptr                                     cloud_palletremoved;
     PointCloudT::Ptr                                     segmented_cloud;
+    PointCloudT::Ptr                                     cloud_planebox;
     PointCloudT::Ptr                                     projectedcloud;
     PointCloudT::Ptr                                     cloud_hull;
     ColoredCloudT::Ptr                                   coloredinput;
