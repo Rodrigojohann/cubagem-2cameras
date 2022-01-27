@@ -12,6 +12,8 @@
 #include <thread>
 #include <math.h>
 
+#include <pcl/filters/radius_outlier_removal.h>
+
 using namespace std;
 typedef std::vector<PointXYZ>              CloudVector;
 typedef pcl::PointCloud<pcl::PointXYZ>     PointCloudT;

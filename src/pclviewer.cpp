@@ -113,6 +113,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
                         pcl::PointIndices::Ptr                         inliers      (new pcl::PointIndices);
                         pcl::ModelCoefficients::Ptr                    coefficients (new pcl::ModelCoefficients());
                         pcl::ExtractIndices<pcl::PointXYZ>             extract;
+                        pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;
 
                         seg.setOptimizeCoefficients (true);
                         seg.setModelType (pcl::SACMODEL_PLANE);
@@ -127,6 +128,13 @@ PCLViewer::PCLViewer (QWidget *parent) :
                         extract.setIndices (inliers);
                         extract.setNegative (false);
                         extract.filter (*segmented_cloud);
+
+                        outrem.setInputCloud(segmented_cloud);
+                        outrem.setRadiusSearch(0.01);
+                        outrem.setMinNeighborsInRadius (3);
+                        outrem.setKeepOrganized(false);
+                        outrem.filter (*segmented_cloud);
+
 
                     for(size_t i=0; i < segmented_cloud->points.size(); ++i)
                     {
