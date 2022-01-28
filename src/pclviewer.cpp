@@ -108,13 +108,10 @@ PCLViewer::PCLViewer (QWidget *parent) :
                         segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
                     }
 
-
                     cloud_planebox = c.ExtractPlaneBox(segmented_cloud);
 
                     for(size_t i=0; i < cloud_planebox->points.size(); ++i)
                     {
-//////////////////
-
                         coloredcloud->points[i].x = (*cloud_planebox)[i].x;
                         coloredcloud->points[i].y = (*cloud_planebox)[i].y;
                         coloredcloud->points[i].z = (*cloud_planebox)[i].z;

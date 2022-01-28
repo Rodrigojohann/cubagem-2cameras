@@ -64,6 +64,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree         (new pcl::search::KdTree<pcl::PointXYZ>);
     pcl::PointCloud<pcl::PointNormal>                        mls_points;
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
+    pcl::RadiusOutlierRemoval<pcl::PointXYZ>                 outrem;
 ////
     pass_x.setInputCloud(inputcloud);
     pass_x.setFilterFieldName("x");
@@ -135,6 +136,13 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
             outputcloud2->points[i].z = (mls_points)[i].z;
         }
     }
+
+    outrem.setInputCloud(outputcloud2);
+    outrem.setRadiusSearch(0.05);
+    outrem.setMinNeighborsInRadius (5);
+    outrem.setKeepOrganized(false);
+    outrem.filter (*outputcloud2);
+
     return outputcloud2;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +162,7 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
 
     return filtered_cloud;
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PointCloudT::Ptr Controller::ExtractPlaneBox(PointCloudT::Ptr inputcloud)
 {
 // var
