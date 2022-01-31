@@ -82,7 +82,7 @@ PointCloudT::Ptr Controller::PreProcessingCloud(PointCloudT::Ptr inputcloud){
     return filtered_cloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
+PointCloudT::Ptr Controller::FilterROI(PointCloudT::Ptr inputcloud)
 {
 // var
     pcl::PassThrough<pcl::PointXYZ>                          pass_x;
