@@ -22,6 +22,7 @@ class Controller
 public:
     std::vector <pcl::PointIndices>                 SortClusters(std::vector <pcl::PointIndices> inputclusters, int size);
     std::vector <pcl::PointIndices>                 SortClustersPallet(std::vector <pcl::PointIndices> inputclusters, int size);
+    PointCloudT::Ptr                                PreProcessingCloud(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                FilterCloud(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                RemovePallet(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                ExtractPlaneBox(PointCloudT::Ptr inputcloud);

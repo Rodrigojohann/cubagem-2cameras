@@ -47,6 +47,41 @@ std::vector <pcl::PointIndices> Controller::SortClustersPallet(std::vector <pcl:
     return sortedclusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PointCloudT::Ptr Controller::PreProcessingCloud(PointCloudT::Ptr inputcloud){
+// var
+    PointCloudT::Ptr                                         mls_cloud      (new PointCloudT);
+    PointCloudT::Ptr                                         filtered_cloud (new PointCloudT);
+    pcl::RadiusOutlierRemoval<pcl::PointXYZ>                 outrem;
+    pcl::PointCloud<pcl::PointNormal>                        mls_points;
+    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree           (new pcl::search::KdTree<pcl::PointXYZ>);
+////
+    if (inputcloud->points.size() > 10){
+        mls.setInputCloud (inputcloud);
+        mls.setPolynomialOrder (2);
+        mls.setSearchMethod (tree);
+        mls.setSearchRadius (0.05);
+        mls.process (mls_points);
+
+        mls_cloud->points.resize(mls_points.size());
+
+        for(size_t i=0; i<mls_cloud->points.size(); ++i)
+        {
+            mls_cloud->points[i].x = (mls_points)[i].x;
+            mls_cloud->points[i].y = (mls_points)[i].y;
+            mls_cloud->points[i].z = (mls_points)[i].z;
+        }
+    }
+
+    outrem.setInputCloud(mls_cloud);
+    outrem.setRadiusSearch(0.05);
+    outrem.setMinNeighborsInRadius (5);
+    outrem.setKeepOrganized(false);
+    outrem.filter (*filtered_cloud);
+
+    return filtered_cloud;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
 {
 // var
@@ -61,10 +96,6 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pcl::PointIndices::Ptr                                   inliers      (new pcl::PointIndices);
     pcl::SACSegmentation<pcl::PointXYZ>                      seg;
     pcl::SegmentDifferences<pcl::PointXYZ>                   p;
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree         (new pcl::search::KdTree<pcl::PointXYZ>);
-    pcl::PointCloud<pcl::PointNormal>                        mls_points;
-    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
-    pcl::RadiusOutlierRemoval<pcl::PointXYZ>                 outrem;
 ////
     pass_x.setInputCloud(inputcloud);
     pass_x.setFilterFieldName("x");
@@ -120,30 +151,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         }
     }
 
-    if (outputcloud1->points.size() > 10){
-        mls.setInputCloud (outputcloud1);
-        mls.setPolynomialOrder (2);
-        mls.setSearchMethod (tree);
-        mls.setSearchRadius (0.05);
-        mls.process (mls_points);
-
-        outputcloud2->points.resize(mls_points.size());
-
-        for(size_t i=0; i<outputcloud2->points.size(); ++i)
-        {
-            outputcloud2->points[i].x = (mls_points)[i].x;
-            outputcloud2->points[i].y = (mls_points)[i].y;
-            outputcloud2->points[i].z = (mls_points)[i].z;
-        }
-    }
-
-    outrem.setInputCloud(outputcloud2);
-    outrem.setRadiusSearch(0.05);
-    outrem.setMinNeighborsInRadius (5);
-    outrem.setKeepOrganized(false);
-    outrem.filter (*outputcloud2);
-
-    return outputcloud2;
+    return outputcloud1;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)

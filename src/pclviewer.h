@@ -48,6 +48,7 @@ class PCLViewer : public QMainWindow
     boost::shared_ptr<boost::thread>                     visualizer_thread_;
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
     PointCloudT::Ptr                                     cloudnew;
+    PointCloudT::Ptr                                     cloud_preprocessed;
     PointCloudT::Ptr                                     filteredcloud;
     PointCloudT::Ptr                                     cloud_palletremoved;
     PointCloudT::Ptr                                     segmented_cloud;

@@ -54,21 +54,23 @@ PCLViewer::PCLViewer (QWidget *parent) :
         for (size_t counter = 0; counter < Nsamples; ++counter)
         {
             cloudnew = s.TwoCamStream(IP1, IP2, PORT);
-            coloredinput->points.resize(cloudnew->points.size());
+            cloud_preprocessed = c.PreProcessingCloud(cloudnew);
 
-            if (cloudnew->points.size() > 100){
+            coloredinput->points.resize(cloud_preprocessed->points.size());
+
+            if (cloud_preprocessed->points.size() > 100){
                 for (size_t i = 0; i < coloredinput->points.size(); i++)
                 {
-                    coloredinput->points[i].x = (*cloudnew)[i].x;
-                    coloredinput->points[i].y = (*cloudnew)[i].y;
-                    coloredinput->points[i].z = (*cloudnew)[i].z;
+                    coloredinput->points[i].x = (*cloud_preprocessed)[i].x;
+                    coloredinput->points[i].y = (*cloud_preprocessed)[i].y;
+                    coloredinput->points[i].z = (*cloud_preprocessed)[i].z;
                     coloredinput->points[i].r = 255;
                     coloredinput->points[i].g = 255;
                     coloredinput->points[i].b = 255;
                     coloredinput->points[i].a = 200;
                 }
 
-                filteredcloud = c.FilterCloud(cloudnew);
+                filteredcloud = c.FilterCloud(cloud_preprocessed);
                 std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
                 notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
