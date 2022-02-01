@@ -127,10 +127,13 @@ PCLViewer::PCLViewer (QWidget *parent) :
                     hullarea = c.SurfaceArea(cloud_planebox);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(cloud_planebox);
 
-                    objvolume = dimensionX*dimensionY*dimensionZ;
-                    totalvolume += objvolume;
+                    if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
+                    {
+                        objvolume = dimensionX*dimensionY*dimensionZ;
+                        totalvolume += objvolume;
 
-                    viewer_->updatePointCloud(coloredcloud, to_string(number));
+                        viewer_->updatePointCloud(coloredcloud, to_string(number));
+                    }
                 }
             }
             volumemean += totalvolume;
@@ -246,10 +249,14 @@ void PCLViewer::FrameGeneric(){
                   hullarea = c.SurfaceArea(segmented_cloud);
                   std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(segmented_cloud);
 
-                  objvolume = hullarea*dimensionZ;
-                  totalvolume += objvolume;
+                  if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
+                  {
+                      objvolume = hullarea*dimensionZ;
+                      totalvolume += objvolume;
 
-                  viewer_->updatePointCloud(coloredcloud, to_string(number));
+                      viewer_->updatePointCloud(coloredcloud, to_string(number));
+                  }
+
               }
           }
           volumemean += totalvolume;
@@ -373,10 +380,14 @@ void PCLViewer::FrameBoxInPallet(){
 
                     dimensionZ = dimensionZ - (PALLETHEIGHT*100);
 
-                    objvolume = hullarea*dimensionZ;
-                    totalvolume += objvolume;
 
-                    viewer_->updatePointCloud(coloredcloud, to_string(number));
+                    if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
+                    {
+                        objvolume = hullarea*dimensionZ;
+                        totalvolume += objvolume;
+
+                        viewer_->updatePointCloud(coloredcloud, to_string(number));
+                    }
                 }
             }
             volumemean += totalvolume;
@@ -494,10 +505,14 @@ void PCLViewer::FrameGenericInPallet(){
                   std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(segmented_cloud);
 
                   dimensionZ = dimensionZ - (PALLETHEIGHT*100);
-                  objvolume = hullarea*dimensionZ;
-                  totalvolume += objvolume;
 
-                  viewer_->updatePointCloud(coloredcloud, to_string(number));
+                  if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
+                  {
+                      objvolume = hullarea*dimensionZ;
+                      totalvolume += objvolume;
+
+                      viewer_->updatePointCloud(coloredcloud, to_string(number));
+                  }
               }
           }
           volumemean += totalvolume;

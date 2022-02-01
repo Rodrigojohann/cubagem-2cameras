@@ -185,7 +185,7 @@ PointCloudT::Ptr Controller::ExtractPlaneBox(PointCloudT::Ptr inputcloud)
     seg.setModelType (pcl::SACMODEL_PLANE);
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setMaxIterations (1000);
-    seg.setDistanceThreshold (0.01);
+    seg.setDistanceThreshold (0.015);
 
     seg.setInputCloud(inputcloud);
     seg.segment (*inliers, *coefficients);
