@@ -15,6 +15,8 @@
 #include <pcl/filters/extract_indices.h>
 #include <pcl/filters/radius_outlier_removal.h>
 
+#include <pcl/segmentation/region_growing.h>
+
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
 class Controller

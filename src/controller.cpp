@@ -207,18 +207,27 @@ PointCloudT::Ptr Controller::ExtractPlaneBox(PointCloudT::Ptr inputcloud)
 std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
 {
 // var
-    pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    std::vector <pcl::PointIndices>                clusters;
-    pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
+    pcl::search::Search<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>);
+    pcl::PointCloud <pcl::Normal>::Ptr                normals (new pcl::PointCloud <pcl::Normal>);
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimator;
+    std::vector <pcl::PointIndices>                   clusters;
+    pcl::RegionGrowing<pcl::PointXYZ, pcl::Normal>    reg;
 ////
     if (inputcloud->points.size() > 10){
-        tree->setInputCloud (inputcloud);
-        ec.setClusterTolerance (0.030);
-        ec.setMinClusterSize (50);
-        ec.setMaxClusterSize (25000);
-        ec.setSearchMethod (tree);
-        ec.setInputCloud (inputcloud);
-        ec.extract (clusters);
+        normal_estimator.setSearchMethod (tree);
+        normal_estimator.setInputCloud (inputcloud);
+        normal_estimator.setKSearch (50);
+        normal_estimator.compute (*normals);
+
+        reg.setMinClusterSize (50);
+        reg.setMaxClusterSize (25000);
+        reg.setSearchMethod (tree);
+        reg.setNumberOfNeighbours (30);
+        reg.setInputCloud (inputcloud);
+        reg.setInputNormals (normals);
+        reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
+        reg.setCurvatureThreshold (1.0);
+        reg.extract (clusters);
     }
 
     return std::make_tuple(clusters, clusters.size());
