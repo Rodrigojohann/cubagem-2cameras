@@ -411,11 +411,16 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
     }
 
     hullarea = 0.0;
-    for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
+
+    if (cloud_hull->points.size > 0)
     {
-        hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i+1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i+1].x));
+        for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
+        {
+            hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i+1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i+1].x));
+        }
+        hullarea=0.5*abs(hullarea)*10000;
     }
-    hullarea=0.5*abs(hullarea)*10000;
+
 
     return hullarea;
 }
