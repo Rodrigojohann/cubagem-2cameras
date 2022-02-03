@@ -74,7 +74,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
                 notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-                clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
+                newclusters = c.RemoveInclined(filteredcloud, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -100,10 +100,10 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 {
                     segmented_cloud.reset(new PointCloudT);
                     coloredcloud.reset(new ColoredCloudT);
-                    coloredcloud->points.resize(clusters[number].indices.size());
-                    segmented_cloud->points.resize(clusters[number].indices.size());
+                    coloredcloud->points.resize(newclusters[number]->points.size());
+                    segmented_cloud->points.resize(newclusters[number]->points.size());
 
-                    *cloud_planebox = *clusters[number];
+                    *cloud_planebox = *newclusters[number];
 
                     for(size_t i=0; i < cloud_planebox->points.size(); ++i)
                     {
