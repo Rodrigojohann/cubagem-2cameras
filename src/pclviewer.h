@@ -61,7 +61,7 @@ class PCLViewer : public QMainWindow
     std::vector<pcl::PointIndices>                       unsortedclusters;
     std::vector<pcl::PointIndices>                       notorientedclusters;
     std::vector<pcl::PointIndices>                       clusters;
-    std::vector<PointCloudT>                       newclusters;
+    std::vector<PointCloudT::Ptr>                       newclusters;
     int                                                  cloudcolor[5][3] = {{0, 0, 255}, {0, 220, 0}, {255, 0, 0}, {200, 200, 0}, {255, 0, 255}};
     int                                                  clustersize;
     int                                                  limitcluster;

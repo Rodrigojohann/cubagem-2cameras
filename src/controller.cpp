@@ -374,10 +374,10 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
     return cloud_plane;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector <PointCloudT> Controller::RemoveInclined(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
+std::vector <PointCloudT::Ptr> Controller::RemoveInclined(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
 {
 // var
-    std::vector<pcl::PointIndices> selectedclusters;
+    std::vector<PointCloudT::Ptr> selectedclusters;
     PointCloudT::Ptr               cloud_plane(new PointCloudT);
 ////
     for (int i=0; i<inputclusters.size(); ++i)
