@@ -331,7 +331,7 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster)
+PointCloudT::Ptr Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster)
 {
 // var
     PointCloudT::Ptr                         segmented_cloud (new PointCloudT);
