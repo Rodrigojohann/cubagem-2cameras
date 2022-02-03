@@ -103,14 +103,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
                     coloredcloud->points.resize(clusters[number].indices.size());
                     segmented_cloud->points.resize(clusters[number].indices.size());
 
-                    for(size_t i=0; i<clusters[number].indices.size(); ++i)
-                    {
-                        segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                        segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                        segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
-                    }
-
-                    cloud_planebox = c.ExtractPlaneBox(segmented_cloud);
+                    *cloud_planebox = *clusters[number];
 
                     for(size_t i=0; i < cloud_planebox->points.size(); ++i)
                     {
@@ -200,8 +193,8 @@ void PCLViewer::FrameGeneric(){
               filteredcloud = c.FilterROI(cloud_preprocessed);
               std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-              notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-              clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
+              clusters = c.SortClusters(unsortedclusters, clustersize);
+              //clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -324,8 +317,8 @@ void PCLViewer::FrameBoxInPallet(){
                 cloud_palletremoved = c.RemovePallet(filteredcloud);
                 std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(cloud_palletremoved);
 
-                notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-                clusters = c.RemoveInclined(cloud_palletremoved, notorientedclusters);
+                clusters = c.SortClusters(unsortedclusters, clustersize);
+                //clusters = c.RemoveInclined(cloud_palletremoved, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -455,8 +448,8 @@ void PCLViewer::FrameGenericInPallet(){
               cloud_palletremoved = c.RemovePallet(filteredcloud);
               std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(cloud_palletremoved);
 
-              notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-              clusters = c.RemoveInclined(cloud_palletremoved, notorientedclusters);
+              clusters = c.SortClusters(unsortedclusters, clustersize);
+              //clusters = c.RemoveInclined(cloud_palletremoved, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
 

@@ -334,13 +334,13 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
 bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster)
 {
 // var
-    pcl::PointCloud<pcl::Normal>::Ptr                 normals         (new pcl::PointCloud<pcl::Normal>);
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr           tree            (new pcl::search::KdTree<pcl::PointXYZ>());
-    PointCloudT::Ptr                                  segmented_cloud (new PointCloudT);
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
-    float                                             normal_x_mean;
-    float                                             normal_y_mean;
-    float                                             tolerance = 0.25;
+    PointCloudT::Ptr                         segmented_cloud (new PointCloudT);
+    PointCloudT::Ptr                         cloud_plane     (new PointCloudT);
+    pcl::PointIndices::Ptr                   inliers         (new pcl::PointIndices);
+    pcl::ModelCoefficients::Ptr              coefficients    (new pcl::ModelCoefficients());
+    pcl::SACSegmentation<pcl::PointXYZ>      seg;
+    pcl::ExtractIndices<pcl::PointXYZ>       extract;
+    pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;
 ////
     segmented_cloud->points.resize(inputcluster.indices.size());
 
@@ -351,45 +351,41 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
         segmented_cloud->points[i].z = (*inputcloud)[inputcluster.indices[i]].z;
     }
 
-    ne.setInputCloud(segmented_cloud);
-    ne.setSearchMethod (tree);
-    ne.setKSearch (5);
-    ne.compute(*normals);
+    seg.setOptimizeCoefficients (true);
+    seg.setModelType (pcl::SACMODEL_PLANE);
+    seg.setMethodType (pcl::SAC_RANSAC);
+    seg.setMaxIterations (1000);
+    seg.setDistanceThreshold (0.015);
 
-    normal_x_mean = 0.0;
-    normal_y_mean = 0.0;
+    seg.setInputCloud(segmented_cloud);
+    seg.segment (*inliers, *coefficients);
 
-    for (size_t i=0; i < normals->size(); ++i)
-    {
-        normal_x_mean += (*normals)[i].normal_x;
-        normal_y_mean += (*normals)[i].normal_y;
-    }
+    extract.setInputCloud (segmented_cloud);
+    extract.setIndices (inliers);
+    extract.setNegative (false);
+    extract.filter (*cloud_plane);
 
-    normal_x_mean = normal_x_mean/normals->size();
-    normal_y_mean = normal_y_mean/normals->size();
+    outrem.setInputCloud(cloud_plane);
+    outrem.setRadiusSearch(0.03);
+    outrem.setMinNeighborsInRadius (4);
+    outrem.setKeepOrganized(false);
+    outrem.filter (*cloud_plane);
 
-    if (normal_x_mean < tolerance && normal_x_mean > (-tolerance) && normal_y_mean < tolerance && normal_y_mean > (-tolerance))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return cloud_plane;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector <pcl::PointIndices> Controller::RemoveInclined(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
+std::vector <PointCloudT> Controller::RemoveInclined(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
 {
 // var
     std::vector<pcl::PointIndices> selectedclusters;
-    bool                           IsNormal;
+    PointCloudT::Ptr               cloud_plane(new PointCloudT);
 ////
     for (int i=0; i<inputclusters.size(); ++i)
     {
-        IsNormal = NormalOrientation(inputcloud, inputclusters[i]);
-        if (IsNormal == true)
+        cloud_plane = NormalOrientation(inputcloud, inputclusters[i]);
+        if (cloud_plane->points.size() > 10)
         {
-            selectedclusters.push_back(inputclusters[i]);
+            selectedclusters.push_back(cloud_plane);
         }
     }
     return selectedclusters;
@@ -412,7 +408,7 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
 
     hullarea = 0.0;
 
-    if (cloud_hull->points.size > 0)
+    if (cloud_hull->points.size() > 0)
     {
         for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
         {
