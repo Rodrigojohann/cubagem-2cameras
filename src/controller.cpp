@@ -402,10 +402,13 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
     PointCloudT::Ptr                cloud_hull (new PointCloudT);
     pcl::ConcaveHull<pcl::PointXYZ> chull;
 ////
-    chull.setInputCloud (inputcloud);
-    chull.setDimension(2);
-    chull.setAlpha (0.1);
-    chull.reconstruct (*cloud_hull);
+    if (inputcloud->points.size() > 10)
+    {
+        chull.setInputCloud (inputcloud);
+        chull.setDimension(2);
+        chull.setAlpha (0.1);
+        chull.reconstruct (*cloud_hull);
+    }
 
     hullarea = 0.0;
     for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
