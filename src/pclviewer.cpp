@@ -74,11 +74,8 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
                 notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+                newclusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
 
-cout << "\n\n Clusters: " << notorientedclusters.size();
-                newclusters = c.RemoveInclined(filteredcloud, notorientedclusters);
-cout << "\n new Clusters " << newclusters.size();
-cout << "\n";
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
                 if (newclusters.size() > 5)
@@ -198,7 +195,7 @@ void PCLViewer::FrameGeneric(){
               std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
               clusters = c.SortClusters(unsortedclusters, clustersize);
-              //clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
+              //clusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -322,7 +319,7 @@ void PCLViewer::FrameBoxInPallet(){
                 std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(cloud_palletremoved);
 
                 clusters = c.SortClusters(unsortedclusters, clustersize);
-                //clusters = c.RemoveInclined(cloud_palletremoved, notorientedclusters);
+                //clusters = c.ExtractTopPlaneBox(cloud_palletremoved, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -453,7 +450,7 @@ void PCLViewer::FrameGenericInPallet(){
               std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(cloud_palletremoved);
 
               clusters = c.SortClusters(unsortedclusters, clustersize);
-              //clusters = c.RemoveInclined(cloud_palletremoved, notorientedclusters);
+              //clusters = c.ExtractTopPlaneBox(cloud_palletremoved, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
 

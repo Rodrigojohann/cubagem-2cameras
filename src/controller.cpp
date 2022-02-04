@@ -331,58 +331,93 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster)
+//PointCloudT::Ptr Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster)
+//{
+//// var
+//    PointCloudT::Ptr                         segmented_cloud (new PointCloudT);
+//    PointCloudT::Ptr                         cloud_plane     (new PointCloudT);
+//    pcl::PointIndices::Ptr                   inliers         (new pcl::PointIndices);
+//    pcl::ModelCoefficients::Ptr              coefficients    (new pcl::ModelCoefficients());
+//    pcl::SACSegmentation<pcl::PointXYZ>      seg;
+//    pcl::ExtractIndices<pcl::PointXYZ>       extract;
+//    pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;
+//////
+//    segmented_cloud->points.resize(inputcluster.indices.size());
+
+//    for(size_t i=0; i<inputcluster.indices.size(); ++i)
+//    {
+//        segmented_cloud->points[i].x = (*inputcloud)[inputcluster.indices[i]].x;
+//        segmented_cloud->points[i].y = (*inputcloud)[inputcluster.indices[i]].y;
+//        segmented_cloud->points[i].z = (*inputcloud)[inputcluster.indices[i]].z;
+//    }
+
+//    seg.setOptimizeCoefficients (true);
+//    seg.setModelType (pcl::SACMODEL_PLANE);
+//    seg.setMethodType (pcl::SAC_RANSAC);
+//    seg.setMaxIterations (1000);
+//    seg.setDistanceThreshold (0.015);
+
+//    seg.setInputCloud(segmented_cloud);
+//    seg.segment (*inliers, *coefficients);
+
+//    extract.setInputCloud (segmented_cloud);
+//    extract.setIndices (inliers);
+//    extract.setNegative (false);
+//    extract.filter (*cloud_plane);
+
+//    outrem.setInputCloud(cloud_plane);
+//    outrem.setRadiusSearch(0.03);
+//    outrem.setMinNeighborsInRadius (4);
+//    outrem.setKeepOrganized(false);
+//    outrem.filter (*cloud_plane);
+
+//    return cloud_plane;
+//}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::vector <PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
 {
 // var
+    std::vector<PointCloudT::Ptr>            selectedclusters;
+    PointCloudT::Ptr                         cloud_plane(new PointCloudT);
     PointCloudT::Ptr                         segmented_cloud (new PointCloudT);
-    PointCloudT::Ptr                         cloud_plane     (new PointCloudT);
     pcl::PointIndices::Ptr                   inliers         (new pcl::PointIndices);
     pcl::ModelCoefficients::Ptr              coefficients    (new pcl::ModelCoefficients());
     pcl::SACSegmentation<pcl::PointXYZ>      seg;
     pcl::ExtractIndices<pcl::PointXYZ>       extract;
     pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;
 ////
-    segmented_cloud->points.resize(inputcluster.indices.size());
-
-    for(size_t i=0; i<inputcluster.indices.size(); ++i)
-    {
-        segmented_cloud->points[i].x = (*inputcloud)[inputcluster.indices[i]].x;
-        segmented_cloud->points[i].y = (*inputcloud)[inputcluster.indices[i]].y;
-        segmented_cloud->points[i].z = (*inputcloud)[inputcluster.indices[i]].z;
-    }
-
-    seg.setOptimizeCoefficients (true);
-    seg.setModelType (pcl::SACMODEL_PLANE);
-    seg.setMethodType (pcl::SAC_RANSAC);
-    seg.setMaxIterations (1000);
-    seg.setDistanceThreshold (0.015);
-
-    seg.setInputCloud(segmented_cloud);
-    seg.segment (*inliers, *coefficients);
-
-    extract.setInputCloud (segmented_cloud);
-    extract.setIndices (inliers);
-    extract.setNegative (false);
-    extract.filter (*cloud_plane);
-
-    outrem.setInputCloud(cloud_plane);
-    outrem.setRadiusSearch(0.03);
-    outrem.setMinNeighborsInRadius (4);
-    outrem.setKeepOrganized(false);
-    outrem.filter (*cloud_plane);
-
-    return cloud_plane;
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector <PointCloudT::Ptr> Controller::RemoveInclined(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
-{
-// var
-    std::vector<PointCloudT::Ptr> selectedclusters;
-    PointCloudT::Ptr               cloud_plane(new PointCloudT);
-////
     for (int i=0; i<inputclusters.size(); ++i)
     {
-        cloud_plane = NormalOrientation(inputcloud, inputclusters[i]);
+        segmented_cloud.reset(new PointCloudT);
+        segmented_cloud->points.resize(inputclusters.indices.size());
+
+        for(size_t i=0; i<inputclusters.indices.size(); ++i)
+        {
+            segmented_cloud->points[i].x = (*inputcloud)[inputclusters.indices[i]].x;
+            segmented_cloud->points[i].y = (*inputcloud)[inputclusters.indices[i]].y;
+            segmented_cloud->points[i].z = (*inputcloud)[inputclusters.indices[i]].z;
+        }
+
+        seg.setOptimizeCoefficients (true);
+        seg.setModelType (pcl::SACMODEL_PLANE);
+        seg.setMethodType (pcl::SAC_RANSAC);
+        seg.setMaxIterations (1000);
+        seg.setDistanceThreshold (0.015);
+
+        seg.setInputCloud(segmented_cloud);
+        seg.segment (*inliers, *coefficients);
+
+        extract.setInputCloud (segmented_cloud);
+        extract.setIndices (inliers);
+        extract.setNegative (false);
+        extract.filter (*cloud_plane);
+
+        outrem.setInputCloud(cloud_plane);
+        outrem.setRadiusSearch(0.03);
+        outrem.setMinNeighborsInRadius (4);
+        outrem.setKeepOrganized(false);
+        outrem.filter (*cloud_plane);
+
         if (cloud_plane->points.size() > 10)
         {
             selectedclusters.push_back(cloud_plane);
@@ -390,6 +425,23 @@ std::vector <PointCloudT::Ptr> Controller::RemoveInclined(PointCloudT::Ptr input
     }
     return selectedclusters;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//std::vector <PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
+//{
+//// var
+//    std::vector<PointCloudT::Ptr> selectedclusters;
+//    PointCloudT::Ptr               cloud_plane(new PointCloudT);
+//////
+//    for (int i=0; i<inputclusters.size(); ++i)
+//    {
+//        cloud_plane = NormalOrientation(inputcloud, inputclusters[i]);
+//        if (cloud_plane->points.size() > 10)
+//        {
+//            selectedclusters.push_back(cloud_plane);
+//        }
+//    }
+//    return selectedclusters;
+//}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
 {
