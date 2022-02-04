@@ -71,9 +71,11 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 }
 
                 filteredcloud = c.FilterROI(cloud_preprocessed);
-                std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
+                std::tie(notorientedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-                notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+                std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+
+                //notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
                 newclusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
