@@ -79,13 +79,13 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
-                if (newclusters.size() > 5)
+                if (clusters.size() > 5)
                 {
                     limitcluster = 5;
                 }
                 else
                 {
-                    limitcluster = newclusters.size();
+                    limitcluster = clusters.size();
                 }
 
                 totalvolume = 0.0;
@@ -99,19 +99,14 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
                 for (int number=0; number<limitcluster; ++number)
                 {
-                    segmented_cloud.reset(new PointCloudT);
                     coloredcloud.reset(new ColoredCloudT);
-                    coloredcloud->points.resize(newclusters[number]->points.size());
-                    segmented_cloud->points.resize(newclusters[number]->points.size());
-cloud_planebox.reset(new PointCloudT);
-                    *cloud_planebox = *newclusters[number];
-cout << "\nCloud " << cloud_planebox->points.size();
-cout << "\n";
-                    for(size_t i=0; i < cloud_planebox->points.size(); ++i)
+                    coloredcloud->points.resize(clusters[number]->points.size());
+
+                    for(size_t i=0; i < clusters[number]->points.size(); ++i)
                     {
-                        coloredcloud->points[i].x = (*cloud_planebox)[i].x;
-                        coloredcloud->points[i].y = (*cloud_planebox)[i].y;
-                        coloredcloud->points[i].z = (*cloud_planebox)[i].z;
+                        coloredcloud->points[i].x = (*clusters[number])[i].x;
+                        coloredcloud->points[i].y = (*clusters[number])[i].y;
+                        coloredcloud->points[i].z = (*clusters[number])[i].z;
 
                         coloredcloud->points[i].r = cloudcolor[number][0];
                         coloredcloud->points[i].g = cloudcolor[number][1];
@@ -119,8 +114,8 @@ cout << "\n";
                         coloredcloud->points[i].a = 255;
                     }
 
-                    hullarea = c.SurfaceArea(cloud_planebox);
-                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(cloud_planebox);
+                    hullarea = c.SurfaceArea(clusters[number]);
+                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
 
                     if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
                     {
@@ -221,20 +216,15 @@ void PCLViewer::FrameGeneric(){
 
               for (int number=0; number<limitcluster; ++number)
               {
-                  segmented_cloud.reset(new PointCloudT);
                   coloredcloud.reset(new ColoredCloudT);
-                  coloredcloud->points.resize(clusters[number].indices.size());
-                  segmented_cloud->points.resize(clusters[number].indices.size());
+                  coloredcloud->points.resize(clusters[number]->points.size());
 
-                  for(size_t i=0; i<clusters[number].indices.size(); ++i)
+                  for(size_t i=0; i<clusters[number]->points.size(); ++i)
                   {
-                      segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                      segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                      segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
-                      coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                      coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                      coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+                      coloredcloud->points[i].x = (*clusters[number])[i].x;
+                      coloredcloud->points[i].y = (*clusters[number])[i].y;
+                      coloredcloud->points[i].z = (*clusters[number])[i].z;
 
                       coloredcloud->points[i].r = cloudcolor[number][0];
                       coloredcloud->points[i].g = cloudcolor[number][1];
@@ -242,8 +232,8 @@ void PCLViewer::FrameGeneric(){
                       coloredcloud->points[i].a = 255;
                   }
 
-                  hullarea = c.SurfaceArea(segmented_cloud);
-                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(segmented_cloud);
+                  hullarea = c.SurfaceArea(clusters[number]);
+                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(clusters[number]);
 
                   if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
                   {
@@ -346,25 +336,14 @@ void PCLViewer::FrameBoxInPallet(){
 
                 for (int number=0; number<limitcluster; ++number)
                 {
-                    segmented_cloud.reset(new PointCloudT);
                     coloredcloud.reset(new ColoredCloudT);
-                    coloredcloud->points.resize(clusters[number].indices.size());
-                    segmented_cloud->points.resize(clusters[number].indices.size());
+                    coloredcloud->points.resize(clusters[number]->points.size());
 
-                    for(size_t i=0; i<clusters[number].indices.size(); ++i)
+                    for(size_t i=0; i<clusters[number]->points.size(); ++i)
                     {
-                        segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                        segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                        segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
-                    }
-
-                    cloud_planebox = c.ExtractPlaneBox(segmented_cloud);
-
-                    for(size_t i=0; i < cloud_planebox->points.size(); ++i)
-                    {
-                        coloredcloud->points[i].x = (*cloud_planebox)[i].x;
-                        coloredcloud->points[i].y = (*cloud_planebox)[i].y;
-                        coloredcloud->points[i].z = (*cloud_planebox)[i].z;
+                        coloredcloud->points[i].x = (*clusters[number])[i].x;
+                        coloredcloud->points[i].y = (*clusters[number])[i].y;
+                        coloredcloud->points[i].z = (*clusters[number])[i].z;
 
                         coloredcloud->points[i].r = cloudcolor[number][0];
                         coloredcloud->points[i].g = cloudcolor[number][1];
@@ -372,8 +351,8 @@ void PCLViewer::FrameBoxInPallet(){
                         coloredcloud->points[i].a = 255;
                     }
 
-                    hullarea = c.SurfaceArea(cloud_planebox);
-                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(cloud_planebox);
+                    hullarea = c.SurfaceArea(clusters[number]);
+                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
 
                     dimensionZ = dimensionZ - (PALLETHEIGHT*100);
 
@@ -478,20 +457,14 @@ void PCLViewer::FrameGenericInPallet(){
 
               for (int number=0; number<limitcluster; ++number)
               {
-                  segmented_cloud.reset(new PointCloudT);
                   coloredcloud.reset(new ColoredCloudT);
-                  coloredcloud->points.resize(clusters[number].indices.size());
-                  segmented_cloud->points.resize(clusters[number].indices.size());
+                  coloredcloud->points.resize(clusters[number]->points.size());
 
-                  for(size_t i=0; i<clusters[number].indices.size(); ++i)
+                  for(size_t i=0; i<clusters[number]->points.size(); ++i)
                   {
-                      segmented_cloud->points[i].x = (*cloud_palletremoved)[clusters[number].indices[i]].x;
-                      segmented_cloud->points[i].y = (*cloud_palletremoved)[clusters[number].indices[i]].y;
-                      segmented_cloud->points[i].z = (*cloud_palletremoved)[clusters[number].indices[i]].z;
-
-                      coloredcloud->points[i].x = (*cloud_palletremoved)[clusters[number].indices[i]].x;
-                      coloredcloud->points[i].y = (*cloud_palletremoved)[clusters[number].indices[i]].y;
-                      coloredcloud->points[i].z = (*cloud_palletremoved)[clusters[number].indices[i]].z;
+                      coloredcloud->points[i].x = (*clusters[number])[i].x;
+                      coloredcloud->points[i].y = (*clusters[number])[i].y;
+                      coloredcloud->points[i].z = (*clusters[number])[i].z;
 
                       coloredcloud->points[i].r = cloudcolor[number][0];
                       coloredcloud->points[i].g = cloudcolor[number][1];
@@ -499,8 +472,8 @@ void PCLViewer::FrameGenericInPallet(){
                       coloredcloud->points[i].a = 255;
                   }
 
-                  hullarea = c.SurfaceArea(segmented_cloud);
-                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(segmented_cloud);
+                  hullarea = c.SurfaceArea(clusters[number]);
+                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(clusters[number]);
 
                   dimensionZ = dimensionZ - (PALLETHEIGHT*100);
 
