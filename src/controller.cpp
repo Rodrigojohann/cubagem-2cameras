@@ -340,7 +340,7 @@ cout << "\n\nCluster size: " << inputclusters[i].indices.size() << "\n";
     return selectedclusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<PointCloudT::Ptr> Controller::IndicestoCloud(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
+std::vector<PointCloudT::Ptr> Controller::IndicestoCloud(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputindices)
 {
 // var
     PointCloudT::Ptr              segmented_cloud(new PointCloudT);
