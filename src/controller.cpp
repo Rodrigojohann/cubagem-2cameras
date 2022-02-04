@@ -389,13 +389,13 @@ std::vector <PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr i
     for (int i=0; i<inputclusters.size(); ++i)
     {
         segmented_cloud.reset(new PointCloudT);
-        segmented_cloud->points.resize(inputclusters.indices.size());
+        segmented_cloud->points.resize(inputclusters[i].indices.size());
 
-        for(size_t i=0; i<inputclusters.indices.size(); ++i)
+        for(size_t j=0; j<inputclusters[i].indices.size(); ++j)
         {
-            segmented_cloud->points[i].x = (*inputcloud)[inputclusters.indices[i]].x;
-            segmented_cloud->points[i].y = (*inputcloud)[inputclusters.indices[i]].y;
-            segmented_cloud->points[i].z = (*inputcloud)[inputclusters.indices[i]].z;
+            segmented_cloud->points[j].x = (*inputcloud)[inputclusters[i].indices[j]].x;
+            segmented_cloud->points[j].y = (*inputcloud)[inputclusters[i].indices[j]].y;
+            segmented_cloud->points[j].z = (*inputcloud)[inputclusters[i].indices[j]].z;
         }
 
         seg.setOptimizeCoefficients (true);
