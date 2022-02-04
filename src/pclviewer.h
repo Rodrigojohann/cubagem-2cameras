@@ -58,7 +58,6 @@ class PCLViewer : public QMainWindow
     ColoredCloudT::Ptr                                   coloredinput;
     ColoredCloudT::Ptr                                   coloredcloud;
     std::vector<pcl::Vertices>                           hullpolygons;
-    std::vector<pcl::PointIndices>                       unsortedclusters;
     std::vector<pcl::PointIndices>                       notorientedclusters;
     std::vector<pcl::PointIndices>                       clusters;
     std::vector<PointCloudT::Ptr>                       newclusters;

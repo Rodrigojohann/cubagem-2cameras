@@ -22,8 +22,6 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 class Controller
 {
 public:
-    std::vector <pcl::PointIndices>                 SortClusters(std::vector <pcl::PointIndices> inputclusters, int size);
-    std::vector <pcl::PointIndices>                 SortClustersPallet(std::vector <pcl::PointIndices> inputclusters, int size);
     PointCloudT::Ptr                                PreProcessingCloud(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                FilterROI(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                RemovePallet(PointCloudT::Ptr inputcloud);
@@ -32,7 +30,6 @@ public:
     std::tuple<std::vector<pcl::PointIndices>, int> CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensions(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensionsGeneric(PointCloudT::Ptr inputcloud);
-//    PointCloudT::Ptr                                NormalOrientation (PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster);
     std::vector <PointCloudT::Ptr>                  ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputclusters);
     double                                          SurfaceArea(PointCloudT::Ptr inputcloud);
     double                                          PalletArea(PointCloudT::Ptr inputcloud);

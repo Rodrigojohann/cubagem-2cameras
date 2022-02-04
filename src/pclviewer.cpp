@@ -194,9 +194,9 @@ void PCLViewer::FrameGeneric(){
               }
 
               filteredcloud = c.FilterROI(cloud_preprocessed);
-              std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
+              std::tie(clusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-              clusters = c.SortClusters(unsortedclusters, clustersize);
+              std::sort(clusters.begin(), clusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
               //clusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
@@ -318,9 +318,9 @@ void PCLViewer::FrameBoxInPallet(){
 
                 filteredcloud = c.FilterROI(cloud_preprocessed);
                 cloud_palletremoved = c.RemovePallet(filteredcloud);
-                std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(cloud_palletremoved);
+                std::tie(clusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-                clusters = c.SortClusters(unsortedclusters, clustersize);
+                std::sort(clusters.begin(), clusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
                 //clusters = c.ExtractTopPlaneBox(cloud_palletremoved, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
@@ -449,9 +449,9 @@ void PCLViewer::FrameGenericInPallet(){
 
               filteredcloud = c.FilterROI(cloud_preprocessed);
               cloud_palletremoved = c.RemovePallet(filteredcloud);
-              std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(cloud_palletremoved);
+              std::tie(clusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-              clusters = c.SortClusters(unsortedclusters, clustersize);
+              std::sort(clusters.begin(), clusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
               //clusters = c.ExtractTopPlaneBox(cloud_palletremoved, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
