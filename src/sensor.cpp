@@ -84,9 +84,6 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     cloud_raw1 = CamStream(ipAddress1, port);
     cloud_raw2 = CamStream(ipAddress2, port);
 
-    cout << "\n\nCloud 1: " << cloud_raw1->points.size();
-    cout << "\nCloud 2: " << cloud_raw2->points.size();
-
     passz.setInputCloud(cloud_raw1);
     passz.setFilterFieldName ("z");
     passz.setFilterLimits (0, 5);
@@ -97,9 +94,6 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     passz.setFilterLimits (0, 5);
     passz.filter(*cloud_raw2);
 
-    cout << "\n\nCloud 1 filtered: " << cloud_raw1->points.size();
-    cout << "\nCloud 2 filtered: " << cloud_raw2->points.size();
-
     float theta1 = -ANGLE1*(M_PI/180);
     float theta2 = -ANGLE2*(M_PI/180);
 
@@ -109,11 +103,8 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     transform_1.rotate (Eigen::AngleAxisf (theta1, Eigen::Vector3f::UnitX()));
     transform_2.rotate (Eigen::AngleAxisf (theta2, Eigen::Vector3f::UnitX()));
 
-    std::cout << transform_2.matrix() << std::endl;
-
     pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
     pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, transform_2);
-
 
     float theta3 = M_PI;
     Eigen::Affine3f transform_3 = Eigen::Affine3f::Identity();
@@ -121,7 +112,6 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     transform_3.translation() << 0.0, 3.05, 0.0;
 
     pcl::transformPointCloud (*cloud_transformed2, *cloud_transformed3, transform_3);
-
 
     *output_cloud += *cloud_transformed1;
     *output_cloud += *cloud_transformed3;

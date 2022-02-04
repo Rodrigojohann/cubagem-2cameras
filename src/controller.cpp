@@ -391,7 +391,7 @@ std::vector <PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr i
         segmented_cloud.reset(new PointCloudT);
         cloud_plane.reset(new PointCloudT);
         segmented_cloud->points.resize(inputclusters[i].indices.size());
-
+cout << "\n\nCluster size: " << inputclusters[i].indices.size() << "\n";
         for(size_t j=0; j<inputclusters[i].indices.size(); ++j)
         {
             segmented_cloud->points[j].x = (*inputcloud)[inputclusters[i].indices[j]].x;
