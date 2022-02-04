@@ -160,7 +160,7 @@ PointCloudT::Ptr Controller::ExtractPlaneBox(PointCloudT::Ptr inputcloud)
     return cloud_plane;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
+<std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
 {
 // var
     pcl::search::Search<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>);
@@ -186,10 +186,10 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
         reg.extract (clusters);
     }
 
-    return std::make_tuple(clusters, clusters.size());
+    return clusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentationPallet(PointCloudT::Ptr inputcloud)
+std::vector<pcl::PointIndices> Controller::CloudSegmentationPallet(PointCloudT::Ptr inputcloud)
 {
 // var
     pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
@@ -206,7 +206,7 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentationPal
         ec.extract (clusters);
     }
 
-    return std::make_tuple(clusters, clusters.size());
+    return clusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr inputcloud)
@@ -287,7 +287,7 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector <PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
+std::vector<PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
 {
 // var
     std::vector<PointCloudT::Ptr>            selectedclusters;
@@ -336,6 +336,29 @@ cout << "\n\nCluster size: " << inputclusters[i].indices.size() << "\n";
         {
             selectedclusters.push_back(cloud_plane);
         }
+    }
+    return selectedclusters;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::vector<PointCloudT::Ptr> Controller::IndicestoCloud(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
+{
+// var
+    PointCloudT::Ptr              segmented_cloud(new PointCloudT);
+    std::vector<PointCloudT::Ptr> selectedclusters;
+////
+    for (int i=0; i<inputclusters.size(); ++i)
+    {
+        segmented_cloud.reset(new PointCloudT);
+        segmented_cloud->points.resize(inputclusters[i].indices.size());
+
+        for(size_t j=0; j<inputclusters[i].indices.size(); ++j)
+        {
+            segmented_cloud->points[j].x = (*inputcloud)[inputclusters[i].indices[j]].x;
+            segmented_cloud->points[j].y = (*inputcloud)[inputclusters[i].indices[j]].y;
+            segmented_cloud->points[j].z = (*inputcloud)[inputclusters[i].indices[j]].z;
+        }
+
+        selectedclusters.push_back(segmented_cloud);
     }
     return selectedclusters;
 }

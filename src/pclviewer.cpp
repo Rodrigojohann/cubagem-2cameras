@@ -71,12 +71,11 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 }
 
                 filteredcloud = c.FilterROI(cloud_preprocessed);
-                std::tie(notorientedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
+                notorientedclusters = c.CloudSegmentation(filteredcloud);
 
                 std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
 
-                //notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-                newclusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
+                clusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -194,10 +193,11 @@ void PCLViewer::FrameGeneric(){
               }
 
               filteredcloud = c.FilterROI(cloud_preprocessed);
-              std::tie(clusters, clustersize) = c.CloudSegmentation(filteredcloud);
+              notorientedclusters = c.CloudSegmentation(filteredcloud);
 
-              std::sort(clusters.begin(), clusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
-              //clusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
+              std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+
+              clusters = c.IndicestoClouds(filteredcloud, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -318,10 +318,11 @@ void PCLViewer::FrameBoxInPallet(){
 
                 filteredcloud = c.FilterROI(cloud_preprocessed);
                 cloud_palletremoved = c.RemovePallet(filteredcloud);
-                std::tie(clusters, clustersize) = c.CloudSegmentation(filteredcloud);
+                notorientedclusters = c.CloudSegmentation(cloud_palletremoved);
 
-                std::sort(clusters.begin(), clusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
-                //clusters = c.ExtractTopPlaneBox(cloud_palletremoved, notorientedclusters);
+                std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+
+                clusters = c.IndicestoClouds(cloud_palletremoved, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -449,10 +450,11 @@ void PCLViewer::FrameGenericInPallet(){
 
               filteredcloud = c.FilterROI(cloud_preprocessed);
               cloud_palletremoved = c.RemovePallet(filteredcloud);
-              std::tie(clusters, clustersize) = c.CloudSegmentation(filteredcloud);
+              notorientedclusters = c.CloudSegmentation(cloud_palletremoved);
 
-              std::sort(clusters.begin(), clusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
-              //clusters = c.ExtractTopPlaneBox(cloud_palletremoved, notorientedclusters);
+              std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+
+              clusters = c.IndicestoClouds(cloud_palletremoved, notorientedclusters);
 
               viewer_->updatePointCloud(coloredinput, "inputcloud");
 
