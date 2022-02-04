@@ -346,16 +346,16 @@ std::vector<PointCloudT::Ptr> Controller::IndicestoClouds(PointCloudT::Ptr input
     PointCloudT::Ptr              segmented_cloud(new PointCloudT);
     std::vector<PointCloudT::Ptr> selectedclusters;
 ////
-    for (int i=0; i<inputclusters.size(); ++i)
+    for (int i=0; i<inputindices.size(); ++i)
     {
         segmented_cloud.reset(new PointCloudT);
-        segmented_cloud->points.resize(inputclusters[i].indices.size());
+        segmented_cloud->points.resize(inputindices[i].indices.size());
 
-        for(size_t j=0; j<inputclusters[i].indices.size(); ++j)
+        for(size_t j=0; j<inputindices[i].indices.size(); ++j)
         {
-            segmented_cloud->points[j].x = (*inputcloud)[inputclusters[i].indices[j]].x;
-            segmented_cloud->points[j].y = (*inputcloud)[inputclusters[i].indices[j]].y;
-            segmented_cloud->points[j].z = (*inputcloud)[inputclusters[i].indices[j]].z;
+            segmented_cloud->points[j].x = (*inputcloud)[inputindices[i].indices[j]].x;
+            segmented_cloud->points[j].y = (*inputcloud)[inputindices[i].indices[j]].y;
+            segmented_cloud->points[j].z = (*inputcloud)[inputindices[i].indices[j]].z;
         }
 
         selectedclusters.push_back(segmented_cloud);
