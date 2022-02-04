@@ -315,6 +315,8 @@ cout << "\n\nCluster size: " << inputclusters[i].indices.size() << "\n";
         seg.setOptimizeCoefficients (true);
         seg.setModelType (pcl::SACMODEL_PLANE);
         seg.setMethodType (pcl::SAC_RANSAC);
+        seg.setAxis(Eigen::Vector3f(0.0,0.0,1.0));
+        seg.setEpsAngle(5.0f*(PI/180.0f));
         seg.setMaxIterations (1000);
         seg.setDistanceThreshold (0.015);
 
