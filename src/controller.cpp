@@ -160,7 +160,7 @@ PointCloudT::Ptr Controller::ExtractPlaneBox(PointCloudT::Ptr inputcloud)
     return cloud_plane;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-<std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
+std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
 {
 // var
     pcl::search::Search<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>);
