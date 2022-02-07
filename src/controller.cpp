@@ -188,6 +188,25 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 
     return clusters;
 }
+
+//{
+//// var
+//    pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
+//    std::vector <pcl::PointIndices>                clusters;
+//    pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
+//////
+//    if (inputcloud->points.size() > 10){
+//        tree->setInputCloud (inputcloud);
+//        ec.setClusterTolerance (0.030);
+//        ec.setMinClusterSize (50);
+//        ec.setMaxClusterSize (25000);
+//        ec.setSearchMethod (tree);
+//        ec.setInputCloud (inputcloud);
+//        ec.extract (clusters);
+//    }
+
+//    return clusters;
+//}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentationPallet(PointCloudT::Ptr inputcloud)
 {
