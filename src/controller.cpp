@@ -313,12 +313,12 @@ cout << "\n\nCluster size: " << inputclusters[i].indices.size() << "\n";
         }
 
         seg.setOptimizeCoefficients (true);
-        seg.setModelType (pcl::SACMODEL_PLANE);
+        seg.setModelType (pcl::SACMODEL_PERPENDICULAR_PLANE);
         seg.setMethodType (pcl::SAC_RANSAC);
-        seg.setAxis(Eigen::Vector3f(0.0,0.0,1.0));
+        seg.setAxis(Eigen::Vector3f::UnitZ());
         seg.setEpsAngle(5.0f*(M_PI/180.0f));
         seg.setMaxIterations (1000);
-        seg.setDistanceThreshold (0.015);
+        seg.setDistanceThreshold (0.01);
 
         seg.setInputCloud(segmented_cloud);
         seg.segment (*inliers, *coefficients);
