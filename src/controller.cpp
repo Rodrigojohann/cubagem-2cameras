@@ -127,39 +127,6 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
     return filtered_cloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Controller::ExtractPlaneBox(PointCloudT::Ptr inputcloud)
-{
-// var
-    PointCloudT::Ptr                         cloud_plane  (new PointCloudT);
-    pcl::PointIndices::Ptr                   inliers      (new pcl::PointIndices);
-    pcl::ModelCoefficients::Ptr              coefficients (new pcl::ModelCoefficients());
-    pcl::SACSegmentation<pcl::PointXYZ>      seg;
-    pcl::ExtractIndices<pcl::PointXYZ>       extract;
-    pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;
-////
-    seg.setOptimizeCoefficients (true);
-    seg.setModelType (pcl::SACMODEL_PLANE);
-    seg.setMethodType (pcl::SAC_RANSAC);
-    seg.setMaxIterations (1000);
-    seg.setDistanceThreshold (0.015);
-
-    seg.setInputCloud(inputcloud);
-    seg.segment (*inliers, *coefficients);
-
-    extract.setInputCloud (inputcloud);
-    extract.setIndices (inliers);
-    extract.setNegative (false);
-    extract.filter (*cloud_plane);
-
-    outrem.setInputCloud(cloud_plane);
-    outrem.setRadiusSearch(0.03);
-    outrem.setMinNeighborsInRadius (4);
-    outrem.setKeepOrganized(false);
-    outrem.filter (*cloud_plane);
-
-    return cloud_plane;
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
 {
 // var

@@ -25,7 +25,6 @@ public:
     PointCloudT::Ptr                                PreProcessingCloud(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                FilterROI(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                RemovePallet(PointCloudT::Ptr inputcloud);
-    PointCloudT::Ptr                                ExtractPlaneBox(PointCloudT::Ptr inputcloud);
     std::vector<pcl::PointIndices>                  CloudSegmentation(PointCloudT::Ptr inputcloud);
     std::vector<pcl::PointIndices>                  CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensions(PointCloudT::Ptr inputcloud);

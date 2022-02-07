@@ -156,123 +156,121 @@ PCLViewer::PCLViewer (QWidget *parent) :
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::FrameGeneric(){
-////////
-  Controller c;
-  Sensor     s;
+    ////////
+      Controller c;
+      Sensor     s;
 
-  if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
-  {
-      TotalStr = "N/A";
-      ui->label_2->setText(QString::fromStdString(TotalStr));
-      ui->qvtkWidget->update();
-  }
-  else
-  {
-      for (size_t counter = 0; counter < Nsamples; ++counter)
+      if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
       {
-          cloudnew = s.TwoCamStream(IP1, IP2, PORT);
-          cloud_preprocessed = c.PreProcessingCloud(cloudnew);
-
-          coloredinput->points.resize(cloud_preprocessed->points.size());
-
-          if (cloud_preprocessed->points.size() > 100){
-              for (size_t i = 0; i < coloredinput->points.size(); i++)
-              {
-                  coloredinput->points[i].x = (*cloud_preprocessed)[i].x;
-                  coloredinput->points[i].y = (*cloud_preprocessed)[i].y;
-                  coloredinput->points[i].z = (*cloud_preprocessed)[i].z;
-                  coloredinput->points[i].r = 255;
-                  coloredinput->points[i].g = 255;
-                  coloredinput->points[i].b = 255;
-                  coloredinput->points[i].a = 200;
-              }
-
-              filteredcloud = c.FilterROI(cloud_preprocessed);
-              notorientedclusters = c.CloudSegmentation(filteredcloud);
-
-              std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
-
-              clusters = c.IndicestoClouds(filteredcloud, notorientedclusters);
-
-              viewer_->updatePointCloud(coloredinput, "inputcloud");
-
-              if (clusters.size() > 5)
-              {
-                  limitcluster = 5;
-              }
-              else
-              {
-                  limitcluster = clusters.size();
-              }
-
-              totalvolume = 0.0;
-              objvolume = 0.0;
-
-              viewer_->updatePointCloud(coloredcloud, to_string(0));
-              viewer_->updatePointCloud(coloredcloud, to_string(1));
-              viewer_->updatePointCloud(coloredcloud, to_string(2));
-              viewer_->updatePointCloud(coloredcloud, to_string(3));
-              viewer_->updatePointCloud(coloredcloud, to_string(4));
-
-              for (int number=0; number<limitcluster; ++number)
-              {
-                  coloredcloud.reset(new ColoredCloudT);
-                  coloredcloud->points.resize(clusters[number]->points.size());
-
-                  for(size_t i=0; i<clusters[number]->points.size(); ++i)
-                  {
-
-                      coloredcloud->points[i].x = (*clusters[number])[i].x;
-                      coloredcloud->points[i].y = (*clusters[number])[i].y;
-                      coloredcloud->points[i].z = (*clusters[number])[i].z;
-
-                      coloredcloud->points[i].r = cloudcolor[number][0];
-                      coloredcloud->points[i].g = cloudcolor[number][1];
-                      coloredcloud->points[i].b = cloudcolor[number][2];
-                      coloredcloud->points[i].a = 255;
-                  }
-
-                  hullarea = c.SurfaceArea(clusters[number]);
-                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(clusters[number]);
-
-                  if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
-                  {
-                      objvolume = hullarea*dimensionZ;
-                      totalvolume += objvolume;
-
-                      viewer_->updatePointCloud(coloredcloud, to_string(number));
-                  }
-
-              }
-          }
-          volumemean += totalvolume;
-      }
-
-      cubefactor = (volumemean/Nsamples)/5988.02395;
-      cubefactor = floor((cubefactor*2)+0.5)/2;
-
-      if (cubefactor >= 1000)
-      {
-          stringprecision = 6;
-      }
-      else if (cubefactor < 1000 and cubefactor >= 100)
-      {
-          stringprecision = 5;
-      }
-      else if (cubefactor < 100 and cubefactor >= 10)
-      {
-          stringprecision = 4;
+          TotalStr = "N/A";
+          ui->label_2->setText(QString::fromStdString(TotalStr));
+          ui->qvtkWidget->update();
       }
       else
       {
-          stringprecision = 3;
-      }
+          for (size_t counter = 0; counter < Nsamples; ++counter)
+          {
+              cloudnew = s.TwoCamStream(IP1, IP2, PORT);
+              cloud_preprocessed = c.PreProcessingCloud(cloudnew);
 
-      TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
-      ui->label_2->setText(QString::fromStdString(TotalStr));
-      ui->qvtkWidget->update();
+              coloredinput->points.resize(cloud_preprocessed->points.size());
+
+              if (cloud_preprocessed->points.size() > 100){
+                  for (size_t i = 0; i < coloredinput->points.size(); i++)
+                  {
+                      coloredinput->points[i].x = (*cloud_preprocessed)[i].x;
+                      coloredinput->points[i].y = (*cloud_preprocessed)[i].y;
+                      coloredinput->points[i].z = (*cloud_preprocessed)[i].z;
+                      coloredinput->points[i].r = 255;
+                      coloredinput->points[i].g = 255;
+                      coloredinput->points[i].b = 255;
+                      coloredinput->points[i].a = 200;
+                  }
+
+                  filteredcloud = c.FilterROI(cloud_preprocessed);
+                  notorientedclusters = c.CloudSegmentation(filteredcloud);
+
+                  std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+
+                  clusters = c.IndicestoClouds(filteredcloud, notorientedclusters);
+
+                  viewer_->updatePointCloud(coloredinput, "inputcloud");
+
+                  if (clusters.size() > 5)
+                  {
+                      limitcluster = 5;
+                  }
+                  else
+                  {
+                      limitcluster = clusters.size();
+                  }
+
+                  totalvolume = 0.0;
+                  objvolume = 0.0;
+
+                  viewer_->updatePointCloud(coloredcloud, to_string(0));
+                  viewer_->updatePointCloud(coloredcloud, to_string(1));
+                  viewer_->updatePointCloud(coloredcloud, to_string(2));
+                  viewer_->updatePointCloud(coloredcloud, to_string(3));
+                  viewer_->updatePointCloud(coloredcloud, to_string(4));
+
+                  for (int number=0; number<limitcluster; ++number)
+                  {
+                      coloredcloud.reset(new ColoredCloudT);
+                      coloredcloud->points.resize(clusters[number]->points.size());
+
+                      for(size_t i=0; i < clusters[number]->points.size(); ++i)
+                      {
+                          coloredcloud->points[i].x = (*clusters[number])[i].x;
+                          coloredcloud->points[i].y = (*clusters[number])[i].y;
+                          coloredcloud->points[i].z = (*clusters[number])[i].z;
+
+                          coloredcloud->points[i].r = cloudcolor[number][0];
+                          coloredcloud->points[i].g = cloudcolor[number][1];
+                          coloredcloud->points[i].b = cloudcolor[number][2];
+                          coloredcloud->points[i].a = 255;
+                      }
+
+                      hullarea = c.SurfaceArea(clusters[number]);
+                      std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
+
+                      if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
+                      {
+                          objvolume = hullarea*dimensionZ;
+                          totalvolume += objvolume;
+
+                          viewer_->updatePointCloud(coloredcloud, to_string(number));
+                      }
+                  }
+              }
+              volumemean += totalvolume;
+          }
+
+          cubefactor = (volumemean/Nsamples)/5988.02395;
+          cubefactor = floor((cubefactor*2)+0.5)/2;
+
+          if (cubefactor >= 1000)
+          {
+              stringprecision = 6;
+          }
+          else if (cubefactor < 1000 and cubefactor >= 100)
+          {
+              stringprecision = 5;
+          }
+          else if (cubefactor < 100 and cubefactor >= 10)
+          {
+              stringprecision = 4;
+          }
+          else
+          {
+              stringprecision = 3;
+          }
+
+          TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
+          ui->label_2->setText(QString::fromStdString(TotalStr));
+          ui->qvtkWidget->update();
+      }
   }
-}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::FrameBoxInPallet(){
   ////////
@@ -308,11 +306,11 @@ void PCLViewer::FrameBoxInPallet(){
 
                 filteredcloud = c.FilterROI(cloud_preprocessed);
                 cloud_palletremoved = c.RemovePallet(filteredcloud);
-                notorientedclusters = c.CloudSegmentation(cloud_palletremoved);
+                notorientedclusters = c.CloudSegmentation(filteredcloud);
 
                 std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
 
-                clusters = c.IndicestoClouds(cloud_palletremoved, notorientedclusters);
+                clusters = c.ExtractTopPlaneBox(filteredcloud, notorientedclusters);
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
@@ -339,7 +337,7 @@ void PCLViewer::FrameBoxInPallet(){
                     coloredcloud.reset(new ColoredCloudT);
                     coloredcloud->points.resize(clusters[number]->points.size());
 
-                    for(size_t i=0; i<clusters[number]->points.size(); ++i)
+                    for(size_t i=0; i < clusters[number]->points.size(); ++i)
                     {
                         coloredcloud->points[i].x = (*clusters[number])[i].x;
                         coloredcloud->points[i].y = (*clusters[number])[i].y;
@@ -353,13 +351,12 @@ void PCLViewer::FrameBoxInPallet(){
 
                     hullarea = c.SurfaceArea(clusters[number]);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
-
                     dimensionZ = dimensionZ - (PALLETHEIGHT*100);
 
 
                     if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
                     {
-                        objvolume = hullarea*dimensionZ;
+                        objvolume = dimensionX*dimensionY*dimensionZ;
                         totalvolume += objvolume;
 
                         viewer_->updatePointCloud(coloredcloud, to_string(number));
@@ -396,124 +393,124 @@ void PCLViewer::FrameBoxInPallet(){
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::FrameGenericInPallet(){
-   ////////
-    Controller c;
-    Sensor     s;
+    ////////
+      Controller c;
+      Sensor     s;
 
-    if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
-    {
-      TotalStr = "N/A";
-      ui->label_2->setText(QString::fromStdString(TotalStr));
-      ui->qvtkWidget->update();
-    }
-    else
-    {
-      for (size_t counter = 0; counter < Nsamples; ++counter)
+      if (s.TestConnection(IP1, PORT) == false or s.TestConnection(IP2, PORT) == false)
       {
-          cloudnew = s.TwoCamStream(IP1, IP2, PORT);
-          cloud_preprocessed = c.PreProcessingCloud(cloudnew);
-
-          coloredinput->points.resize(cloud_preprocessed->points.size());
-
-          if (cloud_preprocessed->points.size() > 100){
-              for (size_t i = 0; i < coloredinput->points.size(); i++)
-              {
-                  coloredinput->points[i].x = (*cloud_preprocessed)[i].x;
-                  coloredinput->points[i].y = (*cloud_preprocessed)[i].y;
-                  coloredinput->points[i].z = (*cloud_preprocessed)[i].z;
-                  coloredinput->points[i].r = 255;
-                  coloredinput->points[i].g = 255;
-                  coloredinput->points[i].b = 255;
-                  coloredinput->points[i].a = 200;
-              }
-
-              filteredcloud = c.FilterROI(cloud_preprocessed);
-              cloud_palletremoved = c.RemovePallet(filteredcloud);
-              notorientedclusters = c.CloudSegmentation(cloud_palletremoved);
-
-              std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
-
-              clusters = c.IndicestoClouds(cloud_palletremoved, notorientedclusters);
-
-              viewer_->updatePointCloud(coloredinput, "inputcloud");
-
-              if (clusters.size() > 5)
-              {
-                  limitcluster = 5;
-              }
-              else
-              {
-                  limitcluster = clusters.size();
-              }
-
-              totalvolume = 0.0;
-              objvolume = 0.0;
-
-              viewer_->updatePointCloud(coloredcloud, to_string(0));
-              viewer_->updatePointCloud(coloredcloud, to_string(1));
-              viewer_->updatePointCloud(coloredcloud, to_string(2));
-              viewer_->updatePointCloud(coloredcloud, to_string(3));
-              viewer_->updatePointCloud(coloredcloud, to_string(4));
-
-              for (int number=0; number<limitcluster; ++number)
-              {
-                  coloredcloud.reset(new ColoredCloudT);
-                  coloredcloud->points.resize(clusters[number]->points.size());
-
-                  for(size_t i=0; i<clusters[number]->points.size(); ++i)
-                  {
-                      coloredcloud->points[i].x = (*clusters[number])[i].x;
-                      coloredcloud->points[i].y = (*clusters[number])[i].y;
-                      coloredcloud->points[i].z = (*clusters[number])[i].z;
-
-                      coloredcloud->points[i].r = cloudcolor[number][0];
-                      coloredcloud->points[i].g = cloudcolor[number][1];
-                      coloredcloud->points[i].b = cloudcolor[number][2];
-                      coloredcloud->points[i].a = 255;
-                  }
-
-                  hullarea = c.SurfaceArea(clusters[number]);
-                  std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensionsGeneric(clusters[number]);
-
-                  dimensionZ = dimensionZ - (PALLETHEIGHT*100);
-
-                  if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
-                  {
-                      objvolume = hullarea*dimensionZ;
-                      totalvolume += objvolume;
-
-                      viewer_->updatePointCloud(coloredcloud, to_string(number));
-                  }
-              }
-          }
-          volumemean += totalvolume;
-      }
-
-      cubefactor = (volumemean/Nsamples)/5988.02395;
-      cubefactor = floor((cubefactor*2)+0.5)/2;
-
-      if (cubefactor >= 1000)
-      {
-          stringprecision = 6;
-      }
-      else if (cubefactor < 1000 and cubefactor >= 100)
-      {
-          stringprecision = 5;
-      }
-      else if (cubefactor < 100 and cubefactor >= 10)
-      {
-          stringprecision = 4;
+          TotalStr = "N/A";
+          ui->label_2->setText(QString::fromStdString(TotalStr));
+          ui->qvtkWidget->update();
       }
       else
       {
-          stringprecision = 3;
-      }
+          for (size_t counter = 0; counter < Nsamples; ++counter)
+          {
+              cloudnew = s.TwoCamStream(IP1, IP2, PORT);
+              cloud_preprocessed = c.PreProcessingCloud(cloudnew);
 
-      TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
-      ui->label_2->setText(QString::fromStdString(TotalStr));
-      ui->qvtkWidget->update();
-    }
-}
+              coloredinput->points.resize(cloud_preprocessed->points.size());
+
+              if (cloud_preprocessed->points.size() > 100){
+                  for (size_t i = 0; i < coloredinput->points.size(); i++)
+                  {
+                      coloredinput->points[i].x = (*cloud_preprocessed)[i].x;
+                      coloredinput->points[i].y = (*cloud_preprocessed)[i].y;
+                      coloredinput->points[i].z = (*cloud_preprocessed)[i].z;
+                      coloredinput->points[i].r = 255;
+                      coloredinput->points[i].g = 255;
+                      coloredinput->points[i].b = 255;
+                      coloredinput->points[i].a = 200;
+                  }
+
+                  filteredcloud = c.FilterROI(cloud_preprocessed);
+                  cloud_palletremoved = c.RemovePallet(filteredcloud);
+                  notorientedclusters = c.CloudSegmentation(filteredcloud);
+
+                  std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+
+                  clusters = c.IndicestoClouds(filteredcloud, notorientedclusters);
+
+                  viewer_->updatePointCloud(coloredinput, "inputcloud");
+
+                  if (clusters.size() > 5)
+                  {
+                      limitcluster = 5;
+                  }
+                  else
+                  {
+                      limitcluster = clusters.size();
+                  }
+
+                  totalvolume = 0.0;
+                  objvolume = 0.0;
+
+                  viewer_->updatePointCloud(coloredcloud, to_string(0));
+                  viewer_->updatePointCloud(coloredcloud, to_string(1));
+                  viewer_->updatePointCloud(coloredcloud, to_string(2));
+                  viewer_->updatePointCloud(coloredcloud, to_string(3));
+                  viewer_->updatePointCloud(coloredcloud, to_string(4));
+
+                  for (int number=0; number<limitcluster; ++number)
+                  {
+                      coloredcloud.reset(new ColoredCloudT);
+                      coloredcloud->points.resize(clusters[number]->points.size());
+
+                      for(size_t i=0; i < clusters[number]->points.size(); ++i)
+                      {
+                          coloredcloud->points[i].x = (*clusters[number])[i].x;
+                          coloredcloud->points[i].y = (*clusters[number])[i].y;
+                          coloredcloud->points[i].z = (*clusters[number])[i].z;
+
+                          coloredcloud->points[i].r = cloudcolor[number][0];
+                          coloredcloud->points[i].g = cloudcolor[number][1];
+                          coloredcloud->points[i].b = cloudcolor[number][2];
+                          coloredcloud->points[i].a = 255;
+                      }
+
+                      hullarea = c.SurfaceArea(clusters[number]);
+                      std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
+                      dimensionZ = dimensionZ - (PALLETHEIGHT*100);
+
+
+                      if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
+                      {
+                          objvolume = hullarea*dimensionZ;
+                          totalvolume += objvolume;
+
+                          viewer_->updatePointCloud(coloredcloud, to_string(number));
+                      }
+                  }
+              }
+              volumemean += totalvolume;
+          }
+
+          cubefactor = (volumemean/Nsamples)/5988.02395;
+          cubefactor = floor((cubefactor*2)+0.5)/2;
+
+          if (cubefactor >= 1000)
+          {
+              stringprecision = 6;
+          }
+          else if (cubefactor < 1000 and cubefactor >= 100)
+          {
+              stringprecision = 5;
+          }
+          else if (cubefactor < 100 and cubefactor >= 10)
+          {
+              stringprecision = 4;
+          }
+          else
+          {
+              stringprecision = 3;
+          }
+
+          TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
+          ui->label_2->setText(QString::fromStdString(TotalStr));
+          ui->qvtkWidget->update();
+      }
+  }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::CleanBox()
 {
