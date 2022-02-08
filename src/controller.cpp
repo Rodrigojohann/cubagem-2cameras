@@ -191,7 +191,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     double threshold = 0.1;
     double segradius = 0.1;
 ////
-    tree->setInputCloud(inputcloud);
+    tree->setInputCloud(*inputcloud);
 
     ne.setInputCloud (inputcloud);
     ne.setSearchMethod (tree);
@@ -203,7 +203,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     ne.setRadiusSearch (scale2);
     ne.compute (*normals_large_scale);
 
-    copyPointCloud (*cloud, *doncloud);
+    copyPointCloud (*inputcloud, *doncloud);
 
     pcl::DifferenceOfNormalsEstimation<PointCloudT, pcl::PointNormal, pcl::PointNormal> don;
     don.setInputCloud (inputcloud);

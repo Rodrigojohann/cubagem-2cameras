@@ -19,6 +19,7 @@
 #include <pcl/search/kdtree.h>
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/filters/conditional_removal.h>
+#include <pcl/features/don.h>
 
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
