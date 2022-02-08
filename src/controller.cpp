@@ -177,14 +177,13 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 {
 // var
     std::vector <pcl::PointIndices> clusters;
-    pcl::search::Search<PointXYZRGB>::Ptr tree;
-    pcl::NormalEstimationOMP<PointCloutT, pcl::PointNormal> ne;
+    pcl::search::Search<PointCloudT>::Ptr tree;
+    pcl::NormalEstimationOMP<PointCloudT, pcl::PointNormal> ne;
     pcl::PointCloud<pcl::PointNormal>::Ptr normals_small_scale (new pcl::PointCloud<pcl::PointNormal>);
     pcl::PointCloud<pcl::PointNormal>::Ptr normals_large_scale (new pcl::PointCloud<pcl::PointNormal>);
     pcl::PointCloud<pcl::PointNormal>::Ptr doncloud (new pcl::PointCloud<pcl::PointNormal>);
     pcl::ConditionOr<pcl::PointNormal>::Ptr range_cond (new pcl::ConditionOr<pcl::PointNormal>());
     pcl::PointCloud<pcl::PointNormal>::Ptr doncloud_filtered (new pcl::PointCloud<pcl::PointNormal>);
-    std::vector<pcl::PointIndices> clusters;
     pcl::EuclideanClusterExtraction<pcl::PointNormal> ec;
 
     double scale1 = 0.05;

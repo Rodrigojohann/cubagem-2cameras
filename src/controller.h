@@ -16,6 +16,10 @@
 #include <pcl/filters/radius_outlier_removal.h>
 
 #include <pcl/segmentation/region_growing.h>
+#include <pcl/search/kdtree.h>
+#include <pcl/features/normal_3d_omp.h>
+#include <pcl/filters/conditional_removal.h>
+
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
