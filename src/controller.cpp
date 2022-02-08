@@ -181,11 +181,11 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     pcl::NormalEstimationOMP<PointCloutT, pcl::PointNormal> ne;
     pcl::PointCloud<pcl::PointNormal>::Ptr normals_small_scale (new pcl::PointCloud<pcl::PointNormal>);
     pcl::PointCloud<pcl::PointNormal>::Ptr normals_large_scale (new pcl::PointCloud<pcl::PointNormal>);
-    pcl´::PointCloud<pcl::PointNormal>::Ptr doncloud (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::PointCloud<pcl::PointNormal>::Ptr doncloud (new pcl::PointCloud<pcl::PointNormal>);
     pcl::ConditionOr<pcl::PointNormal>::Ptr range_cond (new pcl::ConditionOr<pcl::PointNormal>());
     pcl::PointCloud<pcl::PointNormal>::Ptr doncloud_filtered (new pcl::PointCloud<pcl::PointNormal>);
     std::vector<pcl::PointIndices> clusters;
-    pcl::EuclideanClusterExtraction<PointNormal> ec;
+    pcl::EuclideanClusterExtraction<pcl::PointNormal> ec;
 
     double scale1 = 0.05;
     double scale2 = 0.1;
@@ -214,14 +214,14 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 
     range_cond->addComparison (pcl::FieldComparison<pcl::PointNormal>::ConstPtr (new pcl::FieldComparison<pcl::PointNormal> ("curvature", pcl::ComparisonOps::GT, threshold)));
 
-    pcl::ConditionalRemoval<PointNormal> condrem;
+    pcl::ConditionalRemoval<pcl::PointNormal> condrem;
     condrem.setCondition (range_cond);
     condrem.setInputCloud (doncloud);
     condrem.filter (*doncloud_filtered);
 
     doncloud = doncloud_filtered;
 
-    pcl::search::KdTree<PointNormal>::Ptr segtree (new pcl::search::KdTree<PointNormal>);
+    pcl::search::KdTree<pcl::PointNormal>::Ptr segtree (new pcl::search::KdTree<pcl::PointNormal>);
     segtree->setInputCloud (doncloud);
 
     ec.setClusterTolerance (segradius);
