@@ -128,33 +128,33 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
-{
-// var
-    pcl::search::Search<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    pcl::PointCloud <pcl::Normal>::Ptr                normals (new pcl::PointCloud <pcl::Normal>);
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimator;
-    std::vector <pcl::PointIndices>                   clusters;
-    pcl::RegionGrowing<pcl::PointXYZ, pcl::Normal>    reg;
-////
-    if (inputcloud->points.size() > 10){
-        normal_estimator.setSearchMethod (tree);
-        normal_estimator.setInputCloud (inputcloud);
-        normal_estimator.setKSearch (50);
-        normal_estimator.compute (*normals);
+//{
+//// var
+//    pcl::search::Search<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>);
+//    pcl::PointCloud <pcl::Normal>::Ptr                normals (new pcl::PointCloud <pcl::Normal>);
+//    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimator;
+//    std::vector <pcl::PointIndices>                   clusters;
+//    pcl::RegionGrowing<pcl::PointXYZ, pcl::Normal>    reg;
+//////
+//    if (inputcloud->points.size() > 10){
+//        normal_estimator.setSearchMethod (tree);
+//        normal_estimator.setInputCloud (inputcloud);
+//        normal_estimator.setKSearch (50);
+//        normal_estimator.compute (*normals);
 
-        reg.setMinClusterSize (50);
-        reg.setMaxClusterSize (25000);
-        reg.setSearchMethod (tree);
-        reg.setNumberOfNeighbours (30);
-        reg.setInputCloud (inputcloud);
-        reg.setInputNormals (normals);
-        reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
-        reg.setCurvatureThreshold (1.0);
-        reg.extract (clusters);
-    }
+//        reg.setMinClusterSize (50);
+//        reg.setMaxClusterSize (25000);
+//        reg.setSearchMethod (tree);
+//        reg.setNumberOfNeighbours (30);
+//        reg.setInputCloud (inputcloud);
+//        reg.setInputNormals (normals);
+//        reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
+//        reg.setCurvatureThreshold (1.0);
+//        reg.extract (clusters);
+//    }
 
-    return clusters;
-}
+//    return clusters;
+//}
 
 //{
 //// var
@@ -174,6 +174,65 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 
 //    return clusters;
 //}
+{
+// var
+    std::vector <pcl::PointIndices> clusters;
+    pcl::search::Search<PointXYZRGB>::Ptr tree;
+    pcl::NormalEstimationOMP<PointCloutT, pcl::PointNormal> ne;
+    pcl::PointCloud<pcl::PointNormal>::Ptr normals_small_scale (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::PointCloud<pcl::PointNormal>::Ptr normals_large_scale (new pcl::PointCloud<pcl::PointNormal>);
+    pcl´::PointCloud<pcl::PointNormal>::Ptr doncloud (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::ConditionOr<pcl::PointNormal>::Ptr range_cond (new pcl::ConditionOr<pcl::PointNormal>());
+    pcl::PointCloud<pcl::PointNormal>::Ptr doncloud_filtered (new pcl::PointCloud<pcl::PointNormal>);
+    std::vector<pcl::PointIndices> clusters;
+    pcl::EuclideanClusterExtraction<PointNormal> ec;
+
+    double scale1 = 0.05;
+    double scale2 = 0.1;
+    double threshold = 0.1;
+    double segradius = 0.1;
+////
+    tree->setInputCloud(inputcloud);
+
+    ne.setInputCloud (inputcloud);
+    ne.setSearchMethod (tree);
+    ne.setViewPoint (std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+
+    ne.setRadiusSearch (scale1);
+    ne.compute (*normals_small_scale);
+
+    ne.setRadiusSearch (scale2);
+    ne.compute (*normals_large_scale);
+
+    copyPointCloud (*cloud, *doncloud);
+
+    pcl::DifferenceOfNormalsEstimation<PointCloudT, pcl::PointNormal, pcl::PointNormal> don;
+    don.setInputCloud (inputcloud);
+    don.setNormalScaleLarge (normals_large_scale);
+    don.setNormalScaleSmall (normals_small_scale);
+    don.computeFeature (*doncloud);
+
+    range_cond->addComparison (pcl::FieldComparison<pcl::PointNormal>::ConstPtr (new pcl::FieldComparison<pcl::PointNormal> ("curvature", pcl::ComparisonOps::GT, threshold)));
+
+    pcl::ConditionalRemoval<PointNormal> condrem;
+    condrem.setCondition (range_cond);
+    condrem.setInputCloud (doncloud);
+    condrem.filter (*doncloud_filtered);
+
+    doncloud = doncloud_filtered;
+
+    pcl::search::KdTree<PointNormal>::Ptr segtree (new pcl::search::KdTree<PointNormal>);
+    segtree->setInputCloud (doncloud);
+
+    ec.setClusterTolerance (segradius);
+    ec.setMinClusterSize (50);
+    ec.setMaxClusterSize (100000);
+    ec.setSearchMethod (segtree);
+    ec.setInputCloud (doncloud);
+    ec.extract (clusters);
+
+    return clusters;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentationPallet(PointCloudT::Ptr inputcloud)
 {
