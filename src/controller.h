@@ -15,12 +15,7 @@
 #include <pcl/filters/extract_indices.h>
 #include <pcl/filters/radius_outlier_removal.h>
 
-#include <pcl/segmentation/region_growing.h>
-#include <pcl/search/kdtree.h>
-#include <pcl/features/normal_3d_omp.h>
-#include <pcl/filters/conditional_removal.h>
-#include <pcl/features/don.h>
-
+#include <pcl/segmentation/conditional_euclidean_clustering.h>
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
@@ -31,6 +26,7 @@ public:
     PointCloudT::Ptr                                FilterROI(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                RemovePallet(PointCloudT::Ptr inputcloud);
     std::vector<pcl::PointIndices>                  CloudSegmentation(PointCloudT::Ptr inputcloud);
+    bool                                            ClusterCondition(PointCloudT::Ptr seedPoint, PointCloudT::Ptr candidatePoint);
     std::vector<pcl::PointIndices>                  CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensions(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensionsGeneric(PointCloudT::Ptr inputcloud);

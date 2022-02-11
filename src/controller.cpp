@@ -176,61 +176,32 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 //}
 {
 // var
-    std::vector <pcl::PointIndices> clusters;
-    pcl::search::Search<PointCloudT>::Ptr tree;
-    pcl::NormalEstimationOMP<PointCloudT, pcl::PointNormal> ne;
-    pcl::PointCloud<pcl::PointNormal>::Ptr normals_small_scale (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::PointCloud<pcl::PointNormal>::Ptr normals_large_scale (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::PointCloud<pcl::PointNormal>::Ptr doncloud (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::ConditionOr<pcl::PointNormal>::Ptr range_cond (new pcl::ConditionOr<pcl::PointNormal>());
-    pcl::PointCloud<pcl::PointNormal>::Ptr doncloud_filtered (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::EuclideanClusterExtraction<pcl::PointNormal> ec;
-
-    double scale1 = 0.05;
-    double scale2 = 0.1;
-    double threshold = 0.1;
-    double segradius = 0.1;
+    pcl::ConditionalEuclideanClustering<pcl::PointXYZ> clustering;
+    std::vector<pcl::PointIndices> clusters;
 ////
-    tree->setInputCloud(*inputcloud);
+    clustering.setClusterTolerance(0.02);
+    clustering.setMinClusterSize(50);
+    clustering.setMaxClusterSize(250000);
+    clustering.setInputCloud(inputcloud);
 
-    ne.setInputCloud (inputcloud);
-    ne.setSearchMethod (tree);
-    ne.setViewPoint (std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    clustering.setConditionFunction(&ClusterCondition);
 
-    ne.setRadiusSearch (scale1);
-    ne.compute (*normals_small_scale);
+    clustering.segment(clusters);
 
-    ne.setRadiusSearch (scale2);
-    ne.compute (*normals_large_scale);
 
-    copyPointCloud (*inputcloud, *doncloud);
-
-    pcl::DifferenceOfNormalsEstimation<PointCloudT, pcl::PointNormal, pcl::PointNormal> don;
-    don.setInputCloud (inputcloud);
-    don.setNormalScaleLarge (normals_large_scale);
-    don.setNormalScaleSmall (normals_small_scale);
-    don.computeFeature (*doncloud);
-
-    range_cond->addComparison (pcl::FieldComparison<pcl::PointNormal>::ConstPtr (new pcl::FieldComparison<pcl::PointNormal> ("curvature", pcl::ComparisonOps::GT, threshold)));
-
-    pcl::ConditionalRemoval<pcl::PointNormal> condrem;
-    condrem.setCondition (range_cond);
-    condrem.setInputCloud (doncloud);
-    condrem.filter (*doncloud_filtered);
-
-    doncloud = doncloud_filtered;
-
-    pcl::search::KdTree<pcl::PointNormal>::Ptr segtree (new pcl::search::KdTree<pcl::PointNormal>);
-    segtree->setInputCloud (doncloud);
-
-    ec.setClusterTolerance (segradius);
-    ec.setMinClusterSize (50);
-    ec.setMaxClusterSize (100000);
-    ec.setSearchMethod (segtree);
-    ec.setInputCloud (doncloud);
-    ec.extract (clusters);
 
     return clusters;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool Controller::ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::PointXYZ& candidatePoint, float squaredDistance)
+{
+// var
+    float tolerance = 0.015;
+////
+     if ((candidatePoint.z - seedPoint.z) > tolerance)  //If the Y value of the candidate point is less than the Y value of the seed point (that is, the point previously selected as a cluster), the condition is not met, and false
+        return false;
+
+    return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentationPallet(PointCloudT::Ptr inputcloud)
