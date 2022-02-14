@@ -179,12 +179,20 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     pcl::ConditionalEuclideanClustering<pcl::PointXYZ> clustering;
     std::vector<pcl::PointIndices> clusters;
 ////
-    clustering.setClusterTolerance(0.02);
+    auto lambda = [](const pcl::PointXYZ& point_a, const pcl::PointXYZ& point_b, float squared_distance){
+    if(std::abs (point_a.z - point_b.z) < squared_distance)
+       return true;
+    else
+       return false;
+    };
+
+
+    clustering.setClusterTolerance(0.03);
     clustering.setMinClusterSize(50);
     clustering.setMaxClusterSize(250000);
     clustering.setInputCloud(inputcloud);
 
-    clustering.setConditionFunction(&ClusterCondition);
+    clustering.setConditionFunction(lambda);
 
     clustering.segment(clusters);
 
