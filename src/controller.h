@@ -26,6 +26,7 @@ public:
     PointCloudT::Ptr                                FilterROI(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                RemovePallet(PointCloudT::Ptr inputcloud);
     std::vector<pcl::PointIndices>                  CloudSegmentation(PointCloudT::Ptr inputcloud);
+    bool                                            ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::PointXYZ& candidatePoint, float squaredDistance);
     std::vector<pcl::PointIndices>                  CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensions(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensionsGeneric(PointCloudT::Ptr inputcloud);
