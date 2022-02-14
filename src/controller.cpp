@@ -156,52 +156,23 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 //    return clusters;
 //}
 
-//{
-//// var
-//    pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
-//    std::vector <pcl::PointIndices>                clusters;
-//    pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-//////
-//    if (inputcloud->points.size() > 10){
-//        tree->setInputCloud (inputcloud);
-//        ec.setClusterTolerance (0.030);
-//        ec.setMinClusterSize (50);
-//        ec.setMaxClusterSize (25000);
-//        ec.setSearchMethod (tree);
-//        ec.setInputCloud (inputcloud);
-//        ec.extract (clusters);
-//    }
-
-//    return clusters;
-//}
 {
 // var
-    pcl::ConditionalEuclideanClustering<pcl::PointXYZ> clustering;
-    std::vector<pcl::PointIndices> clusters;
+    pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
+    std::vector <pcl::PointIndices>                clusters;
+    pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
 ////
-    clustering.setClusterTolerance(0.03);
-    clustering.setMinClusterSize(50);
-    clustering.setMaxClusterSize(250000);
-    clustering.setInputCloud(inputcloud);
-
-    clustering.setConditionFunction(&ClusterCondition());
-
-    clustering.segment(clusters);
-
-
+    if (inputcloud->points.size() > 10){
+        tree->setInputCloud (inputcloud);
+        ec.setClusterTolerance (0.030);
+        ec.setMinClusterSize (50);
+        ec.setMaxClusterSize (25000);
+        ec.setSearchMethod (tree);
+        ec.setInputCloud (inputcloud);
+        ec.extract (clusters);
+    }
 
     return clusters;
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Controller::ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::PointXYZ& candidatePoint, float squaredDistance)
-{
-// var
-    float tolerance = 0.015;
-////
-     if ((candidatePoint.z - seedPoint.z) > tolerance)  //If the Y value of the candidate point is less than the Y value of the seed point (that is, the point previously selected as a cluster), the condition is not met, and false
-        return false;
-
-    return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentationPallet(PointCloudT::Ptr inputcloud)
