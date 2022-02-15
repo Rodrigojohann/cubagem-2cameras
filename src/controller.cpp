@@ -183,15 +183,10 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     clustering.setClusterTolerance(0.03);
     clustering.setMinClusterSize(50);
     clustering.setMaxClusterSize(250000);
-
-
     clustering.setConditionFunction(boost::bind(&Controller::ClusterCondition, this, _1, _2, _3));
-
     clustering.segment(clusters);
 
-
-
-    return clusters;nan
+    return clusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Controller::ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::PointXYZ& candidatePoint, float squaredDistance)
