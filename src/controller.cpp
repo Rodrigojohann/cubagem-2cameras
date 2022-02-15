@@ -191,7 +191,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 
 
 
-    return clusters;
+    return clusters;nan
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Controller::ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::PointXYZ& candidatePoint, float squaredDistance)
@@ -199,10 +199,14 @@ bool Controller::ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::Poi
 // var
     float tolerance = 0.015;
 ////
-     if ((candidatePoint.z - seedPoint.z) > tolerance)  //If the Y value of the candidate point is less than the Y value of the seed point (that is, the point previously selected as a cluster), the condition is not met, and false
-        return false;
-
-    return true;
+     if ((std::abs(candidatePoint.x - seedPoint.x) < tolerance) and (std::abs(candidatePoint.y - seedPoint.y) < tolerance) and (std::abs(candidatePoint.z - seedPoint.z) < tolerance))
+     {
+         return (true);
+     }
+     else
+     {
+         return (false);
+     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentationPallet(PointCloudT::Ptr inputcloud)
