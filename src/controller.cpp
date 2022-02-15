@@ -184,7 +184,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     //cloud_with_normals->points.resize(inputcloud->points.size());
 
     pcl::copyPointCloud (*inputcloud, *cloud_with_normals);
-    pcl::NormalEstimation<PointTypeIO, PointTypeFull> ne;
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::PointXYZINormal> ne;
     ne.setInputCloud (inputcloud);
     ne.setSearchMethod (search_tree);
     ne.setRadiusSearch (300.0);
