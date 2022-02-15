@@ -178,6 +178,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 // var
     pcl::ConditionalEuclideanClustering<pcl::PointXYZ> clustering (true);
     std::vector<pcl::PointIndices> clusters;
+    pcl::PointCloud<pcl::PointXYZINormal>::Ptr cloud_with_normals (new pcl::PointCloud<pcl::PointXYZINormal>);
 ////
     clustering.setInputCloud(inputcloud);
     clustering.setClusterTolerance(0.03);
@@ -192,7 +193,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 bool Controller::ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::PointXYZ& candidatePoint, float squaredDistance)
 {
 // var
-    float tolerance = 0.015;
+    float tolerance = 0.025;
 ////
      if ((std::abs(candidatePoint.x - seedPoint.x) < tolerance) and (std::abs(candidatePoint.y - seedPoint.y) < tolerance) and (std::abs(candidatePoint.z - seedPoint.z) < tolerance))
      {
