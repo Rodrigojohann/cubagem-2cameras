@@ -176,9 +176,10 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 //}
 {
 // var
-    pcl::ConditionalEuclideanClustering<pcl::PointXYZ> clustering (true);
+    pcl::ConditionalEuclideanClustering<pcl::PointXYZINormal> clustering (true);
     std::vector<pcl::PointIndices> clusters;
     pcl::PointCloud<pcl::PointXYZINormal>::Ptr cloud_with_normals (new pcl::PointCloud<pcl::PointXYZINormal>);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr search_tree (new pcl::search::KdTree<pcl::PointXYZ>);
 ////
 
     //cloud_with_normals->points.resize(inputcloud->points.size());
@@ -190,7 +191,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     ne.setRadiusSearch (300.0);
     ne.compute (*cloud_with_normals);
 
-    clustering.setInputCloud(inputcloud);
+    clustering.setInputCloud(cloud_with_normals);
     clustering.setClusterTolerance(0.03);
     clustering.setMinClusterSize(50);
     clustering.setMaxClusterSize(250000);
@@ -200,7 +201,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     return clusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Controller::ClusterCondition(const pcl::PointXYZ& seedPoint, const pcl::PointXYZ& candidatePoint, float squaredDistance)
+bool Controller::ClusterCondition(const pcl::PointXYZINormal& seedPoint, const pcl::PointXYZINormal& candidatePoint, float squaredDistance)
 {
 // var
     float tolerance = 0.025;
