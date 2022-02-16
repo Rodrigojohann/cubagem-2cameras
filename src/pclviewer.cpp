@@ -434,9 +434,9 @@ void PCLViewer::FrameGenericInPallet(){
 
                   viewer_->updatePointCloud(coloredinput, "inputcloud");
 
-                  if (clusters.size() > 5)
+                  if (clusters.size() > 10)
                   {
-                      limitcluster = 5;
+                      limitcluster = 10;
                   }
                   else
                   {
