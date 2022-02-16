@@ -204,9 +204,14 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 bool Controller::ClusterCondition(const pcl::PointXYZINormal& seedPoint, const pcl::PointXYZINormal& candidatePoint, float squaredDistance)
 {
 // var
-    float tolerance = 0.025;
+    float distancethreshold = 0.025;
+    float curvaturethreshold = 0.06;
 ////
      if ((std::abs(candidatePoint.x - seedPoint.x) < tolerance) and (std::abs(candidatePoint.y - seedPoint.y) < tolerance) and (std::abs(candidatePoint.z - seedPoint.z) < tolerance))
+     {
+         return (true);
+     }
+     else if (seedPoint.dot(candidatePoint) < curvaturethreshold)
      {
          return (true);
      }
