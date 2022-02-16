@@ -51,16 +51,12 @@ class PCLViewer : public QMainWindow
     PointCloudT::Ptr                                     cloud_preprocessed;
     PointCloudT::Ptr                                     filteredcloud;
     PointCloudT::Ptr                                     cloud_palletremoved;
-    PointCloudT::Ptr                                     segmented_cloud;
-    PointCloudT::Ptr                                     cloud_planebox;
-    PointCloudT::Ptr                                     projectedcloud;
     PointCloudT::Ptr                                     cloud_hull;
     ColoredCloudT::Ptr                                   coloredinput;
     ColoredCloudT::Ptr                                   coloredcloud;
     std::vector<pcl::Vertices>                           hullpolygons;
-    std::vector<pcl::PointIndices>                       unsortedclusters;
     std::vector<pcl::PointIndices>                       notorientedclusters;
-    std::vector<pcl::PointIndices>                       clusters;
+    std::vector<PointCloudT::Ptr>                        clusters;
     int                                                  cloudcolor[5][3] = {{0, 0, 255}, {0, 220, 0}, {255, 0, 0}, {200, 200, 0}, {255, 0, 255}};
     int                                                  clustersize;
     int                                                  limitcluster;

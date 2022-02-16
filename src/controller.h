@@ -15,25 +15,25 @@
 #include <pcl/filters/extract_indices.h>
 #include <pcl/filters/radius_outlier_removal.h>
 
+#include <pcl/segmentation/conditional_euclidean_clustering.h>
+
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
 class Controller
 {
 public:
-    std::vector <pcl::PointIndices>                 SortClusters(std::vector <pcl::PointIndices> inputclusters, int size);
-    std::vector <pcl::PointIndices>                 SortClustersPallet(std::vector <pcl::PointIndices> inputclusters, int size);
     PointCloudT::Ptr                                PreProcessingCloud(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                FilterROI(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                RemovePallet(PointCloudT::Ptr inputcloud);
-    PointCloudT::Ptr                                ExtractPlaneBox(PointCloudT::Ptr inputcloud);
-    std::tuple<std::vector<pcl::PointIndices>, int> CloudSegmentation(PointCloudT::Ptr inputcloud);
-    std::tuple<std::vector<pcl::PointIndices>, int> CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
+    std::vector<pcl::PointIndices>                  CloudSegmentation(PointCloudT::Ptr inputcloud);
+    bool                                            ClusterCondition(const pcl::PointXYZINormal& seedPoint, const pcl::PointXYZINormal& candidatePoint, float squaredDistance);
+    std::vector<pcl::PointIndices>                  CloudSegmentationPallet(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensions(PointCloudT::Ptr inputcloud);
     std::tuple<float, float, float>                 CalculateDimensionsGeneric(PointCloudT::Ptr inputcloud);
-    bool                                            NormalOrientation (PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster);
-    std::vector <pcl::PointIndices>                 RemoveInclined(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputclusters);
+    std::vector <PointCloudT::Ptr>                  ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputclusters);
+    std::vector <PointCloudT::Ptr>                  IndicestoClouds(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputindices);
     double                                          SurfaceArea(PointCloudT::Ptr inputcloud);
     double                                          PalletArea(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                ProjectCloud(PointCloudT::Ptr inputcloud);
-    std::tuple<PointCloudT::Ptr, std::vector<pcl::Vertices>> ConvexHull(PointCloudT::Ptr inputcloud);
+    std::tuple<PointCloudT::Ptr, std::vector<pcl::Vertices>> ConvexHull(PointCloudT::Ptr inputcloud);    
 };
