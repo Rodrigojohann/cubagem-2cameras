@@ -206,12 +206,13 @@ bool Controller::ClusterCondition(const pcl::PointXYZINormal& seedPoint, const p
 // var
     float distancethreshold = 0.025;
     float curvaturethreshold = 0.06;
+    Eigen::Map<const Eigen::Vector3f> point_a_normal = seedPoint.getNormalVector3fMap (), point_b_normal = candidatePoint.getNormalVector3fMap ();
 ////
-     if ((std::abs(candidatePoint.x - seedPoint.x) < tolerance) and (std::abs(candidatePoint.y - seedPoint.y) < tolerance) and (std::abs(candidatePoint.z - seedPoint.z) < tolerance))
+     if ((std::abs(candidatePoint.x - seedPoint.x) < distancethreshold) and (std::abs(candidatePoint.y - seedPoint.y) < distancethreshold) and (std::abs(candidatePoint.z - seedPoint.z) < distancethreshold))
      {
          return (true);
      }
-     else if (seedPoint.dot(candidatePoint) < curvaturethreshold)
+     else if (point_a_normal.dot(point_b_normal) < curvaturethreshold)
      {
          return (true);
      }
