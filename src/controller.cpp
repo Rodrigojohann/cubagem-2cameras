@@ -128,52 +128,6 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
-//{
-//// var
-//    pcl::search::Search<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>);
-//    pcl::PointCloud <pcl::Normal>::Ptr                normals (new pcl::PointCloud <pcl::Normal>);
-//    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimator;
-//    std::vector <pcl::PointIndices>                   clusters;
-//    pcl::RegionGrowing<pcl::PointXYZ, pcl::Normal>    reg;
-//////
-//    if (inputcloud->points.size() > 10){
-//        normal_estimator.setSearchMethod (tree);
-//        normal_estimator.setInputCloud (inputcloud);
-//        normal_estimator.setKSearch (50);
-//        normal_estimator.compute (*normals);
-
-//        reg.setMinClusterSize (50);
-//        reg.setMaxClusterSize (25000);
-//        reg.setSearchMethod (tree);
-//        reg.setNumberOfNeighbours (30);
-//        reg.setInputCloud (inputcloud);
-//        reg.setInputNormals (normals);
-//        reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
-//        reg.setCurvatureThreshold (1.0);
-//        reg.extract (clusters);
-//    }
-
-//    return clusters;
-//}
-
-//{
-//// var
-//    pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
-//    std::vector <pcl::PointIndices>                clusters;
-//    pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-//////
-//    if (inputcloud->points.size() > 10){
-//        tree->setInputCloud (inputcloud);
-//        ec.setClusterTolerance (0.030);
-//        ec.setMinClusterSize (50);
-//        ec.setMaxClusterSize (25000);
-//        ec.setSearchMethod (tree);
-//        ec.setInputCloud (inputcloud);
-//        ec.extract (clusters);
-//    }
-
-//    return clusters;
-//}
 {
 // var
     pcl::ConditionalEuclideanClustering<pcl::PointXYZINormal> clustering (true);
@@ -181,9 +135,6 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     pcl::PointCloud<pcl::PointXYZINormal>::Ptr cloud_with_normals (new pcl::PointCloud<pcl::PointXYZINormal>);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr search_tree (new pcl::search::KdTree<pcl::PointXYZ>);
 ////
-
-    //cloud_with_normals->points.resize(inputcloud->points.size());
-
     pcl::copyPointCloud (*inputcloud, *cloud_with_normals);
     pcl::NormalEstimation<pcl::PointXYZ, pcl::PointXYZINormal> ne;
     ne.setInputCloud (inputcloud);
@@ -208,14 +159,10 @@ bool Controller::ClusterCondition(const pcl::PointXYZINormal& seedPoint, const p
     float curvaturethreshold = 0.95;
     Eigen::Map<const Eigen::Vector3f> point_a_normal = seedPoint.getNormalVector3fMap (), point_b_normal = candidatePoint.getNormalVector3fMap ();
 ////
-     if ((std::abs(candidatePoint.x - seedPoint.x) < distancethreshold) and (std::abs(candidatePoint.y - seedPoint.y) < distancethreshold) and (std::abs(candidatePoint.z - seedPoint.z) < distancethreshold))// and (std::abs(point_a_normal.dot(point_b_normal)) > curvaturethreshold))
+     if ((std::abs(candidatePoint.x - seedPoint.x) < distancethreshold) and (std::abs(candidatePoint.y - seedPoint.y) < distancethreshold) and (std::abs(candidatePoint.z - seedPoint.z) < distancethreshold))
      {
          return (true);
      }
-//     if (std::abs(point_a_normal.dot(point_b_normal)) > curvaturethreshold)
-//     {
-//         return (true);
-//     }
      else
      {
          return (false);
