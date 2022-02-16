@@ -79,9 +79,9 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
-                if (clusters.size() > 5)
+                if (clusters.size() > 10)
                 {
-                    limitcluster = 5;
+                    limitcluster = 10;
                 }
                 else
                 {
@@ -196,9 +196,9 @@ void PCLViewer::FrameGeneric(){
 
                   viewer_->updatePointCloud(coloredinput, "inputcloud");
 
-                  if (clusters.size() > 5)
+                  if (clusters.size() > 10)
                   {
-                      limitcluster = 5;
+                      limitcluster = 10;
                   }
                   else
                   {
@@ -314,9 +314,9 @@ void PCLViewer::FrameBoxInPallet(){
 
                 viewer_->updatePointCloud(coloredinput, "inputcloud");
 
-                if (clusters.size() > 5)
+                if (clusters.size() > 10)
                 {
-                    limitcluster = 5;
+                    limitcluster = 10;
                 }
                 else
                 {
