@@ -188,7 +188,7 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
     pcl::NormalEstimation<pcl::PointXYZ, pcl::PointXYZINormal> ne;
     ne.setInputCloud (inputcloud);
     ne.setSearchMethod (search_tree);
-    ne.setRadiusSearch (300.0);
+    ne.setKSearch (10);
     ne.compute (*cloud_with_normals);
 
     clustering.setInputCloud(cloud_with_normals);
@@ -205,17 +205,17 @@ bool Controller::ClusterCondition(const pcl::PointXYZINormal& seedPoint, const p
 {
 // var
     float distancethreshold = 0.025;
-    float curvaturethreshold = 0.06;
+    float curvaturethreshold = 0.95;
     Eigen::Map<const Eigen::Vector3f> point_a_normal = seedPoint.getNormalVector3fMap (), point_b_normal = candidatePoint.getNormalVector3fMap ();
 ////
-     if ((std::abs(candidatePoint.x - seedPoint.x) < distancethreshold) and (std::abs(candidatePoint.y - seedPoint.y) < distancethreshold) and (std::abs(candidatePoint.z - seedPoint.z) < distancethreshold))
+     if ((std::abs(candidatePoint.x - seedPoint.x) < distancethreshold) and (std::abs(candidatePoint.y - seedPoint.y) < distancethreshold) and (std::abs(candidatePoint.z - seedPoint.z) < distancethreshold))// and (std::abs(point_a_normal.dot(point_b_normal)) > curvaturethreshold))
      {
          return (true);
      }
-     else if (point_a_normal.dot(point_b_normal) < curvaturethreshold)
-     {
-         return (true);
-     }
+//     if (std::abs(point_a_normal.dot(point_b_normal)) > curvaturethreshold)
+//     {
+//         return (true);
+//     }
      else
      {
          return (false);
