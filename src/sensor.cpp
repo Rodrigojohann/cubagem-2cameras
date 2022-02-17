@@ -85,13 +85,13 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     cloud_raw2 = CamStream(ipAddress2, port);
 
     passz.setInputCloud(cloud_raw1);
-    passz.setFilterFieldName ("z");
-    passz.setFilterLimits (0, 5);
+    passz.setFilterFieldName("z");
+    passz.setFilterLimits(0, 5);
     passz.filter(*cloud_raw1);
 
     passz.setInputCloud(cloud_raw2);
-    passz.setFilterFieldName ("z");
-    passz.setFilterLimits (0, 5);
+    passz.setFilterFieldName("z");
+    passz.setFilterLimits(0, 5);
     passz.filter(*cloud_raw2);
 
     float theta1 = -ANGLE1*(M_PI/180);
@@ -100,26 +100,26 @@ PointCloudT::Ptr Sensor::TwoCamStream(char* ipAddress1, char* ipAddress2, unsign
     Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
     Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
 
-    transform_1.rotate (Eigen::AngleAxisf (theta1, Eigen::Vector3f::UnitX()));
-    transform_2.rotate (Eigen::AngleAxisf (theta2, Eigen::Vector3f::UnitX()));
+    transform_1.rotate(Eigen::AngleAxisf(theta1, Eigen::Vector3f::UnitX()));
+    transform_2.rotate(Eigen::AngleAxisf(theta2, Eigen::Vector3f::UnitX()));
 
-    pcl::transformPointCloud (*cloud_raw1, *cloud_transformed1, transform_1);
-    pcl::transformPointCloud (*cloud_raw2, *cloud_transformed2, transform_2);
+    pcl::transformPointCloud(*cloud_raw1, *cloud_transformed1, transform_1);
+    pcl::transformPointCloud(*cloud_raw2, *cloud_transformed2, transform_2);
 
     float theta3 = M_PI;
     Eigen::Affine3f transform_3 = Eigen::Affine3f::Identity();
-    transform_3.rotate (Eigen::AngleAxisf (theta3, Eigen::Vector3f::UnitZ()));
+    transform_3.rotate(Eigen::AngleAxisf (theta3, Eigen::Vector3f::UnitZ()));
     transform_3.translation() << 0.0, 3.05, 0.0;
 
-    pcl::transformPointCloud (*cloud_transformed2, *cloud_transformed3, transform_3);
+    pcl::transformPointCloud(*cloud_transformed2, *cloud_transformed3, transform_3);
 
     *output_cloud += *cloud_transformed1;
     *output_cloud += *cloud_transformed3;
 
     pcl::VoxelGrid<pcl::PointXYZ> sor;
-    sor.setInputCloud (output_cloud);
-    sor.setLeafSize (0.01f, 0.01f, 0.01f);
-    sor.filter (*output_cloud);
+    sor.setInputCloud(output_cloud);
+    sor.setLeafSize(0.01f, 0.01f, 0.01f);
+    sor.filter(*output_cloud);
 
     return output_cloud;
 }
@@ -138,8 +138,8 @@ PointCloudT::Ptr Sensor::RemoveDistortion(PointCloudT::Ptr inputcloud){
         yi_0 = (*inputcloud)[i].y;
         zi_0 = (*inputcloud)[i].z;
 
-        Ri = sqrt(pow(xi_0, 2.0)+pow(yi_0, 2.0)+pow(zi_0, 2.0));
-        M = 1-0.5*((pow(xi_0, 2.0)*pow(tan(XANGLE), 2.0))+(pow(yi_0, 2.0)*pow(tan(YANGLE), 2.0)));
+        Ri = sqrt(pow(xi_0, 2.0) + pow(yi_0, 2.0) + pow(zi_0, 2.0));
+        M = 1 - 0.5*((pow(xi_0, 2.0)*pow(tan(XANGLE), 2.0)) + (pow(yi_0, 2.0)*pow(tan(YANGLE), 2.0)));
 
         xi = xi_0*M*tan(XANGLE)*Ri;
         yi = yi_0*M*tan(YANGLE)*Ri;
