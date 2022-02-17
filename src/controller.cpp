@@ -7,17 +7,17 @@ PointCloudT::Ptr Controller::PreProcessingCloud(PointCloudT::Ptr inputcloud){
 // var
     PointCloudT::Ptr                                         mls_cloud      (new PointCloudT);
     PointCloudT::Ptr                                         filtered_cloud (new PointCloudT);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree           (new pcl::search::KdTree<pcl::PointXYZ>);
     pcl::RadiusOutlierRemoval<pcl::PointXYZ>                 outrem;
     pcl::PointCloud<pcl::PointNormal>                        mls_points;
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree           (new pcl::search::KdTree<pcl::PointXYZ>);
 ////
     if (inputcloud->points.size() > 10){
-        mls.setInputCloud (inputcloud);
-        mls.setPolynomialOrder (2);
-        mls.setSearchMethod (tree);
-        mls.setSearchRadius (0.05);
-        mls.process (mls_points);
+        mls.setInputCloud(inputcloud);
+        mls.setPolynomialOrder(2);
+        mls.setSearchMethod(tree);
+        mls.setSearchRadius(0.05);
+        mls.process(mls_points);
 
         mls_cloud->points.resize(mls_points.size());
 
@@ -31,9 +31,9 @@ PointCloudT::Ptr Controller::PreProcessingCloud(PointCloudT::Ptr inputcloud){
 
     outrem.setInputCloud(mls_cloud);
     outrem.setRadiusSearch(0.05);
-    outrem.setMinNeighborsInRadius (5);
+    outrem.setMinNeighborsInRadius(5);
     outrem.setKeepOrganized(false);
-    outrem.filter (*filtered_cloud);
+    outrem.filter(*filtered_cloud);
 
     return filtered_cloud;
 }
@@ -73,27 +73,27 @@ PointCloudT::Ptr Controller::FilterROI(PointCloudT::Ptr inputcloud)
     pass_z.setFilterLimits((CAMHEIGHT-0.08), (CAMHEIGHT+0.08));
     pass_z.filter(*outputcloud);
 
-    seg.setOptimizeCoefficients (true);
-    seg.setModelType (pcl::SACMODEL_PLANE);
-    seg.setMethodType (pcl::SAC_RANSAC);
-    seg.setDistanceThreshold (0.2);
+    seg.setOptimizeCoefficients(true);
+    seg.setModelType(pcl::SACMODEL_PLANE);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setDistanceThreshold(0.2);
 
     if (outputcloud->points.size() > 10){
         seg.setInputCloud (outputcloud);
-        seg.segment (*inliers, *coefficients);
+        seg.segment(*inliers, *coefficients);
 
         outputcloud1->points.resize(inliers->indices.size());
 
-        for(size_t i=0; i < inliers->indices.size(); ++i)
+        for (size_t i=0; i < inliers->indices.size(); ++i)
         {
             outputcloud1->points[i].x = (*outputcloud)[inliers->indices[i]].x;
             outputcloud1->points[i].y = (*outputcloud)[inliers->indices[i]].y;
             outputcloud1->points[i].z = (*outputcloud)[inliers->indices[i]].z;
         }
 
-        p.setInputCloud (inputcloud);
-        p.setTargetCloud (outputcloud1);
-        p.setDistanceThreshold (0.001);
+        p.setInputCloud(inputcloud);
+        p.setTargetCloud(outputcloud1);
+        p.setDistanceThreshold(0.001);
         p.segment(*outputcloud1);
     }
     else
@@ -130,17 +130,17 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
 std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
 {
 // var
-    pcl::ConditionalEuclideanClustering<pcl::PointXYZINormal> clustering (true);
-    std::vector<pcl::PointIndices> clusters;
-    pcl::PointCloud<pcl::PointXYZINormal>::Ptr cloud_with_normals (new pcl::PointCloud<pcl::PointXYZINormal>);
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr search_tree (new pcl::search::KdTree<pcl::PointXYZ>);
+    std::vector<pcl::PointIndices>                            clusters;
+    pcl::ConditionalEuclideanClustering<pcl::PointXYZINormal> clustering         (true);
+    pcl::PointCloud<pcl::PointXYZINormal>::Ptr                cloud_with_normals (new pcl::PointCloud<pcl::PointXYZINormal>);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr                   search_tree        (new pcl::search::KdTree<pcl::PointXYZ>);
 ////
-    pcl::copyPointCloud (*inputcloud, *cloud_with_normals);
+    pcl::copyPointCloud(*inputcloud, *cloud_with_normals);
     pcl::NormalEstimation<pcl::PointXYZ, pcl::PointXYZINormal> ne;
-    ne.setInputCloud (inputcloud);
-    ne.setSearchMethod (search_tree);
-    ne.setKSearch (10);
-    ne.compute (*cloud_with_normals);
+    ne.setInputCloud(inputcloud);
+    ne.setSearchMethod(search_tree);
+    ne.setKSearch(10);
+    ne.compute(*cloud_with_normals);
 
     clustering.setInputCloud(cloud_with_normals);
     clustering.setClusterTolerance(0.03);
@@ -155,9 +155,9 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudT::Ptr in
 bool Controller::ClusterCondition(const pcl::PointXYZINormal& seedPoint, const pcl::PointXYZINormal& candidatePoint, float squaredDistance)
 {
 // var
-    float distancethreshold = 0.025;
-    float curvaturethreshold = 0.95;
-    Eigen::Map<const Eigen::Vector3f> point_a_normal = seedPoint.getNormalVector3fMap (), point_b_normal = candidatePoint.getNormalVector3fMap ();
+    float                             distancethreshold = 0.025;
+    float                             curvaturethreshold = 0.95;
+    Eigen::Map<const Eigen::Vector3f> point_a_normal = seedPoint.getNormalVector3fMap (), point_b_normal = candidatePoint.getNormalVector3fMap();
 ////
      if ((std::abs(candidatePoint.x - seedPoint.x) < distancethreshold) and (std::abs(candidatePoint.y - seedPoint.y) < distancethreshold) and (std::abs(candidatePoint.z - seedPoint.z) < distancethreshold))
      {
@@ -177,13 +177,13 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentationPallet(PointCloudT::
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
 ////
     if (inputcloud->points.size() > 10){
-        tree->setInputCloud (inputcloud);
-        ec.setClusterTolerance (0.050);
-        ec.setMinClusterSize (50);
-        ec.setMaxClusterSize (25000);
-        ec.setSearchMethod (tree);
-        ec.setInputCloud (inputcloud);
-        ec.extract (clusters);
+        tree->setInputCloud(inputcloud);
+        ec.setClusterTolerance(0.050);
+        ec.setMinClusterSize(50);
+        ec.setMaxClusterSize(25000);
+        ec.setSearchMethod(tree);
+        ec.setInputCloud(inputcloud);
+        ec.extract(clusters);
     }
 
     return clusters;
@@ -231,8 +231,8 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
 
     pass_z.setInputCloud(inputcloud);
-    pass_z.setFilterFieldName ("z");
-    pass_z.setFilterLimits ((minPt.z), (minPt.z+0.1));
+    pass_z.setFilterFieldName("z");
+    pass_z.setFilterLimits((minPt.z), (minPt.z+0.1));
     pass_z.filter(*cloud_filtered);
 
     pcl::computeCentroid(*cloud_filtered, centroid);
@@ -265,48 +265,49 @@ std::vector<PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr in
         segmented_cloud.reset(new PointCloudT);
         cloud_plane.reset(new PointCloudT);
         segmented_cloud->points.resize(inputclusters[i].indices.size());
-cout << "\n\nCluster size: " << inputclusters[i].indices.size() << "\n";
-        for(size_t j=0; j<inputclusters[i].indices.size(); ++j)
+
+        for (size_t j=0; j<inputclusters[i].indices.size(); ++j)
         {
             segmented_cloud->points[j].x = (*inputcloud)[inputclusters[i].indices[j]].x;
             segmented_cloud->points[j].y = (*inputcloud)[inputclusters[i].indices[j]].y;
             segmented_cloud->points[j].z = (*inputcloud)[inputclusters[i].indices[j]].z;
         }
 
-        seg.setOptimizeCoefficients (true);
-        seg.setModelType (pcl::SACMODEL_PERPENDICULAR_PLANE);
-        seg.setMethodType (pcl::SAC_RANSAC);
+        seg.setOptimizeCoefficients(true);
+        seg.setModelType(pcl::SACMODEL_PERPENDICULAR_PLANE);
+        seg.setMethodType(pcl::SAC_RANSAC);
         seg.setAxis(Eigen::Vector3f::UnitZ());
         seg.setEpsAngle(5.0f*(M_PI/180.0f));
-        seg.setMaxIterations (1000);
-        seg.setDistanceThreshold (0.01);
+        seg.setMaxIterations(1000);
+        seg.setDistanceThreshold(0.01);
 
         seg.setInputCloud(segmented_cloud);
-        seg.segment (*inliers, *coefficients);
+        seg.segment(*inliers, *coefficients);
 
-        extract.setInputCloud (segmented_cloud);
-        extract.setIndices (inliers);
-        extract.setNegative (false);
-        extract.filter (*cloud_plane);
+        extract.setInputCloud(segmented_cloud);
+        extract.setIndices(inliers);
+        extract.setNegative(false);
+        extract.filter(*cloud_plane);
 
         outrem.setInputCloud(cloud_plane);
         outrem.setRadiusSearch(0.03);
-        outrem.setMinNeighborsInRadius (4);
+        outrem.setMinNeighborsInRadius(4);
         outrem.setKeepOrganized(false);
-        outrem.filter (*cloud_plane);
+        outrem.filter(*cloud_plane);
 
         if (cloud_plane->points.size() > 10)
         {
             selectedclusters.push_back(cloud_plane);
         }
     }
+
     return selectedclusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<PointCloudT::Ptr> Controller::IndicestoClouds(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputindices)
 {
 // var
-    PointCloudT::Ptr              segmented_cloud(new PointCloudT);
+    PointCloudT::Ptr              segmented_cloud (new PointCloudT);
     std::vector<PointCloudT::Ptr> selectedclusters;
 ////
     for (int i=0; i<inputindices.size(); ++i)
@@ -323,6 +324,7 @@ std::vector<PointCloudT::Ptr> Controller::IndicestoClouds(PointCloudT::Ptr input
 
         selectedclusters.push_back(segmented_cloud);
     }
+
     return selectedclusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,10 +337,10 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
 ////
     if (inputcloud->points.size() > 10)
     {
-        chull.setInputCloud (inputcloud);
+        chull.setInputCloud(inputcloud);
         chull.setDimension(2);
-        chull.setAlpha (0.1);
-        chull.reconstruct (*cloud_hull);
+        chull.setAlpha(0.1);
+        chull.reconstruct(*cloud_hull);
     }
 
     hullarea = 0.0;
@@ -363,9 +365,9 @@ double Controller::PalletArea(PointCloudT::Ptr inputcloud)
 ////
     if (inputcloud->points.size() > 100)
     {
-        chull.setInputCloud (inputcloud);
+        chull.setInputCloud(inputcloud);
         chull.setDimension(2);
-        chull.reconstruct (*cloud_hull);
+        chull.reconstruct(*cloud_hull);
 
         for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
         {

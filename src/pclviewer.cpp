@@ -4,28 +4,28 @@
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PCLViewer::PCLViewer (QWidget *parent) :
-    QMainWindow (parent),
-    ui (new Ui::PCLViewer)
+PCLViewer::PCLViewer (QWidget *parent):
+    QMainWindow(parent),
+    ui(new Ui::PCLViewer)
 ////
 {
-    ui->setupUi (this);
+    ui->setupUi(this);
     //
 //    this->setWindowState(Qt::WindowFullScreen);
 //    this->setCursor(Qt::BlankCursor);
-    this->setWindowTitle ("Cubagem");
+    this->setWindowTitle("Cubagem");
 
-    connect (ui->pushButton_1, SIGNAL(pressed()), this, SLOT(CleanBox()));
-    connect (ui->pushButton_1, SIGNAL(released()), this, SLOT(FrameBox()));
+    connect(ui->pushButton_1, SIGNAL(pressed()), this, SLOT(CleanBox()));
+    connect(ui->pushButton_1, SIGNAL(released()), this, SLOT(FrameBox()));
 
-    connect (ui->pushButton_2, SIGNAL(pressed()), this, SLOT(CleanGeneric()));
-    connect (ui->pushButton_2, SIGNAL(released()), this, SLOT(FrameGeneric()));
+    connect(ui->pushButton_2, SIGNAL(pressed()), this, SLOT(CleanGeneric()));
+    connect(ui->pushButton_2, SIGNAL(released()), this, SLOT(FrameGeneric()));
 
-    connect (ui->pushButton_3, SIGNAL(pressed()), this, SLOT(CleanBoxInPallet()));
-    connect (ui->pushButton_3, SIGNAL(released()), this, SLOT(FrameBoxInPallet()));
+    connect(ui->pushButton_3, SIGNAL(pressed()), this, SLOT(CleanBoxInPallet()));
+    connect(ui->pushButton_3, SIGNAL(released()), this, SLOT(FrameBoxInPallet()));
 
-    connect (ui->pushButton_4, SIGNAL(pressed()), this, SLOT(CleanGenericInPallet()));
-    connect (ui->pushButton_4, SIGNAL(released()), this, SLOT(FrameGenericInPallet()));
+    connect(ui->pushButton_4, SIGNAL(pressed()), this, SLOT(CleanGenericInPallet()));
+    connect(ui->pushButton_4, SIGNAL(released()), this, SLOT(FrameGenericInPallet()));
 
     // Set up the QVTK window
     viewer_.reset(new pcl::visualization::PCLVisualizer("viewer", false));
@@ -91,7 +91,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 totalvolume = 0.0;
                 objvolume = 0.0;
 
-                for (int number=0; number<limitcluster; ++number)
+                for (int number=0; number < limitcluster; ++number)
                 {
                     coloredcloud.reset(new ColoredCloudT);
                     coloredcloud->points.resize(clusters[number]->points.size());
@@ -124,7 +124,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
         }
 
         cubefactor = (volumemean/Nsamples)/5988.02395;
-        cubefactor = floor((cubefactor*2)+0.5)/2;
+        cubefactor = floor((cubefactor*2) + 0.5)/2;
 
         if (cubefactor >= 1000)
         {
@@ -143,7 +143,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
             stringprecision = 3;
         }
 
-        TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
+        TotalStr = to_string(cubefactor).substr(0, stringprecision) + " kg";
         ui->label_2->setText(QString::fromStdString(TotalStr));
         ui->qvtkWidget->update();
     }
@@ -202,12 +202,12 @@ void PCLViewer::FrameGeneric(){
                   totalvolume = 0.0;
                   objvolume = 0.0;
 
-                  for (int number=0; number<limitcluster; ++number)
+                  for (int number=0; number < limitcluster; ++number)
                   {
                       coloredcloud.reset(new ColoredCloudT);
                       coloredcloud->points.resize(clusters[number]->points.size());
 
-                      for(size_t i=0; i < clusters[number]->points.size(); ++i)
+                      for (size_t i=0; i < clusters[number]->points.size(); ++i)
                       {
                           coloredcloud->points[i].x = (*clusters[number])[i].x;
                           coloredcloud->points[i].y = (*clusters[number])[i].y;
@@ -235,7 +235,7 @@ void PCLViewer::FrameGeneric(){
           }
 
           cubefactor = (volumemean/Nsamples)/5988.02395;
-          cubefactor = floor((cubefactor*2)+0.5)/2;
+          cubefactor = floor((cubefactor*2) + 0.5)/2;
 
           if (cubefactor >= 1000)
           {
@@ -254,7 +254,7 @@ void PCLViewer::FrameGeneric(){
               stringprecision = 3;
           }
 
-          TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
+          TotalStr = to_string(cubefactor).substr(0, stringprecision) + " kg";
           ui->label_2->setText(QString::fromStdString(TotalStr));
           ui->qvtkWidget->update();
       }
@@ -314,12 +314,12 @@ void PCLViewer::FrameBoxInPallet(){
                 totalvolume = 0.0;
                 objvolume = 0.0;
 
-                for (int number=0; number<limitcluster; ++number)
+                for (int number = 0; number < limitcluster; ++number)
                 {
                     coloredcloud.reset(new ColoredCloudT);
                     coloredcloud->points.resize(clusters[number]->points.size());
 
-                    for(size_t i=0; i < clusters[number]->points.size(); ++i)
+                    for(size_t i = 0; i < clusters[number]->points.size(); ++i)
                     {
                         coloredcloud->points[i].x = (*clusters[number])[i].x;
                         coloredcloud->points[i].y = (*clusters[number])[i].y;
@@ -349,7 +349,7 @@ void PCLViewer::FrameBoxInPallet(){
         }
 
         cubefactor = (volumemean/Nsamples)/5988.02395;
-        cubefactor = floor((cubefactor*2)+0.5)/2;
+        cubefactor = floor((cubefactor*2) + 0.5)/2;
 
         if (cubefactor >= 1000)
         {
@@ -368,7 +368,7 @@ void PCLViewer::FrameBoxInPallet(){
             stringprecision = 3;
         }
 
-        TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
+        TotalStr = to_string(cubefactor).substr(0, stringprecision) + " kg";
         ui->label_2->setText(QString::fromStdString(TotalStr));
         ui->qvtkWidget->update();
     }
@@ -428,12 +428,12 @@ void PCLViewer::FrameGenericInPallet(){
                   totalvolume = 0.0;
                   objvolume = 0.0;
 
-                  for (int number=0; number<limitcluster; ++number)
+                  for (int number = 0; number < limitcluster; ++number)
                   {
                       coloredcloud.reset(new ColoredCloudT);
                       coloredcloud->points.resize(clusters[number]->points.size());
 
-                      for(size_t i=0; i < clusters[number]->points.size(); ++i)
+                      for(size_t i = 0; i < clusters[number]->points.size(); ++i)
                       {
                           coloredcloud->points[i].x = (*clusters[number])[i].x;
                           coloredcloud->points[i].y = (*clusters[number])[i].y;
@@ -463,7 +463,7 @@ void PCLViewer::FrameGenericInPallet(){
           }
 
           cubefactor = (volumemean/Nsamples)/5988.02395;
-          cubefactor = floor((cubefactor*2)+0.5)/2;
+          cubefactor = floor((cubefactor*2) + 0.5)/2;
 
           if (cubefactor >= 1000)
           {
@@ -482,7 +482,7 @@ void PCLViewer::FrameGenericInPallet(){
               stringprecision = 3;
           }
 
-          TotalStr = to_string(cubefactor).substr(0,stringprecision)+" kg";
+          TotalStr = to_string(cubefactor).substr(0, stringprecision) + " kg";
           ui->label_2->setText(QString::fromStdString(TotalStr));
           ui->qvtkWidget->update();
       }
