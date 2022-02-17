@@ -108,7 +108,7 @@ PCLViewer::PCLViewer (QWidget *parent):
                         coloredcloud->points[i].a = 255;
                     }
 
-                    hullarea = c.SurfaceArea(clusters[number]);
+                    hullarea = c.ConcaveHullArea(clusters[number]);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
 
                     if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
@@ -219,7 +219,7 @@ void PCLViewer::FrameGeneric(){
                           coloredcloud->points[i].a = 255;
                       }
 
-                      hullarea = c.SurfaceArea(clusters[number]);
+                      hullarea = c.ConcaveHullArea(clusters[number]);
                       std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
 
                       if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
@@ -331,7 +331,7 @@ void PCLViewer::FrameBoxInPallet(){
                         coloredcloud->points[i].a = 255;
                     }
 
-                    hullarea = c.SurfaceArea(clusters[number]);
+                    hullarea = c.ConcaveHullArea(clusters[number]);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
                     dimensionZ = dimensionZ - (PALLETHEIGHT*100);
 
@@ -445,7 +445,7 @@ void PCLViewer::FrameGenericInPallet(){
                           coloredcloud->points[i].a = 255;
                       }
 
-                      hullarea = c.SurfaceArea(clusters[number]);
+                      hullarea = c.ConcaveHullArea(clusters[number]);
                       std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
                       dimensionZ = dimensionZ - (PALLETHEIGHT*100);
 

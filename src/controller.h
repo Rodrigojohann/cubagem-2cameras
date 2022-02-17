@@ -31,7 +31,7 @@ public:
     std::tuple<float, float, float>                          CalculateDimensionsGeneric(PointCloudT::Ptr inputcloud);
     std::vector <PointCloudT::Ptr>                           ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputclusters);
     std::vector <PointCloudT::Ptr>                           IndicestoClouds(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputindices);
-    double                                                   SurfaceArea(PointCloudT::Ptr inputcloud);
+    double                                                   ConcaveHullArea(PointCloudT::Ptr inputcloud);
     PointCloudT::Ptr                                         ProjectCloud(PointCloudT::Ptr inputcloud);
     std::tuple<PointCloudT::Ptr, std::vector<pcl::Vertices>> ConvexHull(PointCloudT::Ptr inputcloud);    
 };

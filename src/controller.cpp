@@ -328,7 +328,7 @@ std::vector<PointCloudT::Ptr> Controller::IndicestoClouds(PointCloudT::Ptr input
     return selectedclusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
+double Controller::ConcaveHullArea(PointCloudT::Ptr inputcloud)
 {
 // var
     double                          hullarea;
