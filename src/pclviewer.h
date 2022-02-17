@@ -57,7 +57,7 @@ class PCLViewer : public QMainWindow
     std::vector<pcl::Vertices>                           hullpolygons;
     std::vector<pcl::PointIndices>                       notorientedclusters;
     std::vector<PointCloudT::Ptr>                        clusters;
-    int                                                  cloudcolor[5][3] = {{0, 0, 255}, {0, 220, 0}, {255, 0, 0}, {200, 200, 0}, {255, 0, 255}};
+    int                                                  cloudcolor[10][3] = {{0, 0, 255}, {0, 220, 0}, {255, 0, 0}, {200, 200, 0}, {255, 0, 255}, {0, 255, 150}, {125, 0, 125}, {0, 255, 255}, {170, 0, 255}, {0, 150, 150}};
     int                                                  clustersize;
     int                                                  limitcluster;
     int                                                  stringprecision;
