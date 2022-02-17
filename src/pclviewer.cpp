@@ -91,12 +91,6 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 totalvolume = 0.0;
                 objvolume = 0.0;
 
-//                viewer_->updatePointCloud(coloredcloud, to_string(0));
-//                viewer_->updatePointCloud(coloredcloud, to_string(1));
-//                viewer_->updatePointCloud(coloredcloud, to_string(2));
-//                viewer_->updatePointCloud(coloredcloud, to_string(3));
-//                viewer_->updatePointCloud(coloredcloud, to_string(4));
-
                 for (int number=0; number<limitcluster; ++number)
                 {
                     coloredcloud.reset(new ColoredCloudT);
@@ -207,12 +201,6 @@ void PCLViewer::FrameGeneric(){
 
                   totalvolume = 0.0;
                   objvolume = 0.0;
-
-//                  viewer_->updatePointCloud(coloredcloud, to_string(0));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(1));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(2));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(3));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(4));
 
                   for (int number=0; number<limitcluster; ++number)
                   {
@@ -325,12 +313,6 @@ void PCLViewer::FrameBoxInPallet(){
 
                 totalvolume = 0.0;
                 objvolume = 0.0;
-
-//                viewer_->updatePointCloud(coloredcloud, to_string(0));
-//                viewer_->updatePointCloud(coloredcloud, to_string(1));
-//                viewer_->updatePointCloud(coloredcloud, to_string(2));
-//                viewer_->updatePointCloud(coloredcloud, to_string(3));
-//                viewer_->updatePointCloud(coloredcloud, to_string(4));
 
                 for (int number=0; number<limitcluster; ++number)
                 {
@@ -445,12 +427,6 @@ void PCLViewer::FrameGenericInPallet(){
 
                   totalvolume = 0.0;
                   objvolume = 0.0;
-
-//                  viewer_->updatePointCloud(coloredcloud, to_string(0));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(1));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(2));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(3));
-//                  viewer_->updatePointCloud(coloredcloud, to_string(4));
 
                   for (int number=0; number<limitcluster; ++number)
                   {
