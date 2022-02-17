@@ -110,10 +110,11 @@ PCLViewer::PCLViewer (QWidget *parent):
 
                     hullarea = c.ConcaveHullArea(clusters[number]);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
+                    surfacearea = c.SurfaceArea(hullarea, dimensionX, dimensionY);
 
                     if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
                     {
-                        objvolume = dimensionX*dimensionY*dimensionZ;
+                        objvolume = surfacearea*dimensionZ;
                         totalvolume += objvolume;
 
                         viewer_->updatePointCloud(coloredcloud, to_string(number));
@@ -334,11 +335,11 @@ void PCLViewer::FrameBoxInPallet(){
                     hullarea = c.ConcaveHullArea(clusters[number]);
                     std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
                     dimensionZ = dimensionZ - (PALLETHEIGHT*100);
-
+                    surfacearea = c.SurfaceArea(hullarea, dimensionX, dimensionY);
 
                     if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
                     {
-                        objvolume = dimensionX*dimensionY*dimensionZ;
+                        objvolume = surfacearea*dimensionZ;
                         totalvolume += objvolume;
 
                         viewer_->updatePointCloud(coloredcloud, to_string(number));

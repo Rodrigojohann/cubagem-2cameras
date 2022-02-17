@@ -66,6 +66,7 @@ class PCLViewer : public QMainWindow
     double                                               objvolume, totalvolume;
     double                                               volumemean;
     double                                               hullarea;
+    double                                               surfacearea;
     double                                               palletarea;
     double                                               minpalletarea;
     double                                               cubefactor;

@@ -32,6 +32,7 @@ public:
     std::vector <PointCloudT::Ptr>                           ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputclusters);
     std::vector <PointCloudT::Ptr>                           IndicestoClouds(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputindices);
     double                                                   ConcaveHullArea(PointCloudT::Ptr inputcloud);
+    double                                                   SurfaceArea(double hullarea, double dimensionX, double dimensionY);
     PointCloudT::Ptr                                         ProjectCloud(PointCloudT::Ptr inputcloud);
     std::tuple<PointCloudT::Ptr, std::vector<pcl::Vertices>> ConvexHull(PointCloudT::Ptr inputcloud);    
 };
