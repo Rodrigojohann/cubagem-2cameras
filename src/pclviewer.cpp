@@ -522,7 +522,6 @@ void PCLViewer::CleanBox()
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(8));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(9));
 
-
     volumemean = 0.0;
 
     ui->label_2->setStyleSheet("font-weight: bold");
@@ -563,6 +562,7 @@ void PCLViewer::CleanGeneric()
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(7));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(8));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(9));
+
     volumemean = 0.0;
 
     ui->label_2->setStyleSheet("font-weight: bold");
