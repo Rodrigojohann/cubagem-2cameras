@@ -349,33 +349,10 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
     {
         for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
         {
-            hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i+1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i+1].x));
-        }
-        hullarea=0.5*abs(hullarea)*10000;
-    }
-    return hullarea;
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-double Controller::PalletArea(PointCloudT::Ptr inputcloud)
-{
-// var
-    double                         hullarea = 0.0;
-    PointCloudT::Ptr               cloud_hull (new PointCloudT);
-    pcl::ConvexHull<pcl::PointXYZ> chull;
-////
-    if (inputcloud->points.size() > 100)
-    {
-        chull.setInputCloud(inputcloud);
-        chull.setDimension(2);
-        chull.reconstruct(*cloud_hull);
-
-        for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
-        {
             hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i + 1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i + 1].x));
         }
         hullarea=0.5*abs(hullarea)*10000;
     }
-
     return hullarea;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
