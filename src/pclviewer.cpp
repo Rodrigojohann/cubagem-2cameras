@@ -91,11 +91,11 @@ PCLViewer::PCLViewer (QWidget *parent) :
                 totalvolume = 0.0;
                 objvolume = 0.0;
 
-                viewer_->updatePointCloud(coloredcloud, to_string(0));
-                viewer_->updatePointCloud(coloredcloud, to_string(1));
-                viewer_->updatePointCloud(coloredcloud, to_string(2));
-                viewer_->updatePointCloud(coloredcloud, to_string(3));
-                viewer_->updatePointCloud(coloredcloud, to_string(4));
+//                viewer_->updatePointCloud(coloredcloud, to_string(0));
+//                viewer_->updatePointCloud(coloredcloud, to_string(1));
+//                viewer_->updatePointCloud(coloredcloud, to_string(2));
+//                viewer_->updatePointCloud(coloredcloud, to_string(3));
+//                viewer_->updatePointCloud(coloredcloud, to_string(4));
 
                 for (int number=0; number<limitcluster; ++number)
                 {
@@ -208,11 +208,11 @@ void PCLViewer::FrameGeneric(){
                   totalvolume = 0.0;
                   objvolume = 0.0;
 
-                  viewer_->updatePointCloud(coloredcloud, to_string(0));
-                  viewer_->updatePointCloud(coloredcloud, to_string(1));
-                  viewer_->updatePointCloud(coloredcloud, to_string(2));
-                  viewer_->updatePointCloud(coloredcloud, to_string(3));
-                  viewer_->updatePointCloud(coloredcloud, to_string(4));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(0));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(1));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(2));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(3));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(4));
 
                   for (int number=0; number<limitcluster; ++number)
                   {
@@ -326,11 +326,11 @@ void PCLViewer::FrameBoxInPallet(){
                 totalvolume = 0.0;
                 objvolume = 0.0;
 
-                viewer_->updatePointCloud(coloredcloud, to_string(0));
-                viewer_->updatePointCloud(coloredcloud, to_string(1));
-                viewer_->updatePointCloud(coloredcloud, to_string(2));
-                viewer_->updatePointCloud(coloredcloud, to_string(3));
-                viewer_->updatePointCloud(coloredcloud, to_string(4));
+//                viewer_->updatePointCloud(coloredcloud, to_string(0));
+//                viewer_->updatePointCloud(coloredcloud, to_string(1));
+//                viewer_->updatePointCloud(coloredcloud, to_string(2));
+//                viewer_->updatePointCloud(coloredcloud, to_string(3));
+//                viewer_->updatePointCloud(coloredcloud, to_string(4));
 
                 for (int number=0; number<limitcluster; ++number)
                 {
@@ -446,11 +446,11 @@ void PCLViewer::FrameGenericInPallet(){
                   totalvolume = 0.0;
                   objvolume = 0.0;
 
-                  viewer_->updatePointCloud(coloredcloud, to_string(0));
-                  viewer_->updatePointCloud(coloredcloud, to_string(1));
-                  viewer_->updatePointCloud(coloredcloud, to_string(2));
-                  viewer_->updatePointCloud(coloredcloud, to_string(3));
-                  viewer_->updatePointCloud(coloredcloud, to_string(4));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(0));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(1));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(2));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(3));
+//                  viewer_->updatePointCloud(coloredcloud, to_string(4));
 
                   for (int number=0; number<limitcluster; ++number)
                   {
@@ -528,6 +528,11 @@ void PCLViewer::CleanBox()
     viewer_->addPointCloud(coloredcloud, to_string(2));
     viewer_->addPointCloud(coloredcloud, to_string(3));
     viewer_->addPointCloud(coloredcloud, to_string(4));
+    viewer_->addPointCloud(coloredcloud, to_string(5));
+    viewer_->addPointCloud(coloredcloud, to_string(6));
+    viewer_->addPointCloud(coloredcloud, to_string(7));
+    viewer_->addPointCloud(coloredcloud, to_string(8));
+    viewer_->addPointCloud(coloredcloud, to_string(9));
 
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
@@ -535,6 +540,12 @@ void PCLViewer::CleanBox()
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(2));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(3));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(4));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(5));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(6));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(7));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(8));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(9));
+
 
     volumemean = 0.0;
 
@@ -559,6 +570,11 @@ void PCLViewer::CleanGeneric()
     viewer_->addPointCloud(coloredcloud, to_string(2));
     viewer_->addPointCloud(coloredcloud, to_string(3));
     viewer_->addPointCloud(coloredcloud, to_string(4));
+    viewer_->addPointCloud(coloredcloud, to_string(5));
+    viewer_->addPointCloud(coloredcloud, to_string(6));
+    viewer_->addPointCloud(coloredcloud, to_string(7));
+    viewer_->addPointCloud(coloredcloud, to_string(8));
+    viewer_->addPointCloud(coloredcloud, to_string(9));
 
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
@@ -566,7 +582,11 @@ void PCLViewer::CleanGeneric()
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(2));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(3));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(4));
-
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(5));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(6));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(7));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(8));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(9));
     volumemean = 0.0;
 
     ui->label_2->setStyleSheet("font-weight: bold");
@@ -590,6 +610,11 @@ void PCLViewer::CleanBoxInPallet()
     viewer_->addPointCloud(coloredcloud, to_string(2));
     viewer_->addPointCloud(coloredcloud, to_string(3));
     viewer_->addPointCloud(coloredcloud, to_string(4));
+    viewer_->addPointCloud(coloredcloud, to_string(5));
+    viewer_->addPointCloud(coloredcloud, to_string(6));
+    viewer_->addPointCloud(coloredcloud, to_string(7));
+    viewer_->addPointCloud(coloredcloud, to_string(8));
+    viewer_->addPointCloud(coloredcloud, to_string(9));
 
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
@@ -597,6 +622,11 @@ void PCLViewer::CleanBoxInPallet()
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(2));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(3));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(4));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(5));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(6));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(7));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(8));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(9));
 
     volumemean = 0.0;
 
@@ -621,6 +651,11 @@ void PCLViewer::CleanGenericInPallet()
     viewer_->addPointCloud(coloredcloud, to_string(2));
     viewer_->addPointCloud(coloredcloud, to_string(3));
     viewer_->addPointCloud(coloredcloud, to_string(4));
+    viewer_->addPointCloud(coloredcloud, to_string(5));
+    viewer_->addPointCloud(coloredcloud, to_string(6));
+    viewer_->addPointCloud(coloredcloud, to_string(7));
+    viewer_->addPointCloud(coloredcloud, to_string(8));
+    viewer_->addPointCloud(coloredcloud, to_string(9));
 
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "inputcloud");
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(0));
@@ -628,6 +663,11 @@ void PCLViewer::CleanGenericInPallet()
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(2));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(3));
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(4));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(5));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(6));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(7));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(8));
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, to_string(9));
 
     volumemean = 0.0;
 
