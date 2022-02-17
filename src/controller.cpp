@@ -21,7 +21,7 @@ PointCloudT::Ptr Controller::PreProcessingCloud(PointCloudT::Ptr inputcloud){
 
         mls_cloud->points.resize(mls_points.size());
 
-        for(size_t i=0; i<mls_cloud->points.size(); ++i)
+        for(size_t i = 0; i < mls_cloud->points.size(); ++i)
         {
             mls_cloud->points[i].x = (mls_points)[i].x;
             mls_cloud->points[i].y = (mls_points)[i].y;
@@ -84,7 +84,7 @@ PointCloudT::Ptr Controller::FilterROI(PointCloudT::Ptr inputcloud)
 
         outputcloud1->points.resize(inliers->indices.size());
 
-        for (size_t i=0; i < inliers->indices.size(); ++i)
+        for (size_t i = 0; i < inliers->indices.size(); ++i)
         {
             outputcloud1->points[i].x = (*outputcloud)[inliers->indices[i]].x;
             outputcloud1->points[i].y = (*outputcloud)[inliers->indices[i]].y;
@@ -99,7 +99,7 @@ PointCloudT::Ptr Controller::FilterROI(PointCloudT::Ptr inputcloud)
     else
     {
         outputcloud1->points.resize(inputcloud->points.size());
-        for (size_t i=0; i < inputcloud->points.size(); ++i)
+        for (size_t i = 0; i < inputcloud->points.size(); ++i)
         {
             outputcloud1->points[i].x = (*inputcloud)[i].x;
             outputcloud1->points[i].y = (*inputcloud)[i].y;
@@ -260,13 +260,13 @@ std::vector<PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr in
     pcl::ExtractIndices<pcl::PointXYZ>       extract;
     pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;
 ////
-    for (int i=0; i<inputclusters.size(); ++i)
+    for (int i = 0; i < inputclusters.size(); ++i)
     {
         segmented_cloud.reset(new PointCloudT);
         cloud_plane.reset(new PointCloudT);
         segmented_cloud->points.resize(inputclusters[i].indices.size());
 
-        for (size_t j=0; j<inputclusters[i].indices.size(); ++j)
+        for (size_t j = 0; j < inputclusters[i].indices.size(); ++j)
         {
             segmented_cloud->points[j].x = (*inputcloud)[inputclusters[i].indices[j]].x;
             segmented_cloud->points[j].y = (*inputcloud)[inputclusters[i].indices[j]].y;
@@ -310,12 +310,12 @@ std::vector<PointCloudT::Ptr> Controller::IndicestoClouds(PointCloudT::Ptr input
     PointCloudT::Ptr              segmented_cloud (new PointCloudT);
     std::vector<PointCloudT::Ptr> selectedclusters;
 ////
-    for (int i=0; i<inputindices.size(); ++i)
+    for (int i = 0; i < inputindices.size(); ++i)
     {
         segmented_cloud.reset(new PointCloudT);
         segmented_cloud->points.resize(inputindices[i].indices.size());
 
-        for(size_t j=0; j<inputindices[i].indices.size(); ++j)
+        for(size_t j = 0; j<inputindices[i].indices.size(); ++j)
         {
             segmented_cloud->points[j].x = (*inputcloud)[inputindices[i].indices[j]].x;
             segmented_cloud->points[j].y = (*inputcloud)[inputindices[i].indices[j]].y;
@@ -347,11 +347,12 @@ double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
 
     if (cloud_hull->points.size() > 0)
     {
-        for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
+        for (size_t i = 0; i < (cloud_hull->points.size() - 1); ++i)
         {
             hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i + 1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i + 1].x));
         }
-        hullarea=0.5*abs(hullarea)*10000;
+
+        hullarea = 0.5*abs(hullarea)*10000;
     }
     return hullarea;
 }
@@ -363,7 +364,7 @@ PointCloudT::Ptr Controller::ProjectCloud(PointCloudT::Ptr inputcloud)
 ////
     outputcloud->points.resize(inputcloud->points.size());
 
-    for(size_t i=0; i<inputcloud->points.size(); ++i)
+    for(size_t i = 0; i < inputcloud->points.size(); ++i)
     {
         outputcloud->points[i].x = (*inputcloud)[i].x;
         outputcloud->points[i].y = (*inputcloud)[i].y;
