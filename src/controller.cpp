@@ -70,7 +70,7 @@ PointCloudT::Ptr Controller::FilterROI(PointCloudT::Ptr inputcloud)
 
     pass_z.setInputCloud(inputcloud);
     pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits((CAMHEIGHT-0.08), (CAMHEIGHT+0.08));
+    pass_z.setFilterLimits((CAMHEIGHT - 0.08), (CAMHEIGHT + 0.08));
     pass_z.filter(*outputcloud);
 
     seg.setOptimizeCoefficients(true);
@@ -121,7 +121,7 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
 
     pass_z.setInputCloud(inputcloud);
     pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits(0, (CAMHEIGHT-PALLETHEIGHT));
+    pass_z.setFilterLimits(0, (CAMHEIGHT - PALLETHEIGHT));
     pass_z.filter(*filtered_cloud);
 
     return filtered_cloud;
@@ -232,7 +232,7 @@ std::tuple<float, float, float> Controller::CalculateDimensionsGeneric(PointClou
 
     pass_z.setInputCloud(inputcloud);
     pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits((minPt.z), (minPt.z+0.1));
+    pass_z.setFilterLimits((minPt.z), (minPt.z + 0.1));
     pass_z.filter(*cloud_filtered);
 
     pcl::computeCentroid(*cloud_filtered, centroid);
@@ -371,7 +371,7 @@ double Controller::PalletArea(PointCloudT::Ptr inputcloud)
 
         for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
         {
-            hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i+1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i+1].x));
+            hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i + 1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i + 1].x));
         }
         hullarea=0.5*abs(hullarea)*10000;
     }
