@@ -349,7 +349,7 @@ double Controller::ConcaveHullArea(PointCloudT::Ptr inputcloud)
     {
         for (size_t i = 0; i < (cloud_hull->points.size() - 1); ++i)
         {
-            hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i + 1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i + 1].x));
+            hullarea += (((*cloud_hull)[i].x + (*cloud_hull)[i + 1].x)*((*cloud_hull)[i].y - (*cloud_hull)[i + 1].y));
         }
 
         hullarea = 0.5*abs(hullarea)*10000;
