@@ -334,13 +334,14 @@ double Controller::ConcaveHullArea(PointCloudT::Ptr inputcloud)
     double                          hullarea;
     PointCloudT::Ptr                cloud_hull (new PointCloudT);
     pcl::ConcaveHull<pcl::PointXYZ> chull;
+    std::vector<pcl::Vertices>      polygons;
 ////
     if (inputcloud->points.size() > 10)
     {
         chull.setInputCloud(inputcloud);
         chull.setDimension(2);
         chull.setAlpha(0.1);
-        chull.reconstruct(*cloud_hull);
+        chull.reconstruct(*cloud_hull, polygons);
     }
 
     hullarea = 0.0;
